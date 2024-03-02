@@ -7,13 +7,19 @@ const chance_denom: float = 100.0
 
 # stats that don't change often
 var stats: StatBlock
+var faction: int
+var entity_index: int
 
 # stats that do
 var cur_hp: int
+var location: Vector2
+var time_spent: int
 
-func _init(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int):
-	stats = StatBlock.new(brawn, brains, guts, eyesight, footwork, hustle)
+func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int, faction: int):
+	stats = StatBlock.new()
+	stats = stats.initialize(brawn, brains, guts, eyesight, footwork, hustle)
 	cur_hp = stats.max_hp()
+	self.faction = faction
 
 func chance_to_hit_other(other: CombatEntity) -> float:
 	#example: self accuracy 10, other evasion 8

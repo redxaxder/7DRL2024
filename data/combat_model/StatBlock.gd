@@ -1,3 +1,5 @@
+extends Resource
+
 class_name StatBlock
 
 # core stats
@@ -27,7 +29,7 @@ func damage() -> int:
 func crit() -> int:
 	return eyesight + hustle
 
-func _init(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int):
+func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int):
 	self.brawn = brawn
 	self.brains = brains
 	self.guts = guts
