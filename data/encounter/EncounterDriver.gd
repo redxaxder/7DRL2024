@@ -17,12 +17,14 @@ func initialize():
 	var nme = CombatEntity.new()
 	nme.initialize(10, 10, 10, 10, 10, 10, Constants.ENEMY_FACTION)
 	nme.entity_index = 0
+	nme.actor_type = Actor.Type.Wolf
 	cur_state.actors.push_back(nme)
-	cur_state.set_location(0, Vector2(5,5))
+	cur_state.set_location(0, Vector2(9,5))
 	
 	var player = CombatEntity.new()
 	player.initialize(10, 10, 10, 10, 10, 10, Constants.PLAYER_FACTION)
 	player.entity_index = 1
+	player.actor_type = Actor.Type.Player
 	cur_state.player = player.entity_index
 	cur_state.actors.push_back(player)
 	cur_state.set_location(1, Vector2(1,1))

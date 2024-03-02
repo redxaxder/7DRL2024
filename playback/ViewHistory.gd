@@ -1,24 +1,18 @@
 extends Control
 
-export var cursor: int = 0
-
+var d
+var cursor: int = 0
+var history: EncounterHistory
 func _ready():
-	var some_events = []
-	for _i in 10:
-		var some_event = EncounterEvent.new()
-		some_event.delta = (randi() % 5) - 2
-		some_events.append(some_event)
-#	var state0 = EncounterState.new()
-#	history = roll_up(state0, some_events)
+	var state0 = EncounterState.new()
 # warning-ignore:return_value_discarded
 	get_node("%to_start").connect("button_down", self, "to_start")
 # warning-ignore:return_value_discarded
 	get_node("%to_end").connect("button_down", self, "to_end")
 
 	var progressbar = get_node("%progress_bar")
-	progressbar.min_value = 0
-#	progressbar.max_value = history.states.size() - 1
 	progressbar.step = 1
+	progressbar.min_value = 0
 	progressbar.connect("scrolling", self, "progress_bar_scroll")
 
 	var driver = EncounterDriver.new()
@@ -26,32 +20,20 @@ func _ready():
 	for _i in 10:
 		var _player_is_dead = driver.tick()
 
-	
-	for evt in driver.history.get_events():
-		assert(evt != null)
-		assert(evt is EncounterEvent)
-		var text = driver.event_text(evt)
-		print(text)
+	history = driver.history
+	d = driver
 
+	progressbar.max_value = history.get_states().size() - 1
 
-#func roll_up(state0: EncounterState, events: Array) -> EncounterHistory:
-#	var h = EncounterHistory.new()
-#	h._states = [state0]
-#	h.events = events
-#	h.states.resize(events.size() + 1)
-#	for i in events.size():
-#		var e = events[i]
-#		var s = h.states[i]
-#		var next_s = DataUtil.update(DataUtil.dup_state(s),e)
-#		h.states[i+1] = next_s
-#	return h
+	_hard_refresh()
+
 
 func to_start():
 	cursor = 0
 	_refresh()
 
 func to_end():
-#	cursor = history.states.size() - 1
+	cursor = history.get_states().size() - 1
 	_refresh()
 
 func next():
@@ -85,19 +67,21 @@ func allocate_sprites(s: EncounterState):
 		var actor = s.actors[i]
 		var sprite = Actor.get_sprite(actor.actor_type).instance()
 		sprites[i] = sprite
+		$display.add_child(sprite)
+		sprite.position = Vector2(100,100)
 
 # hard refresh for viewing new encounters
 # ordinary refresh for viewing different state of same encounter
+func _hard_refresh(): _refresh(true)
 func _refresh(_hard_refresh: bool = false):
-	pass
-#	var current_state = history.states[cursor]
-#	if hard_refresh:
-#		allocate_sprites(current_state)
-#
-#	var n = current_state.actors.size()
-#	for i in n:
-#		var actor = current_state.actors[n]
-#		sprites[i].position = actor.location * 100
-#
-#	var progressbar = get_node("%progress_bar")
-#	progressbar.value = cursor
+	var current_state = history.get_states()[cursor]
+	if _hard_refresh:
+		allocate_sprites(current_state)
+
+	var n = current_state.actors.size()
+	for i in n:
+		var actor = current_state.actors[i]
+		sprites[i].position = actor.location * 50
+
+	var progressbar = get_node("%progress_bar")
+	progressbar.value = cursor
