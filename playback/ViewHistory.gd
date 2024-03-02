@@ -1,6 +1,5 @@
 extends Control
 
-#export var history: Resource = null
 export var cursor: int = 0
 
 func _ready():
@@ -26,6 +25,7 @@ func _ready():
 	driver.initialize()
 	for _i in 10:
 		var _player_is_dead = driver.tick()
+
 	
 	for evt in driver.history.get_events():
 		assert(evt != null)

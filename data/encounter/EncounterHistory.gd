@@ -1,8 +1,8 @@
 extends Resource
 
 class_name EncounterHistory
-export var _states: Array = [] # Array of EncounterState
-export var _events: Array = [] # Array of EncounterEvent
+export var _states: Array = DataUtil.new_array()
+export var _events: Array = DataUtil.new_array()
 # events[i] is the event that causes a transition from
 # state[i] to state[i+1]
 

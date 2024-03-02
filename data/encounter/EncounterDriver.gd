@@ -25,7 +25,7 @@ func initialize():
 	player.entity_index = 1
 	cur_state.player = player.entity_index
 	cur_state.actors.push_back(player)
-	cur_state.set_location(1, Vector2(3,3))
+	cur_state.set_location(1, Vector2(1,1))
 	
 	queue.insert(player, 0)
 	queue.insert(nme, 0)
@@ -60,7 +60,7 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	var targets: Array = []
 	for d in dirs:
 		var neighbor = actor.location + d
-		var target = cur_state.map.get(neighbor, false)
+		var target = cur_state.lookup_actor(neighbor)
 		if target and target.faction != actor.faction:
 			targets.push_back(target)
 	if targets.size() > 0:

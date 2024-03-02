@@ -10,8 +10,12 @@ static func dup_state(s: EncounterState) -> EncounterState:
 static func update(state: EncounterState, event: EncounterEvent) -> EncounterState:
 	match event.kind:
 		EncounterEvent.EventKind.Move:
-			pass
+			state.set_location(event.actor_idx, event.target_location)
 		EncounterEvent.EventKind.Attack:
 			pass
 
 	return state
+
+
+static func new_array() -> Array:
+	return []
