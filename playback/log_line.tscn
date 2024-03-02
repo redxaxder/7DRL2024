@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://playback/style/log_line_hover.tres" type="StyleBox" id=1]
+[ext_resource path="res://playback/style/log_line_pressed.tres" type="StyleBox" id=2]
+[ext_resource path="res://playback/style/log_line_highlighted.tres" type="StyleBox" id=3]
+[ext_resource path="res://playback/log_line.gd" type="Script" id=4]
+
+[node name="log_line" type="Button"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -15.0
+margin_right = 100.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 200, 30 )
+focus_mode = 0
+size_flags_horizontal = 3
+custom_styles/hover = ExtResource( 1 )
+custom_styles/pressed = ExtResource( 2 )
+custom_styles/normal = ExtResource( 3 )
+shortcut_in_tooltip = false
+action_mode = 0
+enabled_focus_mode = 0
+align = 0
+script = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 5.0
+margin_right = 5.0
+text = "lorem ipsum"
+valign = 1

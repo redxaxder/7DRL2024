@@ -50,8 +50,6 @@ func tick() -> bool:
 	# 4. call data_util.update on event and cur state to get next state
 	history.add_state(DataUtil.dup_state(cur_state))
 # warning-ignore:return_value_discarded
-	for i in cur_state.actors.size():
-		print("{0} hp: {1}".format([i, cur_state.actors[i].cur_hp]))
 	DataUtil.update(cur_state, evt)
 	# 5. If actor is still alive, re-insert it into the priority queue
 	actor.time_spent += int(100.0 / float(actor.stats.speed()))
