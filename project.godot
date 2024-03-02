@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "Actor",
+"language": "GDScript",
+"path": "res://data/actor_types.gd"
+}, {
 "base": "Resource",
 "class": "CombatEntity",
 "language": "GDScript",
@@ -55,6 +60,7 @@ _global_script_classes=[ {
 "path": "res://data/combat_model/StatBlock.gd"
 } ]
 _global_script_class_icons={
+"Actor": "",
 "CombatEntity": "",
 "Constants": "",
 "DataUtil": "",

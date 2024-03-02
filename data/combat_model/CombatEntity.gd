@@ -8,16 +8,18 @@ const chance_denom: float = 100.0
 # stats that don't change often
 var stats: StatBlock
 var faction: int
-var entity_index: int
+var entity_index: int # duplicated from driver
+
+var actor_type: int
 
 # stats that do
 var cur_hp: int
-var location: Vector2
+var location: Vector2 # duplicated from driver
 var time_spent: int
 
 func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int, faction: int):
 	stats = StatBlock.new()
-	stats = stats.initialize(brawn, brains, guts, eyesight, footwork, hustle)
+	stats.initialize(brawn, brains, guts, eyesight, footwork, hustle)
 	cur_hp = stats.max_hp()
 	self.faction = faction
 
