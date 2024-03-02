@@ -24,6 +24,11 @@ func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int
 	cur_hp = stats.max_hp()
 	faction = _faction
 
+func initialize_with_block(_stats: StatBlock, _faction: int):
+	stats = _stats
+	cur_hp = stats.max_hp()
+	faction = _faction
+
 func chance_to_hit_other(other: CombatEntity) -> float:
 	#example: self accuracy 10, other evasion 8
 	# chance to hit is 1 - 1 / 100 = .99

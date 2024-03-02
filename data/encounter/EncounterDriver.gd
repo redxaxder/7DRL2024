@@ -6,6 +6,7 @@ var queue: PriorityQueue
 var cur_state: EncounterState
 const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1)]
 var history: EncounterHistory
+var cur_idx: int = 0
 
 
 func initialize():
@@ -14,24 +15,30 @@ func initialize():
 	history = EncounterHistory.new()
 	
 	cur_state.actors = []
-	var nme = CombatEntity.new()
-	nme.initialize(10, 10, 10, 10, 10, 10, Constants.ENEMY_FACTION)
-	nme.entity_index = 0
-	nme.actor_type = Actor.Type.Wolf
-	cur_state.actors.push_back(nme)
-	cur_state.set_location(0, Vector2(9,5))
 	
 	var player = CombatEntity.new()
 	player.initialize(10, 10, 10, 10, 10, 10, Constants.PLAYER_FACTION)
-	player.entity_index = 1
 	player.actor_type = Actor.Type.Player
-	cur_state.player = player.entity_index
-	cur_state.actors.push_back(player)
-	cur_state.set_location(1, Vector2(1,1))
+	insert_entity(player, Vector2(1, 1))
 	
-	queue.insert(player, 0)
-	queue.insert(nme, 0)
+	for i in range(3):
+		var nme = create_enemy()
+		insert_entity(nme, Vector2(randi() % 5 + 5, randi() % 10))
+	
+	
+func create_enemy() -> CombatEntity:
+	var nme = CombatEntity.new()
+	var reference_nme_idx = randi() % (Actor.Type.size() - 1) + 1
+	nme.initialize_with_block(Actor.get_stat_block(reference_nme_idx), Constants.ENEMY_FACTION)	
+	nme.actor_type = Actor.get_type(reference_nme_idx)
+	return nme
 
+func insert_entity(e: CombatEntity, loc: Vector2):
+	e.entity_index = cur_idx
+	cur_state.actors.push_back(e)
+	cur_state.set_location(cur_idx, loc)
+	queue.insert(e, 0)
+	cur_idx += 1
 
 
 func tick() -> bool:
@@ -67,7 +74,7 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 		if target and target.faction != actor.faction:
 			targets.push_back(target)
 	if targets.size() > 0:
-		targets.shuffle() # TODO track random state
+		targets.shuffle()
 		var target = targets[0]
 		return attack_roll(actor, target)
 	#2. TODO can I use a different ability?
@@ -102,6 +109,11 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 				var neighbor = here + direction
 				# TODO: check if valid move
 				# eg: out of bounds or in wall or occupied
+				# at the start, target will always be non-null (will contain self)
+				# for non-start here, target is guaranteed to be friendly at this point
+				if target != null && here != start:
+					assert(target.faction == friendly_faction)
+					continue
 				if !breadcrumbs.has(neighbor):
 					breadcrumbs[neighbor] = here
 					next_frontier.append(neighbor)

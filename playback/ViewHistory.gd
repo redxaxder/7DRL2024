@@ -20,11 +20,11 @@ func _ready():
 
 	var driver = EncounterDriver.new()
 	driver.initialize()
-	for _i in 10:
-		var _player_is_dead = driver.tick()
+	var player_is_alive = true
+	while player_is_alive:
+		player_is_alive = driver.tick()
 
 	history = driver.history
-	d = driver
 
 	progressbar.max_value = history.get_states().size() - 1
 
