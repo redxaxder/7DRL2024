@@ -6,6 +6,9 @@ export var _events: Array = DataUtil.new_array()
 # events[i] is the event that causes a transition from
 # state[i] to state[i+1]
 
+func size():
+	return _states.size()
+
 func add_state(st: EncounterState):
 	_states.append(st)
 

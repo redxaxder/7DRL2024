@@ -19,6 +19,11 @@ func lookup_actor(location: Vector2) -> CombatEntity:
 		return null
 	return actors[t]
 
+func remove_actor(actor_ix: int):
+	var a = actors[actor_ix]
+	map.erase(a.location)
+	a.location = Vector2(-1000,-1000)
+
 func set_location(actor_id: int, target_loc: Vector2):
 	if map.get(target_loc, null) != null:
 		push_error("Collising locations! The explosion envelops all.")
@@ -30,7 +35,6 @@ func set_location(actor_id: int, target_loc: Vector2):
 	a.location = target_loc
 	map[target_loc] = actor_id
 	
-func resolve_attack(_actor_id: int, target_id: int, did_hit: bool, damage: int):
+func resolve_attack(_actor_id: int, target_id: int, damage: int):
 	var target: CombatEntity = actors[target_id]
-	if did_hit:
-		target.cur_hp -= damage
+	target.cur_hp -= damage

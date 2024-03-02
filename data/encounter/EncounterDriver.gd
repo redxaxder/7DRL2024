@@ -2,6 +2,9 @@ extends Resource
 
 class_name EncounterDriver
 
+
+const EncEvent = preload("res://data/encounter/EncEvent.gd")
+
 var queue: PriorityQueue
 var cur_state: EncounterState
 const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1)]
@@ -17,13 +20,15 @@ func initialize():
 	cur_state.actors = []
 	
 	var player = CombatEntity.new()
-	player.initialize(10, 10, 10, 10, 10, 10, Constants.PLAYER_FACTION)
+	player.initialize(15, 15, 30, 20, 10, 10, Constants.PLAYER_FACTION)
 	player.actor_type = Actor.Type.Player
 	insert_entity(player, Vector2(1, 1))
 	
-	for i in range(3):
+	for _i in range(3):
 		var nme = create_enemy()
 		insert_entity(nme, Vector2(randi() % 5 + 5, randi() % 10))
+	
+	history.add_state(DataUtil.dup_state(cur_state))
 	
 	
 func create_enemy() -> CombatEntity:
@@ -43,21 +48,35 @@ func insert_entity(e: CombatEntity, loc: Vector2):
 
 func tick() -> bool:
 	# 0. is the player alive?
-	if cur_state.get_player().cur_hp <= 0:
+	if !cur_state.get_player().is_alive():
 		return false
-	# 1. grab the first thing in the priority queue
-	var actor: CombatEntity = queue.pop_front()
+	# 0.1. are there any enemies alive?
+	var enemies_alive = false
+	for actor in cur_state.actors:
+		if actor.is_alive() and actor.faction != Constants.PLAYER_FACTION:
+			enemies_alive = true
+			break
+	if !enemies_alive: return false
+	
+	# 1. grab the first living thing in the priority queue
+	var actor = queue.pop_front()
+	while !actor.is_alive() and queue.size() > 0:
+		actor = queue.pop_front()
+	if !actor.is_alive():
+		return false
 	# 2. run its AI
 	#    AI produces an EncounterEvent
 	var evt: EncounterEvent = tick_ai(actor)
-	# 3. record that event into a log
-	assert(evt is EncounterEvent)
-	history.add_event(evt)
-		
-	# 4. call data_util.update on event and cur state to get next state
-	history.add_state(DataUtil.dup_state(cur_state))
-# warning-ignore:return_value_discarded
-	DataUtil.update(cur_state, evt)
+
+	# 3. record that event
+	while evt != null:
+		if evt.kind == EncounterEvent.EventKind.Death:
+			print("a")
+		history.add_event(evt)
+	# warning-ignore:return_value_discarded
+		evt = DataUtil.update(cur_state, evt)
+		history.add_state(DataUtil.dup_state(cur_state))
+
 	# 5. If actor is still alive, re-insert it into the priority queue
 	actor.time_spent += int(100.0 / float(actor.stats.speed()))
 	queue.insert(actor, actor.time_spent)
@@ -137,6 +156,8 @@ func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
 		EncounterEvent.EventKind.Attack:
 			return "{0} attacked {1}! {2} damage!".format([evt.actor_idx, evt.target_idx, evt.damage])
+		EncounterEvent.EventKind.Death:
+			return "{0} died!".format([evt.actor_idx])
 		EncounterEvent.EventKind.Move:
 			return "{0} moved! -> {1}".format([evt.actor_idx, evt.target_location])
 	push_warning("Event not handled by logger! {0}".format([evt.kind]))
@@ -146,46 +167,19 @@ func event_text(evt: EncounterEvent) -> String:
 func gen_move(actor: CombatEntity) -> EncounterEvent:
 	var move_to = breadth_first_search(actor.location, actor.faction)
 	if move_to != Vector2.ZERO:
-		return move_event(actor, move_to)
+		return EncEvent.move_event(actor, move_to)
 	#move randomly
 	else:
 		var dir = dirs[randi() % dirs.size()] # TODO track random state
 		move_to = actor.location + dir
-	return move_event(actor, move_to)
+	return EncEvent.move_event(actor, move_to)
 
 func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
-	var did_hit
-	var damage
 	if randf() < actor.chance_to_hit_other(target): # TODO track random state
 		var damage_range = actor.basic_attack_damage_to_other(target)
-		did_hit = true
-		damage = rand_range(damage_range[0], damage_range[1]) # TODO track random state
+		var damage = rand_range(damage_range[0], damage_range[1]) # TODO track random state
+		return EncEvent.attack_event(actor, target, damage)
 	else:
-		did_hit = false
-		damage = 0
-	return attack_event(actor, target, did_hit, damage)
+		return EncEvent.miss_event(actor, target)
 
 
-
-
-
-# Minimal constructors for events
-func move_event(actor: CombatEntity, move_to: Vector2) -> EncounterEvent:
-	var evt = EncounterEvent.new()
-	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
-	assert(evt is EncounterEvent)
-	evt.kind = EncounterEvent.EventKind.Move
-	evt.actor_idx = actor.entity_index
-	evt.target_location = move_to
-	return evt
-
-func attack_event(actor: CombatEntity, target: CombatEntity, did_hit, damage) -> EncounterEvent:
-	var evt = EncounterEvent.new()
-	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
-	assert(evt is EncounterEvent)
-	evt.kind = EncounterEvent.EventKind.Attack
-	evt.actor_idx = actor.entity_index
-	evt.target_idx = target.entity_index
-	evt.damage = damage
-	evt.did_hit = did_hit
-	return evt

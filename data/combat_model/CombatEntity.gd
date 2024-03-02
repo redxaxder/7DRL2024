@@ -24,6 +24,9 @@ func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int
 	cur_hp = stats.max_hp()
 	faction = _faction
 
+func is_alive():
+	return (cur_hp > 0)
+
 func initialize_with_block(_stats: StatBlock, _faction: int):
 	stats = _stats
 	cur_hp = stats.max_hp()

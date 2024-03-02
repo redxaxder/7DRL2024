@@ -13,3 +13,6 @@ func insert(value, priority: int):
 func pop_front():
 	_priorities.pop_front()
 	return _values.pop_front()
+
+func size():
+	return _values.size()

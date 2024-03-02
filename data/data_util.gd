@@ -1,5 +1,7 @@
 class_name DataUtil
 
+const EncEvent = preload("res://data/encounter/EncEvent.gd")
+
 static func dup_state(s: EncounterState) -> EncounterState:
 	var new = deep_dup(s)
 	assert(new is EncounterState)
@@ -59,13 +61,18 @@ static func dup_dict(d: Dictionary) -> Dictionary:
 		new[k] = deep_dup(d[k])
 	return new
 
-static func update(state: EncounterState, event: EncounterEvent) -> EncounterState:
+static func update(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
 	match event.kind:
 		EncounterEvent.EventKind.Move:
 			state.set_location(event.actor_idx, event.target_location)
 		EncounterEvent.EventKind.Attack:
-			state.resolve_attack(event.actor_idx, event.target_idx, event.did_hit, event.damage)
-	return state
+			state.resolve_attack(event.actor_idx, event.target_idx, event.damage)
+			var target = state.actors[event.target_idx]
+			if !target.is_alive():
+				return EncEvent.death_event(target)
+		EncounterEvent.EventKind.Death:
+			state.remove_actor(event.actor_idx)
+	return null
 
 static func new_array() -> Array:
 	return []

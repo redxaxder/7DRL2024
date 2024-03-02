@@ -1,5 +1,7 @@
 extends Control
 
+const turn_limit = 100
+
 var d
 var cursor: int = 0
 var history: EncounterHistory
@@ -21,10 +23,13 @@ func _ready():
 	var driver = EncounterDriver.new()
 	driver.initialize()
 	var player_is_alive = true
-	while player_is_alive:
-		player_is_alive = driver.tick()
+	while driver.tick() and driver.history.size() < turn_limit:
+		pass
+	
 
 	history = driver.history
+#	var last_state = history.get_states().pop_back()
+#	var it = last_state.get_player().is_alive()
 
 	progressbar.max_value = history.get_states().size() - 1
 
@@ -105,6 +110,7 @@ func _refresh(_hard_refresh: bool = false):
 	for i in n:
 		var actor = current_state.actors[i]
 		sprites[i].position = actor.location * 50
+		sprites[i].visible = actor.is_alive()
 
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = cursor
