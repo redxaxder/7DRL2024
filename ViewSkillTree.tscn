@@ -1,9 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://ViewSkillTree.gd" type="Script" id=1]
-
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.164706, 0.603922, 0.462745, 1 )
 
 [node name="ViewSkillTree" type="Control"]
 script = ExtResource( 1 )
@@ -36,9 +33,3 @@ margin_top = 120.0
 margin_right = 56.0
 margin_bottom = 140.0
 text = "Unlock"
-
-[node name="Button" type="Button" parent="VBoxContainer"]
-margin_top = 170.0
-margin_right = 56.0
-margin_bottom = 184.0
-custom_styles/normal = SubResource( 1 )
