@@ -28,12 +28,18 @@ _global_script_classes=[ {
 "class": "EncounterState",
 "language": "GDScript",
 "path": "res://data/EncounterState.gd"
+}, {
+"base": "Resource",
+"class": "PriorityQueue",
+"language": "GDScript",
+"path": "res://misc/priority_queue.gd"
 } ]
 _global_script_class_icons={
 "DataUtil": "",
 "EncounterEvent": "",
 "EncounterHistory": "",
-"EncounterState": ""
+"EncounterState": "",
+"PriorityQueue": ""
 }
 
 [application]
