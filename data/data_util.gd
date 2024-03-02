@@ -9,6 +9,5 @@ static func dup_state(s: EncounterState) -> EncounterState:
 	return new
 
 static func update(state: EncounterState, event: EncounterEvent) -> EncounterState:
-	var next = dup_state(state)
-	next.i = clamp(next.i + event.delta, 0, 10)
-	return next
+	state.i = clamp(state.i + event.delta, 0, 10)
+	return state

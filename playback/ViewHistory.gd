@@ -28,7 +28,7 @@ func roll_up(state0: EncounterState, events: Array) -> EncounterHistory:
 	for i in events.size():
 		var e = events[i]
 		var s = h.states[i]
-		var next_s = DataUtil.update(s,e)
+		var next_s = DataUtil.update(DataUtil.dup_state(s),e)
 		h.states[i+1] = next_s
 	return h
 
