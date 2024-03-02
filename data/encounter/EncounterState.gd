@@ -10,7 +10,7 @@ var actors: Array # [CombatEntity]
 var map: Dictionary # [location Vector2, index in the actor array]
 					# represent walls etc with -1?
 
-func player() -> CombatEntity:
+func get_player() -> CombatEntity:
 	return actors[player]
 
 func lookup_actor(location: Vector2) -> CombatEntity:
@@ -24,7 +24,13 @@ func set_location(actor_id: int, target_loc: Vector2):
 		push_error("Collising locations! The explosion envelops all.")
 	var a = actors[actor_id]
 	# remove current location from map
+# warning-ignore:return_value_discarded
 	map.erase(a.location)
 	# set new loc, and add it to map
 	a.location = target_loc
 	map[target_loc] = actor_id
+	
+func resolve_attack(_actor_id: int, target_id: int, did_hit: bool, damage: int):
+	var target: CombatEntity = actors[target_id]
+	if did_hit:
+		target.cur_hp -= damage

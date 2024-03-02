@@ -8,7 +8,7 @@ func _ready():
 		var some_event = EncounterEvent.new()
 		some_event.delta = (randi() % 5) - 2
 		some_events.append(some_event)
-	var state0 = EncounterState.new()
+#	var state0 = EncounterState.new()
 #	history = roll_up(state0, some_events)
 # warning-ignore:return_value_discarded
 	get_node("%to_start").connect("button_down", self, "to_start")
@@ -88,7 +88,7 @@ func allocate_sprites(s: EncounterState):
 
 # hard refresh for viewing new encounters
 # ordinary refresh for viewing different state of same encounter
-func _refresh(hard_refresh: bool = false):
+func _refresh(_hard_refresh: bool = false):
 	pass
 #	var current_state = history.states[cursor]
 #	if hard_refresh:

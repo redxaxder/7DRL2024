@@ -34,7 +34,7 @@ func initialize():
 
 func tick() -> bool:
 	# 0. is the player alive?
-	if cur_state.player().cur_hp <= 0:
+	if cur_state.get_player().cur_hp <= 0:
 		return false
 	# 1. grab the first thing in the priority queue
 	var actor: CombatEntity = queue.pop_front()
@@ -47,9 +47,12 @@ func tick() -> bool:
 		
 	# 4. call data_util.update on event and cur state to get next state
 	history.add_state(DataUtil.dup_state(cur_state))
+# warning-ignore:return_value_discarded
+	for i in cur_state.actors.size():
+		print("{0} hp: {1}".format([i, cur_state.actors[i].cur_hp]))
 	DataUtil.update(cur_state, evt)
 	# 5. If actor is still alive, re-insert it into the priority queue
-	actor.time_spent += 100.0 / actor.stats.speed()
+	actor.time_spent += int(100.0 / float(actor.stats.speed()))
 	queue.insert(actor, actor.time_spent)
 	
 	return true
@@ -121,7 +124,7 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
 		EncounterEvent.EventKind.Attack:
-			return "{0} attacked!".format([evt.actor_idx])
+			return "{0} attacked {1}! {2} damage!".format([evt.actor_idx, evt.target_idx, evt.damage])
 		EncounterEvent.EventKind.Move:
 			return "{0} moved! -> {1}".format([evt.actor_idx, evt.target_location])
 	push_warning("Event not handled by logger! {0}".format([evt.kind]))
@@ -170,5 +173,7 @@ func attack_event(actor: CombatEntity, target: CombatEntity, did_hit, damage) ->
 	assert(evt is EncounterEvent)
 	evt.kind = EncounterEvent.EventKind.Attack
 	evt.actor_idx = actor.entity_index
-	evt.target_idx = actor.entity_index
+	evt.target_idx = target.entity_index
+	evt.damage = damage
+	evt.did_hit = did_hit
 	return evt

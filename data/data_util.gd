@@ -12,10 +12,9 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterSta
 		EncounterEvent.EventKind.Move:
 			state.set_location(event.actor_idx, event.target_location)
 		EncounterEvent.EventKind.Attack:
-			pass
+			state.resolve_attack(event.actor_idx, event.target_idx, event.did_hit, event.damage)
 
 	return state
-
 
 static func new_array() -> Array:
 	return []

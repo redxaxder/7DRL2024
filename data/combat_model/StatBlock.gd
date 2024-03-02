@@ -29,10 +29,10 @@ func damage() -> int:
 func crit() -> int:
 	return eyesight + hustle
 
-func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int):
-	self.brawn = brawn
-	self.brains = brains
-	self.guts = guts
-	self.eyesight = eyesight
-	self.footwork = footwork
-	self.hustle = hustle
+func initialize(_brawn: int, _brains: int, _guts: int, _eyesight: int, _footwork: int, _hustle: int):
+	brawn = _brawn
+	brains = _brains
+	guts = _guts
+	eyesight = _eyesight
+	footwork = _footwork
+	hustle = _hustle
