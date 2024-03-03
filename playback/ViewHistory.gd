@@ -32,10 +32,6 @@ func view(_history: EncounterHistory, _map: Map):
 	var progressbar = get_node("%progress_bar")
 	progressbar.max_value = history.get_states().size() - 1
 
-	var display = get_node("%display")
-	for c in display.get_children():
-		c.queue_free()
-	map.createSprites(display)
 
 	var events = history.get_events()
 # warning-ignore:return_value_discarded
@@ -124,7 +120,7 @@ func prev():
 func log_line_click(i):
 	pause()
 	if cursor != i:
-		cursor = i
+		cursor = i + 1
 		_refresh()
 
 func progress_bar_scroll():
@@ -149,46 +145,22 @@ func _gui_input(event):
 	if event.is_action_pressed("ui_right"): next()
 	if event.is_action_pressed("ui_left"): prev()
 
-var sprites = []
-func allocate_sprites(s: EncounterState):
-	var n = s.actors.size()
-	sprites = []
-	sprites.resize(n)
-	for i in n:
-		var actor = s.actors[i]
-		var sprite = Actor.get_sprite(actor.actor_type).instance()
-		sprites[i] = sprite
-		get_node("%display").add_child(sprite)
-		sprite.position = Vector2(100,100)
-
 # hard refresh for viewing new encounters
 # ordinary refresh for viewing different state of same encounter
 func _hard_refresh(): _refresh(true)
-func _refresh(_hard_refresh: bool = false):
+func _refresh(do_hard_refresh: bool = false):
 	if !history: return
-	var display = get_node("%display")
-	var display_size: Vector2 = display.get_rect().size
-	var tile_envelope = Constants.TILE_SIZE + Constants.TILE_MARGIN
-	var tile_bounds = display_size / Constants.MAP_BOUNDARIES.size
-	var scale_factor = floor(min(tile_bounds.x, tile_bounds.y)/ tile_envelope)
-	var scaled_size = scale_factor * tile_envelope
+	var stateview = get_node("%state_view")
 	var current_state = history.get_states()[cursor]
+
+	if do_hard_refresh:
+		stateview.init_view(current_state, map)
+	else:
+		stateview.update_view(current_state)
 
 	var events =  history.get_events()
 	var time = events[min(cursor, events.size() - 1)].timestamp
 	get_node("%timestamp").text = "%d" % time
-	
-	if _hard_refresh:
-		allocate_sprites(current_state)
-
-	var n = current_state.actors.size()
-	for i in n:
-		var actor = current_state.actors[i]
-		sprites[i].position = actor.location * scaled_size
-		sprites[i].scale = Vector2(scale_factor, scale_factor)
-		sprites[i].visible = actor.is_alive()
-		
-	map.updateSprites(scaled_size, scale_factor)
 
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = cursor
