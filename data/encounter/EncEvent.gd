@@ -8,6 +8,7 @@ static func move_event(timestamp:int , actor: CombatEntity, move_to: Vector2) ->
 	set_actor(evt, actor)
 	evt.target_location = move_to
 	evt.timestamp = timestamp
+	print("moved to: {0},{1} {2} ".format([move_to.x, move_to.y, evt.actor_idx]))
 	return evt
 
 static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEntity, damage) -> EncounterEvent:

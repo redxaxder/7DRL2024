@@ -12,7 +12,7 @@ const turn_limit = 500
 # are we in the history view (false)?
 var gonogo: bool = false
 var gameover: bool = false
-
+var map = Map.new()
 
 func _ready():
 # warning-ignore:return_value_discarded
@@ -98,7 +98,8 @@ func make_encounter(use_seed: int = 0):
 
 	seed(encounter_seed)
 	get_node("%history_view").clear()
-	var map = Map.new()
+	
+	map.generate()
 
 	var state = EncounterState.new()
 	var player = CombatEntity.new()
@@ -106,16 +107,12 @@ func make_encounter(use_seed: int = 0):
 	player.actor_type = Actor.Type.Player
 	assert(player_hp > 0)
 	player.cur_hp = player_hp
-	state.add_actor(player, Vector2(1, 1))
+	state.add_actor(player, map.random_passable_tile(state).loc)
 	
 
 	for _i in range(randi() % 3 + 1):
 		var nme = create_enemy()
-		var nme_loc = Vector2(randi() % 5 + 5, randi() % 10)
-		for _retry in 5: 
-			if state.lookup_actor(nme_loc) == null: break
-			nme_loc = Vector2(randi() % 5 + 5, randi() % 10)
-		state.add_actor(nme, nme_loc)
+		state.add_actor(nme, map.random_passable_tile(state).loc)
 	
 	driver = EncounterDriver.new()
 	driver.initialize(state, map, encounter_seed)

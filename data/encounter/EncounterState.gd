@@ -26,6 +26,7 @@ func remove_actor(actor_ix: int):
 	a.location = Vector2(-1000,-1000)
 
 func add_actor(e: CombatEntity, loc: Vector2):
+	print("actor spawn: {0},{1}".format([loc.x, loc.y]))
 	var next_index = actors.size()
 	e.entity_index = next_index
 	actors.push_back(e)
@@ -33,9 +34,17 @@ func add_actor(e: CombatEntity, loc: Vector2):
 		set_location(next_index, loc)
 		e.time_spent = next_index
 
+func is_occupied(target_loc: Vector2):
+	return map.get(target_loc, null) != null
+
 func set_location(actor_id: int, target_loc: Vector2):
-	if map.get(target_loc, null) != null:
-		print("Colliding locations! {0}  {1}".format([actor_id, map.get(target_loc, null)]))
+	if is_occupied(target_loc):
+		print("Colliding locations! {0}  {1} at {2},{3}".format([
+			actor_id,
+			map.get(target_loc, null),
+			target_loc.x,
+			target_loc.y
+		]))
 		push_error("Colliding locations! The explosion envelops all.")
 		assert(false)
 	var a = actors[actor_id]

@@ -8,6 +8,8 @@ class_name Tile
 
 var x: int
 var y: int
+var loc: Vector2
+var xy: String
 var passable: bool
 var sprite
 
@@ -22,6 +24,8 @@ func _init(p_x, p_y, p_passable):
 	x = p_x;
 	y = p_y;
 	passable = p_passable;
+	loc = Vector2(x,y)
+	xy = "{0}-{1}".format([x,y])
 	
 	if(passable):
 		sprite = floor_sprite.instance()

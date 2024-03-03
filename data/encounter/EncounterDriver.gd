@@ -26,7 +26,6 @@ func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 	
 	cur_state = state
 	map = p_map
-	map.generate()
 	
 	for actor in cur_state.actors:
 		queue.insert(actor, actor.time_spent)
@@ -54,7 +53,7 @@ func tick() -> bool:
 		return false
 	# 2. run its AI
 	#    AI produces an EncounterEvent
-	var evt: EncounterEvent = tick_ai(actor)
+	var evt: EncounterEvent = tick_ai(actor, cur_state)
 
 	# 3. record that event
 	while evt != null:
@@ -69,7 +68,7 @@ func tick() -> bool:
 	
 	return true
 
-func tick_ai(actor: CombatEntity) -> EncounterEvent:
+func tick_ai(actor: CombatEntity, cur_state: EncounterState) -> EncounterEvent:
 	#1. can I attack?
 	#   Yes - attack and return attack event
 	var targets: Array = []
@@ -202,6 +201,8 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 func gen_move(actor: CombatEntity) -> EncounterEvent:
 	var move_to = breadth_first_search(actor.location, actor.faction)
 	if move_to != Vector2.ZERO:
+#		if map.get(move_to, null) != null:
+#			pass
 		return EncEvent.move_event(current_time, actor, move_to)
 	#move randomly
 	else:
