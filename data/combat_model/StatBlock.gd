@@ -19,7 +19,6 @@ func _get_brawn():
 	for bonus in bonuses:
 		if bonus.bonus_kind == Skill.BonusKind.Brawn:
 			accumulated_power += bonus.bonus_power
-			print("bonus applied")
 	return brawn + accumulated_power
 	
 func _get_brains():

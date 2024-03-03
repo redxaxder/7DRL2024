@@ -51,12 +51,13 @@ func create_enemy() -> CombatEntity:
 	return nme
 
 func insert_entity(e: CombatEntity, loc: Vector2):
-	e.entity_index = cur_idx
-	cur_state.actors.push_back(e)
-	cur_state.set_location(cur_idx, loc)
-	queue.insert(e, 0)
-	e.time_spent = cur_idx
-	cur_idx += 1
+	if !cur_state.map.has(loc):
+		e.entity_index = cur_idx
+		cur_state.actors.push_back(e)
+		cur_state.set_location(cur_idx, loc)
+		queue.insert(e, 0)
+		e.time_spent = cur_idx
+		cur_idx += 1
 
 
 func tick() -> bool:
