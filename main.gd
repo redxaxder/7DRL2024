@@ -25,6 +25,10 @@ func _ready():
 	get_node("%RESTART").connect("pressed",self,"restart")
 # warning-ignore:return_value_discarded
 	get_node("%history_view").connect("updated", self, "history_scroll")
+# warning-ignore:return_value_discarded
+	get_node("%CloseButton").connect("pressed", self, "toggle_skill_tree")
+# warning-ignore:return_value_discarded
+	get_node("%OpenSkillTree").connect("pressed", self, "toggle_skill_tree")
 	new_game()
 
 
@@ -34,7 +38,7 @@ func new_game():
 
 	skill_tree = SkillTree.new()
 	skill_tree.hand_rolled_skill_tree()
-	skill_tree.unlock(skill_tree.skills[0][0])
+	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = StatBlock.new()
 	var s = Actor.STAT_BLOCKS[Actor.Type.Player]
 	player_stats.initialize(s[0],s[1],s[2],s[3],s[4],s[5])
@@ -53,6 +57,16 @@ func update_button_visibility():
 	get_node("%RESTART").visible = gameover
 
 func go():
+	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lashed out!")
+	var player = driver.cur_state.get_player()
+	player.append_ability(abil)
+	for skill in skill_tree.unlocks:
+		if skill.kind == Skill.SkillKind.Ability:
+			player.append_ability(skill.ability)
+		elif skill.kind == Skill.SkillKind.Bonus:
+			player.append_bonus(skill.bonus)
+	while driver.tick() and driver.history.size() < turn_limit:
+		pass
 	get_node("%history_view").view(driver.history, driver.map)
 	gonogo = false
 	update_button_visibility()
@@ -87,15 +101,8 @@ func make_encounter(use_seed: int = 0):
 	var player = CombatEntity.new()
 	player.initialize_with_block(player_stats, Constants.PLAYER_FACTION)
 	player.actor_type = Actor.Type.Player
-	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lashed out!")
-	player.append_ability(abil)
 	assert(player_hp > 0)
 	player.cur_hp = player_hp
-	for skill in skill_tree.unlocks:
-		if skill.kind == Skill.SkillKind.Ability:
-			player.append_ability(skill.ability)
-		elif skill.kind == Skill.SkillKind.Bonus:
-			player.append_bonus(skill.bonus)
 	state.add_actor(player, Vector2(1, 1))
 	
 
@@ -109,9 +116,7 @@ func make_encounter(use_seed: int = 0):
 	
 	driver = EncounterDriver.new()
 	driver.initialize(state, map, encounter_seed)
-	while driver.tick() and driver.history.size() < turn_limit:
-		pass
-	get_node("%state_view").init_view(driver.history.initial(), map)
+	get_node("%state_view").init_view(DataUtil.deep_dup(state), map)
 	gonogo = true
 	update_button_visibility()
 
@@ -123,4 +128,5 @@ func create_enemy() -> CombatEntity:
 	nme.actor_type = Actor.get_type(reference_nme_idx)
 	return nme
 
-
+func toggle_skill_tree():
+	$SkillTreePanel.visible = !$SkillTreePanel.visible

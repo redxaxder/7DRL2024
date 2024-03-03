@@ -1,6 +1,6 @@
 extends Control
 
-export var skill_tree: Resource = SkillTree.new()
+export var skill_tree: Resource
 
 var selected_skill : Skill
 var unlocked_skills: Dictionary
@@ -29,13 +29,24 @@ func _ready():
 		"Mastadon's Burly Glory",
 	]
 	
-	skill_tree.hand_rolled_skill_tree()
 #	for i in skill_tree.skillsPerRow:
 #		skill_tree.skills.append([])
 #
 	containers.append($VBoxContainer/SkillRow1)
 	containers.append($VBoxContainer/SkillRow2)
 	containers.append($VBoxContainer/SkillRow3)
+	$VBoxContainer/UnlockButton.visible = false
+# warning-ignore:return_value_discarded
+	$VBoxContainer/UnlockButton.connect("pressed", self, 'unlockSkill', [])
+
+func set_skills(st: SkillTree):
+	selected_skill = null
+	unlocked_skills = {}
+	available_skills = {}
+	for container in containers:
+		for button in container.get_children():
+			button.queue_free()
+	skill_tree = st
 	for i in skill_tree.skills.size():
 		for j in skill_tree.skills[i].size():
 			var skill = skill_tree.skills[i][j]
@@ -47,10 +58,6 @@ func _ready():
 #			$VBoxContainer/GridContainer.add_child(button)
 			button.rect_min_size = Vector2(100, 100)
 			print(button.rect_min_size)
-			
-	$VBoxContainer/UnlockButton.visible = false
-# warning-ignore:return_value_discarded
-	$VBoxContainer/UnlockButton.connect("pressed", self, 'unlockSkill', [])
 	
 	# make available first two columns
 	for i in skill_tree.skills.size():

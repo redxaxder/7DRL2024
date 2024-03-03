@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://playback/ViewHistory.tscn" type="PackedScene" id=2]
 [ext_resource path="res://playback/ViewState.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ViewSkillTree.tscn" type="PackedScene" id=4]
 
 [node name="main" type="Node2D"]
 script = ExtResource( 1 )
@@ -27,7 +28,7 @@ __meta__ = {
 [node name="GO" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 margin_right = 109.0
-margin_bottom = 93.0
+margin_bottom = 61.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -72,9 +73,9 @@ valign = 1
 
 [node name="NOGO" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
-margin_top = 97.0
+margin_top = 65.0
 margin_right = 109.0
-margin_bottom = 191.0
+margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -85,6 +86,36 @@ text = "NO GO"
 align = 1
 valign = 1
 
+[node name="OpenSkillTree" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 130.0
+margin_right = 109.0
+margin_bottom = 191.0
+size_flags_vertical = 3
+text = "Skill Tree"
+
 [node name="PopupPanel" type="PopupPanel" parent="."]
 margin_right = 8.0
 margin_bottom = 8.0
+
+[node name="SkillTreePanel" type="PanelContainer" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1024.0
+margin_bottom = 597.0
+
+[node name="ViewSkillTree" parent="SkillTreePanel" instance=ExtResource( 4 )]
+unique_name_in_owner = true
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 590.0
+
+[node name="CloseButton" type="Button" parent="SkillTreePanel/ViewSkillTree"]
+unique_name_in_owner = true
+margin_left = 902.0
+margin_top = 20.0
+margin_right = 995.0
+margin_bottom = 69.0
+text = "Close"
