@@ -87,7 +87,11 @@ func next():
 	step()
 
 func step():
-	var next = min(cursor+1, history.get_states().size() - 1) 
+	var loglines = get_node("%combat_log").get_children()
+	var n = history.get_states().size() - 1
+	var next = min(cursor+1,n)
+	while next < n-1 and !history.get_events()[next].is_animated():
+		next += 1
 	if next > cursor:
 		cursor = next
 		_refresh()

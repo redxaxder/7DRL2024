@@ -13,6 +13,12 @@ func is_displayed() -> bool:
 		EventKind.Move: return false
 		_: return true
 
+func is_animated() -> bool:
+	match kind:
+		EventKind.Move: return true
+		EventKind.Attack: return true
+		_: return false
+
 
 var kind
 
