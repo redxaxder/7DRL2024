@@ -10,7 +10,6 @@ const damage_fudge: float = 0.75
 var stats: StatBlock
 var faction: int
 var entity_index: int # duplicated from driver
-
 var actor_type: int
 
 # stats that do
@@ -58,3 +57,8 @@ func basic_attack_damage_to_other(other: CombatEntity) -> Array:
 	max_damage = int(max(max_damage, 0))
 	min_damage = int(max(min_damage, 0))
 	return [min_damage, max_damage]
+
+func acquire_bonus(skill: Skill):
+	assert(skill.kind == Skill.SkillKind.Bonus)
+	assert(skill.bonus_kind != Skill.BonusKind.None)
+	stats.bonuses.append(skill)

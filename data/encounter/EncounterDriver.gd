@@ -31,6 +31,7 @@ func initialize(use_seed: int = 0):
 	var player = CombatEntity.new()
 	player.initialize(15, 15, 30, 20, 10, 10, Constants.PLAYER_FACTION)
 	player.actor_type = Actor.Type.Player
+	player.acquire_bonus(SkillTree.create_bonus_skill(Skill.BonusKind.Brawn, 5))
 	insert_entity(player, Vector2(1, 1))
 	
 	for _i in range(3):

@@ -42,6 +42,7 @@ func _ready():
 			print(button.rect_min_size)
 			
 	$VBoxContainer/UnlockButton.visible = false
+# warning-ignore:return_value_discarded
 	$VBoxContainer/UnlockButton.connect("pressed", self, 'unlockSkill', [])
 	
 	# make available first two columns
