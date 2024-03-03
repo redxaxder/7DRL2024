@@ -4,7 +4,7 @@ class_name EncEvent
 static func move_event(timestamp:int , actor: CombatEntity, move_to: Vector2) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
-	evt.kind = EncounterEvent.EventKind.Move
+	evt.kind = EncounterEvent.Kind.Move
 	set_actor(evt, actor)
 	evt.target_location = move_to
 	evt.timestamp = timestamp
@@ -14,7 +14,7 @@ static func move_event(timestamp:int , actor: CombatEntity, move_to: Vector2) ->
 static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEntity, damage) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
-	evt.kind = EncounterEvent.EventKind.Attack
+	evt.kind = EncounterEvent.Kind.Attack
 	set_actor(evt, actor)
 	set_target(evt, target)
 	evt.damage = damage
@@ -24,7 +24,7 @@ static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEnti
 static func miss_event(timestamp: int, actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
-	evt.kind = EncounterEvent.EventKind.Attack
+	evt.kind = EncounterEvent.Kind.Attack
 	set_actor(evt, actor)
 	set_target(evt, target)
 	evt.timestamp = timestamp
@@ -33,7 +33,7 @@ static func miss_event(timestamp: int, actor: CombatEntity, target: CombatEntity
 static func death_event(timestamp: int, actor: CombatEntity) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
-	evt.kind = EncounterEvent.EventKind.Death
+	evt.kind = EncounterEvent.Kind.Death
 	set_actor(evt, actor)
 	evt.timestamp = timestamp
 	return evt
@@ -41,7 +41,7 @@ static func death_event(timestamp: int, actor: CombatEntity) -> EncounterEvent:
 static func damage_event(timestamp: int, target: CombatEntity, damage: int) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
-	evt.kind = EncounterEvent.EventKind.Damage
+	evt.kind = EncounterEvent.Kind.Damage
 	set_target(evt, target)
 	evt.timestamp = timestamp
 	evt.damage = damage
@@ -50,7 +50,7 @@ static func damage_event(timestamp: int, target: CombatEntity, damage: int) -> E
 static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability, target: Vector2) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
-	evt.kind = EncounterEvent.EventKind.AbilityActivation
+	evt.kind = EncounterEvent.Kind.AbilityActivation
 	set_actor(evt, actor)
 	evt.target_location = target
 	evt.ability = ability

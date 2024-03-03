@@ -104,16 +104,16 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 
 static func update(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
 	match event.kind:
-		EncounterEvent.EventKind.Move:
+		EncounterEvent.Kind.Move:
 			state.set_location(event.actor_idx, event.target_location)
-		EncounterEvent.EventKind.Attack:
+		EncounterEvent.Kind.Attack:
 			var target = state.actors[event.target_idx]
 			return deal_damage(target, event.damage, event.timestamp)
-		EncounterEvent.EventKind.Death:
+		EncounterEvent.Kind.Death:
 			state.remove_actor(event.actor_idx)
-		EncounterEvent.EventKind.AbilityActivation:
+		EncounterEvent.Kind.AbilityActivation:
 			return handle_ability_activation(state, event)
-		EncounterEvent.EventKind.Damage:
+		EncounterEvent.Kind.Damage:
 			var target = state.actors[event.target_idx]
 			state.resolve_attack(event.target_idx, event.damage)
 			if !target.is_alive():

@@ -61,9 +61,9 @@ func update_button_visibility():
 func go():
 	var player = driver.cur_state.get_player()
 	for skill in skill_tree.unlocks:
-		if skill.kind == Skill.SkillKind.Ability:
+		if skill.kind == Skill.Kind.Ability:
 			player.append_ability(skill.ability)
-		elif skill.kind == Skill.SkillKind.Bonus:
+		elif skill.kind == Skill.Kind.Bonus:
 			player.append_bonus(skill.bonus)
 	while driver.tick() and driver.history.size() < turn_limit:
 		pass

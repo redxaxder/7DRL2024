@@ -2,7 +2,7 @@ extends Resource
 
 class_name Bonus
 
-enum BonusKind {Brawn, Brains, Guts, Eyesight, Footwork, Hustle}
+enum Kind {Brawn, Brains, Guts, Eyesight, Footwork, Hustle}
 var kind
 var power: int = 0
 
@@ -17,17 +17,17 @@ func generate_description() -> String:
 	else:
 		description += "Permanently lowers "
 	match kind:
-		BonusKind.Brawn:
+		Kind.Brawn:
 			description += "Brawn"
-		BonusKind.Brains:
+		Kind.Brains:
 			description += "Brains"
-		BonusKind.Guts:
+		Kind.Guts:
 			description += "Guts"
-		BonusKind.Eyesight:
+		Kind.Eyesight:
 			description += "Eyesight"
-		BonusKind.Footwork:
+		Kind.Footwork:
 			description += "Footwork"
-		BonusKind.Hustle:
+		Kind.Hustle:
 			description += "Hustle"
 	if power > 0:
 		description += " by {0}".format([power])

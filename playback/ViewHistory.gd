@@ -61,15 +61,15 @@ func view(_history: EncounterHistory, _map: Map):
 
 func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
-		EncounterEvent.EventKind.Attack:
+		EncounterEvent.Kind.Attack:
 			return "{time}: {an} attacked {tn}!".format(evt.dict())
-		EncounterEvent.EventKind.Death:
+		EncounterEvent.Kind.Death:
 			return "{time}: {an} died!".format(evt.dict())
-		EncounterEvent.EventKind.Move:
+		EncounterEvent.Kind.Move:
 			return "{time}: {an} moved! -> {loc}".format(evt.dict())
-		EncounterEvent.EventKind.AbilityActivation:
+		EncounterEvent.Kind.AbilityActivation:
 			return "{time}: {an} activated ability {m}".format(evt.dict())
-		EncounterEvent.EventKind.Damage:
+		EncounterEvent.Kind.Damage:
 			return "{time}: {tn} took {d} damage!".format(evt.dict())
 	push_warning("Event not handled by logger! {0}".format([evt.kind]))
 	return ""

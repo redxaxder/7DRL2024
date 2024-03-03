@@ -4,21 +4,21 @@ class_name EncounterEvent
 
 # note: when an event is changed or added, the code that handles the
 # event is in EncounterDriver.update()
-enum EventKind {Attack, Move, Death, AbilityActivation, Damage}
+enum Kind {Attack, Move, Death, AbilityActivation, Damage}
 
 # Is this event's log message visible by default?
 func is_displayed() -> bool:
 	match kind:
-		EventKind.Move: return false
+		Kind.Move: return false
 		_: return true
 
 # When the sim is in playback mode, does it play this event 
 # normally or does it skip past it?
 func is_animated() -> bool:
 	match kind:
-		EventKind.Move: return true
-		EventKind.Attack: return true
-		EventKind.AbilityActivation: return true
+		Kind.Move: return true
+		Kind.Attack: return true
+		Kind.AbilityActivation: return true
 		_: return false
 
 

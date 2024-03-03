@@ -8,6 +8,7 @@ enum TargetKind {Self, Enemies, Allies, Any}
 enum TriggerEffectKind {Damage, Activated} # TODO add more
 enum AbilityEffectKind {Damage, Buff} # TODO add more
 enum BuffKind {Brawn, Brains, Guts, Eyesight, Footwork, Hustle}
+
 var trigger_target_kind
 var trigger_effect_kind
 var effect_kind

@@ -55,7 +55,7 @@ static func create_ability_skill(trigger_target, trigger, effect, power: int, ta
 	var ab = create_ability(trigger_target, trigger, effect, power, target, message, cooldown)
 	var skill = Skill.new()
 	skill.name = message
-	skill.kind = Skill.SkillKind.Ability
+	skill.kind = Skill.Kind.Ability
 	skill.ability = ab
 	return skill
 	
@@ -64,14 +64,14 @@ static func apply_buff(ability: Ability, buff_kind):
 	ability.buff_kind = buff_kind
 	
 static func apply_buff_to_skill(skill: Skill, buff_kind):
-	assert(skill.kind == Skill.SkillKind.Ability)
+	assert(skill.kind == Skill.Kind.Ability)
 	skill.ability.buff_kind = buff_kind
 	
 static func create_bonus_skill(bonus_kind, power: int, skill_name: String) -> Skill:
 	var bonus: Bonus = create_bonus(bonus_kind, power)
 	var skill = Skill.new()
 	skill.name = skill_name
-	skill.kind = Skill.SkillKind.Bonus
+	skill.kind = Skill.Kind.Bonus
 	skill.bonus = bonus
 	return skill
 
@@ -85,9 +85,9 @@ func hand_rolled_skill_tree():
 	apply_buff_to_skill(abil2, Ability.BuffKind.Brawn)
 	append_skill(abil2, 0)
 	append_skill(abil, 1)
-	append_skill(create_bonus_skill(Bonus.BonusKind.Brawn, 5, SkillName.generate_name()), 0)
-	append_skill(create_bonus_skill(Bonus.BonusKind.Brains, 5, SkillName.generate_name()), 1)
-	append_skill(create_bonus_skill(Bonus.BonusKind.Guts, 5, SkillName.generate_name()), 2)
-	append_skill(create_bonus_skill(Bonus.BonusKind.Eyesight, 5, SkillName.generate_name()), 0)
-	append_skill(create_bonus_skill(Bonus.BonusKind.Footwork, 5, SkillName.generate_name()), 1)
-	append_skill(create_bonus_skill(Bonus.BonusKind.Hustle, 5, SkillName.generate_name()), 2)
+	append_skill(create_bonus_skill(Bonus.Kind.Brawn, 5, SkillName.generate_name()), 0)
+	append_skill(create_bonus_skill(Bonus.Kind.Brains, 5, SkillName.generate_name()), 1)
+	append_skill(create_bonus_skill(Bonus.Kind.Guts, 5, SkillName.generate_name()), 2)
+	append_skill(create_bonus_skill(Bonus.Kind.Eyesight, 5, SkillName.generate_name()), 0)
+	append_skill(create_bonus_skill(Bonus.Kind.Footwork, 5, SkillName.generate_name()), 1)
+	append_skill(create_bonus_skill(Bonus.Kind.Hustle, 5, SkillName.generate_name()), 2)
