@@ -13,23 +13,38 @@ margin_bottom = 40.0
 custom_constants/separation = 30
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+visible = false
 margin_right = 56.0
 columns = 5
 
 [node name="SkillName" type="RichTextLabel" parent="VBoxContainer"]
-margin_top = 30.0
 margin_right = 56.0
-margin_bottom = 45.0
+margin_bottom = 15.0
 fit_content_height = true
 
 [node name="SkillDescription" type="RichTextLabel" parent="VBoxContainer"]
-margin_top = 75.0
+margin_top = 45.0
 margin_right = 56.0
-margin_bottom = 90.0
+margin_bottom = 60.0
 fit_content_height = true
 
 [node name="UnlockButton" type="Button" parent="VBoxContainer"]
-margin_top = 120.0
+margin_top = 90.0
+margin_right = 56.0
+margin_bottom = 110.0
+text = "Unlock"
+
+[node name="SkillRow1" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 140.0
 margin_right = 56.0
 margin_bottom = 140.0
-text = "Unlock"
+
+[node name="SkillRow2" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 170.0
+margin_right = 56.0
+margin_bottom = 170.0
+
+[node name="SkillRow3" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 200.0
+margin_right = 56.0
+margin_bottom = 200.0

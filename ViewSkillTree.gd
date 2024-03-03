@@ -5,6 +5,7 @@ export var skill_tree: Resource = SkillTree.new()
 var selected_skill : Skill
 var unlocked_skills: Dictionary
 var available_skills: Dictionary
+var containers: Array
 
 func _ready():
 	unlocked_skills = {}
@@ -28,16 +29,22 @@ func _ready():
 		"Mastadon's Burly Glory",
 	]
 	
-	for i in skill_tree.skillsPerRow:
-		skill_tree.skills.append([])
-		
-	for j in skill_tree.numRows:
-		for i in skill_tree.skillsPerRow:
-			var skill = skill_tree.addSkill(skill_names[j*skill_tree.skillsPerRow + i], i, j)
+	skill_tree.hand_rolled_skill_tree()
+#	for i in skill_tree.skillsPerRow:
+#		skill_tree.skills.append([])
+#
+	containers.append($VBoxContainer/SkillRow1)
+	containers.append($VBoxContainer/SkillRow2)
+	containers.append($VBoxContainer/SkillRow3)
+	for i in skill_tree.skills.size():
+		for j in skill_tree.skills[i].size():
+			var skill = skill_tree.skills[i][j]
+#			var skill = skill_tree.addSkill(skill_names[j*skill_tree.skillsPerRow + i], i, j)
 			print(skill)
 			var button = Button.new()
 			button.connect("pressed", self, 'selectSkill', [skill, button])
-			$VBoxContainer/GridContainer.add_child(button)
+			containers[i].add_child(button)
+#			$VBoxContainer/GridContainer.add_child(button)
 			button.rect_min_size = Vector2(100, 100)
 			print(button.rect_min_size)
 			
@@ -46,8 +53,8 @@ func _ready():
 	$VBoxContainer/UnlockButton.connect("pressed", self, 'unlockSkill', [])
 	
 	# make available first two columns
-	for i in 2:
-		for j in skill_tree.numRows:
+	for i in skill_tree.skills.size():
+		for j in skill_tree.skills[i].size():
 			markSkillAvailable(i, j)
 
 func _draw():
@@ -56,11 +63,12 @@ func _draw():
 	# 	-draw lines between skills
 	# 	-draw buttons as circles
 	
-	for i in skill_tree.skillsPerRow:
-		for j in skill_tree.numRows:
+	for i in skill_tree.skills.size():
+		for j in skill_tree.skills[i].size():
 			var skill : Skill = skill_tree.skills[i][j]
-			var buttonIndex = j*skill_tree.skillsPerRow + i
-			var button : Control = $VBoxContainer/GridContainer.get_child(buttonIndex)
+#			var buttonIndex = j*skill_tree.skills[i].size() + i
+#			var button : Control = $VBoxContainer/GridContainer.get_child(buttonIndex)
+			var button = containers[i].get_child(j)
 			button.text = skill.name[0]
 			
 			if(unlocked_skills.has(skill.name)):
@@ -131,8 +139,8 @@ func markSkillAvailable(i: int, j: int):
 	available_skills[neighbor_skill.name] = true
 	
 func unlockSkill():
-	for i in skill_tree.skillsPerRow:
-		for j in skill_tree.numRows:
+	for i in skill_tree.skills.size():
+		for j in skill_tree.skills[i].size():
 			if(selected_skill.name == skill_tree.skills[i][j].name):
 				markSkillAvailable(i+1,j)
 				markSkillAvailable(i+2,j)
@@ -140,4 +148,6 @@ func unlockSkill():
 				markSkillAvailable(i,j+1)
 	unlocked_skills[selected_skill.name] = true
 	selectSkill(selected_skill)
+	skill_tree.unlock(selected_skill)
 	_draw()
+	

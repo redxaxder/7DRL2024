@@ -2,6 +2,7 @@ extends Node2D
 
 var player_stats: StatBlock
 var player_hp: int = 20
+var skill_tree: SkillTree
 
 var driver: EncounterDriver
 
@@ -12,6 +13,9 @@ func _ready():
 	player_stats = StatBlock.new()
 	var s = Actor.STAT_BLOCKS[Actor.Type.Player]
 	player_stats.initialize(s[0],s[1],s[2],s[3],s[4],s[5])
+	skill_tree = SkillTree.new()
+	skill_tree.hand_rolled_skill_tree()
+	skill_tree.unlock(skill_tree.skills[0][0])
 
 # warning-ignore:return_value_discarded
 	get_node("%GO").connect("pressed",self,"go")
@@ -60,9 +64,17 @@ func make_encounter(use_seed: int = 0):
 	var player = CombatEntity.new()
 	player.initialize_with_block(player_stats, Constants.PLAYER_FACTION)
 	player.actor_type = Actor.Type.Player
+<<<<<<< HEAD
 	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lashed out!")
 	player.append_ability(abil)
 	player.cur_hp = player_hp
+=======
+	for skill in skill_tree.unlocks:
+		if skill.kind == Skill.SkillKind.Ability:
+			player.append_ability(skill.ability)
+		elif skill.kind == Skill.SkillKind.Bonus:
+			player.append_bonus(skill.bonus)
+>>>>>>> 66fcb62 (Skill unlocks, skill tree in main)
 	state.add_actor(player, Vector2(1, 1))
 	
 
