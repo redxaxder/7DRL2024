@@ -114,6 +114,8 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterEve
 			# check to see if the target has any abilities that respond to damage
 			var response: EncounterEvent = trigger_damage_ability(state, event)
 			if response != null:
+				assert(event.timestamp > 0)
+				assert(response.timestamp > 0)
 				return response
 		EncounterEvent.EventKind.Death:
 			state.remove_actor(event.actor_idx)

@@ -45,4 +45,5 @@ static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability,
 	evt.target_location = target
 	evt.ability = ability
 	evt.ab_name = ability.message
+	evt.timestamp = timestamp
 	return evt
