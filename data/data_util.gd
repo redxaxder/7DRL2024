@@ -69,7 +69,7 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterEve
 			state.resolve_attack(event.actor_idx, event.target_idx, event.damage)
 			var target = state.actors[event.target_idx]
 			if !target.is_alive():
-				return EncEvent.death_event(target)
+				return EncEvent.death_event(event.timestamp, target)
 		EncounterEvent.EventKind.Death:
 			state.remove_actor(event.actor_idx)
 	return null

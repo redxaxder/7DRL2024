@@ -22,3 +22,15 @@ var damage: int
 
 var target_location: Vector2
 
+var timestamp: int
+
+
+
+func dict() -> Dictionary:
+	return 	{
+		"a": actor_idx,
+		"t": target_idx,
+		"time": timestamp,
+		"d": damage,
+		"loc": target_location,
+	}

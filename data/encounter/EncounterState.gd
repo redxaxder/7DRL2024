@@ -9,6 +9,7 @@ var player: int
 var actors: Array # [CombatEntity]
 var map: Dictionary # [location Vector2, index in the actor array]
 					# represent walls etc with -1?
+var elapsed_time: int = 0
 
 func get_player() -> CombatEntity:
 	return actors[player]

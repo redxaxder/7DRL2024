@@ -5,8 +5,10 @@ class_name EncounterDriver
 
 const EncEvent = preload("res://data/encounter/EncEvent.gd")
 
+var current_time = 0
 var queue: PriorityQueue
 var cur_state: EncounterState
+
 const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1)]
 var history: EncounterHistory
 var cur_idx: int = 0
@@ -70,8 +72,6 @@ func tick() -> bool:
 
 	# 3. record that event
 	while evt != null:
-		if evt.kind == EncounterEvent.EventKind.Death:
-			print("a")
 		history.add_event(evt)
 	# warning-ignore:return_value_discarded
 		evt = DataUtil.update(cur_state, evt)
@@ -87,6 +87,7 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	#1. can I attack?
 	#   Yes - attack and return attack event
 	var targets: Array = []
+	current_time = actor.time_spent
 	for d in dirs:
 		var neighbor = actor.location + d
 		if !Constants.MAP_BOUNDARIES.has_point(neighbor):
@@ -157,11 +158,11 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
 		EncounterEvent.EventKind.Attack:
-			return "{0} attacked {1}! {2} damage!".format([evt.actor_idx, evt.target_idx, evt.damage])
+			return "{time}: {a} attacked {t}! {d} damage!".format(evt.dict())
 		EncounterEvent.EventKind.Death:
-			return "{0} died!".format([evt.actor_idx])
+			return "{time}: {a} died!".format(evt.dict())
 		EncounterEvent.EventKind.Move:
-			return "{0} moved! -> {1}".format([evt.actor_idx, evt.target_location])
+			return "{time}: {a} moved! -> {loc}".format(evt.dict())
 	push_warning("Event not handled by logger! {0}".format([evt.kind]))
 	return ""
 
@@ -169,19 +170,19 @@ func event_text(evt: EncounterEvent) -> String:
 func gen_move(actor: CombatEntity) -> EncounterEvent:
 	var move_to = breadth_first_search(actor.location, actor.faction)
 	if move_to != Vector2.ZERO:
-		return EncEvent.move_event(actor, move_to)
+		return EncEvent.move_event(current_time, actor, move_to)
 	#move randomly
 	else:
 		var dir = dirs[randi() % dirs.size()] # TODO track random state
 		move_to = actor.location + dir
-	return EncEvent.move_event(actor, move_to)
+	return EncEvent.move_event(current_time, actor, move_to)
 
 func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
 	if randf() < actor.chance_to_hit_other(target): # TODO track random state
 		var damage_range = actor.basic_attack_damage_to_other(target)
 		var damage = rand_range(damage_range[0], damage_range[1]) # TODO track random state
-		return EncEvent.attack_event(actor, target, damage)
+		return EncEvent.attack_event(current_time, actor, target, damage)
 	else:
-		return EncEvent.miss_event(actor, target)
+		return EncEvent.miss_event(current_time, actor, target)
 
 
