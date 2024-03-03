@@ -6,7 +6,7 @@ export var delta: int = 0
 
 # note: when an event is changed or added, the code that handles the
 # event is in DataUtil.update()
-enum EventKind {Attack, Move, Death}
+enum EventKind {Attack, Move, Death, Ability}
 
 func is_displayed() -> bool:
 	match kind:
@@ -24,7 +24,7 @@ var target_location: Vector2
 
 var timestamp: int
 
-
+var ability: Ability
 
 func dict() -> Dictionary:
 	return 	{

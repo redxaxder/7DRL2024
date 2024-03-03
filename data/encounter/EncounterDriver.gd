@@ -2,9 +2,6 @@ extends Resource
 
 class_name EncounterDriver
 
-
-const EncEvent = preload("res://data/encounter/EncEvent.gd")
-
 var current_time = 0
 var queue: PriorityQueue
 var cur_state: EncounterState
@@ -33,7 +30,8 @@ func initialize(use_seed: int = 0):
 	var player = CombatEntity.new()
 	player.initialize(15, 15, 30, 20, 10, 10, Constants.PLAYER_FACTION)
 	player.actor_type = Actor.Type.Player
-	player.acquire_bonus(SkillTree.create_bonus_skill(Skill.BonusKind.Brawn, 5))
+	player.append_bonus(SkillTree.create_bonus_skill(Bonus.BonusKind.Brawn, 5))
+	player.append_ability(SkillTree.create_ability_skill(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Counter!"))
 	insert_entity(player, Vector2(1, 1))
 	
 	for _i in range(3):
@@ -100,6 +98,14 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	#   Yes - attack and return attack event
 	var targets: Array = []
 	var dirs = []
+#	actor.abilities.shuffle()
+#	for ability in actor.abilities:
+#		var ability_targets: Array = cur_state.find_valid_targets(actor.entity_index, ability) #TODO
+#		if ability_targets.size() > 0:
+#			ability_targets.shuffle()
+#			var atarget = ability_targets[0]
+#			return use_ability(actor, atarget, ability)
+		
 	current_time = actor.time_spent
 	cardinal.shuffle()
 	diagonal.shuffle()
@@ -205,4 +211,5 @@ func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
 	else:
 		return EncEvent.miss_event(current_time, actor, target)
 
-
+func use_ability(actor: CombatEntity, target: Vector2, ability: Ability) -> EncounterEvent:
+	return EncEvent.ability_event(current_time, actor, ability, target)

@@ -40,3 +40,32 @@ func set_location(actor_id: int, target_loc: Vector2):
 func resolve_attack(_actor_id: int, target_id: int, damage: int):
 	var target: CombatEntity = actors[target_id]
 	target.cur_hp -= damage
+	
+func find_valid_targets(actor_id: int, ability: Ability) -> Array:
+	var faction_mask: int = 0
+	match ability.ability_target_kind:
+		Ability.TargetKind.Self:
+			return [actors[actor_id].location]
+		Ability.TargetKind.Any:
+			# locations should be all of the locations in ability.range such that
+			# there is one valid target within the ability radius
+			faction_mask = Constants.ANY_FACTION
+		Ability.TargetKind.Enemies:
+			faction_mask = Constants.negate_faction(actors[actor_id].faction)
+		Ability.TargetKind.Allies:
+			faction_mask = actors[actor_id].faction
+	var position = actors[actor_id].location
+	var locations = []
+	for x in range(position.x - ability.ability_range, position.x + ability.ability_range + 1):
+		for y in range(position.y - ability.ability_range, position.y + ability.ability_range + 1):
+			if has_location_in_range(Vector2(x, y), ability.aoe_radius, faction_mask):
+				locations.append(Vector2(x, y))
+	return locations
+
+func has_location_in_range(location: Vector2, radius: int, faction_mask: int):
+	for actor in actors: 
+		var vec: Vector2 = (actor.location - location).abs()
+		var distance = max(vec.x, vec.y)
+		if distance <= radius and Constants.matches_mask(actor.faction, faction_mask):
+			return true
+	return false

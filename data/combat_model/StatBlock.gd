@@ -17,42 +17,42 @@ var bonuses: Array
 func _get_brawn():
 	var accumulated_power: int = 0
 	for bonus in bonuses:
-		if bonus.bonus_kind == Skill.BonusKind.Brawn:
+		if bonus.bonus_kind == Bonus.BonusKind.Brawn:
 			accumulated_power += bonus.bonus_power
 	return brawn + accumulated_power
 	
 func _get_brains():
 	var accumulated_power: int = 0
 	for bonus in bonuses:
-		if bonus.bonus_kind == Skill.BonusKind.Brains:
+		if bonus.bonus_kind == Bonus.BonusKind.Brains:
 			accumulated_power += bonus.bonus_power
 	return brains + accumulated_power
 	
 func _get_guts():
 	var accumulated_power: int = 0
 	for bonus in bonuses:
-		if bonus.bonus_kind == Skill.BonusKind.Guts:
+		if bonus.bonus_kind == Bonus.BonusKind.Guts:
 			accumulated_power += bonus.bonus_power
 	return guts + accumulated_power
 	
 func _get_eyesight():
 	var accumulated_power: int = 0
 	for bonus in bonuses:
-		if bonus.bonus_kind == Skill.BonusKind.Eyesight:
+		if bonus.bonus_kind == Bonus.BonusKind.Eyesight:
 			accumulated_power += bonus.bonus_power
 	return eyesight + accumulated_power
 	
 func _get_footwork():
 	var accumulated_power: int = 0
 	for bonus in bonuses:
-		if bonus.bonus_kind == Skill.BonusKind.Footwork:
+		if bonus.bonus_kind == Bonus.BonusKind.Footwork:
 			accumulated_power += bonus.bonus_power
 	return footwork + accumulated_power
 	
 func _get_hustle():
 	var accumulated_power: int = 0
 	for bonus in bonuses:
-		if bonus.bonus_kind == Skill.BonusKind.Hustle:
+		if bonus.bonus_kind == Bonus.BonusKind.Hustle:
 			accumulated_power += bonus.bonus_power
 	return hustle + accumulated_power
 

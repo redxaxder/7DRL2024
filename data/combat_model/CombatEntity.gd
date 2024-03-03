@@ -11,6 +11,7 @@ var stats: StatBlock
 var faction: int
 var entity_index: int # duplicated from driver
 var actor_type: int
+var abilities: Array
 
 # stats that do
 var cur_hp: int
@@ -58,7 +59,8 @@ func basic_attack_damage_to_other(other: CombatEntity) -> Array:
 	min_damage = int(max(min_damage, 0))
 	return [min_damage, max_damage]
 
-func acquire_bonus(skill: Skill):
-	assert(skill.kind == Skill.SkillKind.Bonus)
-	assert(skill.bonus_kind != Skill.BonusKind.None)
+func append_bonus(skill: Bonus):
 	stats.bonuses.append(skill)
+	
+func append_ability(skill: Ability):
+	abilities.append(skill)

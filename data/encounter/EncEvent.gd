@@ -1,3 +1,4 @@
+class_name EncEvent
 
 # constructors for events
 static func move_event(timestamp:int , actor: CombatEntity, move_to: Vector2) -> EncounterEvent:
@@ -34,4 +35,12 @@ static func death_event(timestamp: int, actor: CombatEntity) -> EncounterEvent:
 	evt.kind = EncounterEvent.EventKind.Death
 	evt.actor_idx = actor.entity_index
 	evt.timestamp = timestamp
+	return evt
+
+static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability, target: Vector2) -> EncounterEvent:
+	var evt = EncounterEvent.new()
+	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
+	evt.actor_idx = actor.entity_index
+	evt.target_location = target
+	evt.ability = ability
 	return evt
