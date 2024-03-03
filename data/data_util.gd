@@ -37,8 +37,11 @@ static func deep_dup(what):
 			_:  it = what
 	return it
 
+const favored_script = "res://data/skills/Skill.gd"
 static func dup_object(o: Object) -> Object:
-	var script = o.get_script()
+	var script: Script = o.get_script()
+	#WARNING: this will fail if the script has arguments in its
+	# _init function
 	var new = script.new()
 	var props = o.get_property_list()
 	for prop_info in props:

@@ -11,8 +11,6 @@ var bonus_power: int = 0
 
 export var name: String
 
-func _init(skillName: String):
-	name = skillName
 	
 func initialize_bonus(bkind, power: int):
 	assert(bkind != BonusKind.None && bkind <= BonusKind.Hustle)
