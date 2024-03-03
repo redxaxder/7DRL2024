@@ -6,6 +6,7 @@ var playback_speed = 5
 var d
 var cursor: int = 0
 var history: EncounterHistory
+var map: Map
 func _ready():
 	randomize()
 # warning-ignore:return_value_discarded
@@ -27,7 +28,11 @@ func _ready():
 	progressbar.connect("scrolling", self, "progress_bar_scroll")
 
 	var driver = EncounterDriver.new()
-	driver.initialize()
+
+	map = Map.new()
+	driver.initialize(0, map)
+	map.createSprites(get_node("%display"))
+	
 	while driver.tick() and driver.history.size() < turn_limit:
 		pass
 	
@@ -165,6 +170,8 @@ func _refresh(_hard_refresh: bool = false):
 		sprites[i].position = actor.location * scaled_size
 		sprites[i].scale = Vector2(scale_factor, scale_factor)
 		sprites[i].visible = actor.is_alive()
+		
+	map.updateSprites(scaled_size, scale_factor)
 
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = cursor

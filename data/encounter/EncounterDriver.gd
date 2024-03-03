@@ -2,6 +2,10 @@ extends Resource
 
 class_name EncounterDriver
 
+
+const EncEvent = preload("res://data/encounter/EncEvent.gd")
+const Map = preload("res://data/map/Map.gd")
+
 var current_time = 0
 var queue: PriorityQueue
 var cur_state: EncounterState
@@ -12,9 +16,10 @@ const diagonal: Array = [Vector2(1, 1), Vector2(-1, 1), Vector2(-1, -1), Vector2
 var history: EncounterHistory
 var cur_idx: int = 0
 
+var map: Map
 
 var encounter_seed
-func initialize(use_seed: int = 0):
+func initialize(use_seed: int = 0, p_map: Map = null):
 	if use_seed == 0:
 		encounter_seed = randi()
 	else:
@@ -24,6 +29,9 @@ func initialize(use_seed: int = 0):
 	queue = PriorityQueue.new()
 	cur_state = EncounterState.new()
 	history = EncounterHistory.new()
+	
+	map = p_map
+	map.generate()
 	
 	cur_state.actors = []
 	
@@ -113,8 +121,10 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	dirs.append_array(diagonal)
 	for d in dirs:
 		var neighbor = actor.location + d
-		if !Constants.MAP_BOUNDARIES.has_point(neighbor):
+		if !Constants.MAP_BOUNDARIES.has_point(neighbor) || !map.is_passable(neighbor):
 			continue
+		if(neighbor.y < 0):
+			pass
 		var target = cur_state.lookup_actor(neighbor)
 		if target and target.faction != actor.faction:
 			targets.push_back(target)

@@ -65,6 +65,16 @@ _global_script_classes=[ {
 "path": "res://data/encounter/EncounterState.gd"
 }, {
 "base": "Resource",
+"class": "Foo",
+"language": "GDScript",
+"path": "res://data/map/Foo.gd"
+}, {
+"base": "Resource",
+"class": "Map",
+"language": "GDScript",
+"path": "res://data/map/Map.gd"
+}, {
+"base": "Resource",
 "class": "PriorityQueue",
 "language": "GDScript",
 "path": "res://misc/priority_queue.gd"
@@ -83,6 +93,11 @@ _global_script_classes=[ {
 "class": "StatBlock",
 "language": "GDScript",
 "path": "res://data/combat_model/StatBlock.gd"
+}, {
+"base": "Resource",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://data/map/Tile.gd"
 } ]
 _global_script_class_icons={
 "Ability": "",
@@ -96,21 +111,29 @@ _global_script_class_icons={
 "EncounterEvent": "",
 "EncounterHistory": "",
 "EncounterState": "",
+"Foo": "",
+"Map": "",
 "PriorityQueue": "",
 "Skill": "",
 "SkillTree": "",
-"StatBlock": ""
+"StatBlock": "",
+"Tile": ""
 }
 
 [application]
 
 config/name="7DRL2024"
-run/main_scene="res://ViewSkillTree.tscn"
+run/main_scene="res://playback/ViewHistory.tscn"
 config/icon="res://icon.png"
 
 [display]
 
 window/stretch/aspect="keep"
+
+[global]
+
+scen=false
+scene=false
 
 [gui]
 
@@ -184,11 +207,6 @@ texture={
 "size_limit": 0,
 "stream": false,
 "svg/scale": 1.0
-}
-toggle={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":32,"unicode":0,"echo":false,"script":null)
- ]
 }
 
 [physics]

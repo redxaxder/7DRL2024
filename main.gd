@@ -5,7 +5,3 @@ func _ready():
 	
 	var driver = EncounterDriver.new()
 	driver.initialize()
-	
-	
-
-
