@@ -99,18 +99,27 @@ func allocate_sprites(s: EncounterState):
 		get_node("%display").add_child(sprite)
 		sprite.position = Vector2(100,100)
 
+
 # hard refresh for viewing new encounters
 # ordinary refresh for viewing different state of same encounter
 func _hard_refresh(): _refresh(true)
 func _refresh(_hard_refresh: bool = false):
+	var display = get_node("%display")
+	var display_size: Vector2 = display.get_rect().size
+	var tile_envelope = Constants.TILE_SIZE + Constants.TILE_MARGIN
+	var tile_bounds = display_size / Constants.MAP_BOUNDARIES.size
+	var scale_factor = floor(min(tile_bounds.x, tile_bounds.y)/ tile_envelope)
+	var scaled_size = scale_factor * tile_envelope
 	var current_state = history.get_states()[cursor]
+
 	if _hard_refresh:
 		allocate_sprites(current_state)
 
 	var n = current_state.actors.size()
 	for i in n:
 		var actor = current_state.actors[i]
-		sprites[i].position = actor.location * 50
+		sprites[i].position = actor.location * scaled_size
+		sprites[i].scale = Vector2(scale_factor, scale_factor)
 		sprites[i].visible = actor.is_alive()
 
 	var progressbar = get_node("%progress_bar")

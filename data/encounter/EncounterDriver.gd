@@ -89,6 +89,8 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	var targets: Array = []
 	for d in dirs:
 		var neighbor = actor.location + d
+		if !Constants.MAP_BOUNDARIES.has_point(neighbor):
+			continue
 		var target = cur_state.lookup_actor(neighbor)
 		if target and target.faction != actor.faction:
 			targets.push_back(target)

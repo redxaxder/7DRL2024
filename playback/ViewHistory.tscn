@@ -15,8 +15,10 @@ script = ExtResource( 1 )
 
 [node name="display" type="Control" parent="."]
 unique_name_in_owner = true
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 88.0
+margin_top = 23.0
+margin_right = 905.0
+margin_bottom = 379.0
 
 [node name="progress_bar" type="HScrollBar" parent="."]
 unique_name_in_owner = true
