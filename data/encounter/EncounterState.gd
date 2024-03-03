@@ -85,3 +85,9 @@ func has_location_in_range(location: Vector2, radius: int, faction_mask: int):
 		if distance <= radius and Constants.matches_mask(actor.faction, faction_mask):
 			return true
 	return false
+
+# state.resolve_buff(target.entity_index, ability.buff_kind, ability.power)
+func resolve_buff(actor_id: int, buff_kind, power: int):
+	assert(buff_kind != null)
+	var bonus: Bonus = SkillTree.create_bonus(buff_kind, power)
+	actors[actor_id].append_bonus(bonus)

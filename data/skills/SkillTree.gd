@@ -45,10 +45,15 @@ static func create_bonus(bonus_kind, power: int) -> Bonus:
 	skill.initialize_bonus(bonus_kind, power)
 	return skill
 
-static func create_ability(trigger_target, trigger, effect, power, target, message) -> Ability:
+static func create_ability(trigger_target, trigger, effect, power: int, target, message: String, cooldown: int) -> Ability:
+	assert(cooldown >= 0)
 	var skill = Ability.new()
-	skill.initialize_ability(trigger_target, trigger, effect, power, target, message)
+	skill.initialize_ability(trigger_target, trigger, effect, power, target, message, cooldown)
 	return skill
+	
+static func apply_buff(ability: Ability, buff_kind):
+	assert(buff_kind != null)
+	ability.buff_kind = buff_kind
 	
 static func create_bonus_skill(bonus_kind, power: int, skill_name: String) -> Skill:
 	var bonus: Bonus = create_bonus(bonus_kind, power)

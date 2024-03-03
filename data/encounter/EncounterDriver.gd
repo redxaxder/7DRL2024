@@ -79,7 +79,8 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 		if ability.trigger_effect_kind == Ability.TriggerEffectKind.Activated:
 			var atarget = cur_state.get_ability_target(actor.entity_index, ability)
 			if atarget != Vector2.INF:
-				return use_ability(actor, atarget, ability)
+				var ab_evt = use_ability(actor, atarget, ability, current_time)
+				if ab_evt != null: return ab_evt
 		
 	current_time = actor.time_spent
 	cardinal.shuffle()
@@ -125,13 +126,15 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterEve
 	
 static func handle_ability_activation(state: EncounterState, event: EncounterEvent):
 	var ability = event.ability
-	match ability.effect_kind:
-		Ability.AbilityEffectKind.Damage:
-			var target = state.lookup_actor(event.target_location)
-			if target != null:
+	var target = state.lookup_actor(event.target_location)
+	if target != null:
+		match ability.effect_kind:
+			Ability.AbilityEffectKind.Damage:
 				state.resolve_attack(event.actor_idx, target.entity_index, ability.power)
 				if !target.is_alive():
 					return EncEvent.death_event(event.timestamp, target)
+			Ability.AbilityEffectKind.Buff:
+				state.resolve_buff(target.entity_index, ability.buff_kind, ability.power)
 
 static func trigger_damage_ability(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
 	if event.damage > 0:
@@ -140,7 +143,7 @@ static func trigger_damage_ability(state: EncounterState, event: EncounterEvent)
 			if ab.trigger_effect_kind == Ability.TriggerEffectKind.Damage && ab.trigger_target_kind == Ability.TargetKind.Self:
 				var atarget = state.get_ability_target(responder.entity_index, ab)
 				if atarget != Vector2.INF:
-					return EncEvent.ability_event(event.timestamp, responder, ab, atarget)
+					return use_ability(responder, atarget, ab, event.timestamp)
 	return null
 	
 const max_dist = 10
@@ -217,5 +220,9 @@ func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
 	else:
 		return EncEvent.miss_event(current_time, actor, target)
 
-func use_ability(actor: CombatEntity, target: Vector2, ability: Ability) -> EncounterEvent:
-	return EncEvent.ability_event(current_time, actor, ability, target)
+static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> EncounterEvent:
+	if ability.on_cooldown():
+		ability.cool()
+		return null
+	ability.use()
+	return EncEvent.ability_event(timestamp, actor, ability, target)
