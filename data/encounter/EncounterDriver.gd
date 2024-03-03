@@ -10,6 +10,8 @@ var queue: PriorityQueue
 var cur_state: EncounterState
 
 const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1)]
+const cardinal: Array = [Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1)]
+const diagonal: Array = [Vector2(1, 1), Vector2(-1, 1), Vector2(-1, -1), Vector2(1, -1)]
 var history: EncounterHistory
 var cur_idx: int = 0
 
@@ -96,7 +98,12 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	#1. can I attack?
 	#   Yes - attack and return attack event
 	var targets: Array = []
+	var dirs = []
 	current_time = actor.time_spent
+	cardinal.shuffle()
+	diagonal.shuffle()
+	dirs.append_array(cardinal)
+	dirs.append_array(diagonal)
 	for d in dirs:
 		var neighbor = actor.location + d
 		if !Constants.MAP_BOUNDARIES.has_point(neighbor):
@@ -120,7 +127,6 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 	var dist: int = 1
 	var frontier = [start]
 	var visited: Dictionary = {}
-	var directions = dirs.duplicate()
 	var breadcrumbs: Dictionary = {}
 	var found_target = null
 	while dist < max_dist \
@@ -135,7 +141,11 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 			if target != null and target.faction != friendly_faction:
 				found_target = here
 				break;
-			directions.shuffle()
+			var directions = []
+			cardinal.shuffle()
+			diagonal.shuffle()
+			directions.append_array(cardinal)
+			directions.append_array(diagonal)
 			for direction in directions:
 				var neighbor = here + direction
 				# TODO: check if valid move
