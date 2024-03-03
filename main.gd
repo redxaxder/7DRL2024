@@ -42,7 +42,11 @@ func make_encounter():
 	
 	for _i in range(3):
 		var nme = create_enemy()
-		state.add_actor(nme, Vector2(randi() % 5 + 5, randi() % 10))
+		var nme_loc = Vector2(randi() % 5 + 5, randi() % 10)
+		for _retry in 5: 
+			if state.lookup_actor(nme_loc) == null: break
+			nme_loc = Vector2(randi() % 5 + 5, randi() % 10)
+		state.add_actor(nme, nme_loc)
 	
 	driver = EncounterDriver.new()
 	driver.initialize(state, map)

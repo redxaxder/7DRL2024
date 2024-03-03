@@ -3,10 +3,6 @@ extends Control
 export var state: Resource
 export var map: Resource
 
-func _ready():
-	var r = get_rect()
-	print(r)
-
 func init_view(s: EncounterState, m: Map):
 
 	var terrain = get_node("%terrain")
@@ -31,9 +27,7 @@ static func display_scale(display_size: Vector2, grid_size: Vector2) -> float:
 
 func update_view(s: EncounterState):
 	state = s
-	var r = get_rect()
-	print(r)
-	var display_size: Vector2 = r.size
+	var display_size: Vector2 = get_rect().size
 	var scale_factor = display_scale(display_size, Constants.MAP_BOUNDARIES.size)
 	var scaled_size = scale_factor * Constants.TILE_ENVELOPE
 #	assert(scale_factor > 0)
