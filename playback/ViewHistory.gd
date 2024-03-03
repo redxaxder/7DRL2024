@@ -39,15 +39,20 @@ func _ready():
 	progressbar.max_value = history.get_states().size() - 1
 
 	var events = driver.history.get_events()
+	add_log_message("0: Start!", 0)
 	var n = events.size()
 	for i in n:
 		var event = events[i]
-		var log_node = preload("res://playback/log_line.tscn").instance()
-		log_node.set_label(driver.event_text(event))
-		log_node.connect("pressed", self, "log_line_click", [i])
+		var log_node = add_log_message(driver.event_text(event), i)
 		log_node.visible = event.is_displayed()
-		get_node("%combat_log").add_child(log_node)
 	_hard_refresh()
+
+func add_log_message(text: String, index: int) -> Node:
+	var log_node = preload("res://playback/log_line.tscn").instance()
+	log_node.set_label(text)
+	log_node.connect("pressed", self, "log_line_click", [index])
+	get_node("%combat_log").add_child(log_node)
+	return log_node
 
 func play():
 	get_node("%play").visible = false
@@ -165,5 +170,11 @@ func _refresh(_hard_refresh: bool = false):
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = cursor
 	var loglines = get_node("%combat_log").get_children()
+	var highlighted_line = 0
 	for i in loglines.size():
-		loglines[i].highlighted = i == cursor
+		if i <= cursor and loglines[i].visible:
+			loglines[highlighted_line].highlighted = false
+			highlighted_line = i
+			loglines[i].highlighted = true
+		else:
+			loglines[i].highlighted = false
