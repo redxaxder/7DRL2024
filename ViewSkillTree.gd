@@ -127,7 +127,7 @@ func drawButtonDefault(button: Button):
 func selectSkill(skill: Skill, button: Button = null):
 	selected_skill = skill
 	$VBoxContainer/SkillName.text = skill.name
-	$VBoxContainer/SkillDescription.text = "Lorem ipsum"
+	$VBoxContainer/SkillDescription.text = skill.generate_description()
 		
 	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(skill.name)
 	
