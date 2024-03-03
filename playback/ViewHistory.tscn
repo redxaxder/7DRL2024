@@ -99,6 +99,6 @@ scroll_horizontal_enabled = false
 
 [node name="combat_log" type="VBoxContainer" parent="ScrollContainer"]
 unique_name_in_owner = true
-margin_right = 266.0
+margin_right = 254.0
 size_flags_horizontal = 3
 custom_constants/separation = 0

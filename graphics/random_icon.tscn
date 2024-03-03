@@ -2,8 +2,11 @@
 
 [ext_resource path="res://graphics/random_icon.gd" type="Script" id=1]
 
-[node name="random_icon" type="Control"]
+[node name="random_icon" type="Button"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -377.0
+margin_left = 533.0
+margin_top = 130.0
+margin_right = -479.0
+margin_bottom = -450.0
 script = ExtResource( 1 )

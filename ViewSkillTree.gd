@@ -52,8 +52,9 @@ func set_skills(st: SkillTree):
 			var skill = skill_tree.skills[i][j]
 #			var skill = skill_tree.addSkill(skill_names[j*skill_tree.skillsPerRow + i], i, j)
 			print(skill)
-			var button = Button.new()
+			var button = preload("res://graphics/random_icon.tscn").instance()
 			button.connect("pressed", self, 'selectSkill', [skill, button])
+			button.set_input(skill.name)
 			containers[i].add_child(button)
 			button.rect_min_size = Vector2(100, 100)
 			print(button.rect_min_size)
