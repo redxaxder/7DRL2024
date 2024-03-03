@@ -3,8 +3,8 @@ extends Control
 export var state: Resource
 export var map: Resource
 
-const actor_base_color: Color = Color(1,1,1)
-const subject_color: Color = Color(0.349911, 0.871094, 0.773372)
+const actor_base_color: Color = Color(0.75, 0.75, 0.75)
+const subject_color: Color = Color(1, 1, 1)
 const target_actor_color: Color = Color(0.871094, 0.740798, 0.349911)
 const target_location_color: Color = Color(0.439489, 0.349911, 0.871094)
 
@@ -35,6 +35,8 @@ static func display_scale(display_size: Vector2, grid_size: Vector2) -> float:
 	return scale_factor
 
 func update_view(s: EncounterState, what: EncounterEvent = null):
+	$reticle.visible = false
+	$reticle2.visible = false
 	state = s
 	get_node("%player_hp").text = "Hp: %d" % max(0,s.get_player().cur_hp)
 	var display_size: Vector2 = get_rect().size
@@ -51,15 +53,21 @@ func update_view(s: EncounterState, what: EncounterEvent = null):
 		actorsprites[i].visible = actor.is_alive()
 		if what and actor.entity_index == what.actor_idx:
 			actorsprites[i].modulate = subject_color
-		elif what and actor.entity_index == what.target_idx:
-			actorsprites[i].modulate = target_actor_color
 		else:
 			actorsprites[i].modulate = actor_base_color
+		if what and actor.entity_index == what.target_idx:
+			$reticle.scale = Vector2(scale_factor, scale_factor)
+			$reticle.position = actorsprites[i].position - $reticle.scale
+			$reticle.visible = true
+#			actorsprites[i].modulate = target_actor_color
 	if what and what.target_location != null \
 		and what.kind != EncounterEvent.EventKind.Move:
-		$location_highlight.rect_position = what.target_location * scaled_size
-		$location_highlight.visible = true
-		$location_highlight.rect_size = scaled_size * Vector2(1,1)
+		$reticle2.scale = Vector2(scale_factor, scale_factor)
+		$reticle2.position = what.target_location * scaled_size - $reticle2.scale
+		$reticle2.visible = true
+#		$location_highlight.rect_position = what.target_location * scaled_size
+#		$location_highlight.visible = true
+#		$location_highlight.rect_size = scaled_size * Vector2(1,1)
 	else:
 		$location_highlight.visible = false
 		

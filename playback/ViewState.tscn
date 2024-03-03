@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://playback/ViewState.gd" type="Script" id=1]
 [ext_resource path="res://fonts/CommitMono-400-Regular.otf" type="DynamicFontData" id=2]
+[ext_resource path="res://graphics/reticles/reticle.png" type="Texture" id=3]
+[ext_resource path="res://graphics/reticles/reticle2.png" type="Texture" id=4]
 
 [sub_resource type="DynamicFont" id=2]
 size = 24
@@ -41,3 +43,12 @@ anchor_bottom = 1.0
 margin_right = 40.0
 margin_bottom = 40.0
 custom_styles/panel = SubResource( 1 )
+
+[node name="reticle" type="Sprite" parent="."]
+texture = ExtResource( 3 )
+centered = false
+
+[node name="reticle2" type="Sprite" parent="."]
+modulate = Color( 0.572549, 1, 0.376471, 1 )
+texture = ExtResource( 4 )
+centered = false
