@@ -9,4 +9,6 @@ export var name: String
 
 var ability: Ability = null
 var bonus: Bonus = null
-	
+
+func generate_name():
+	pass

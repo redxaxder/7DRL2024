@@ -74,6 +74,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://data/map/Map.gd"
 }, {
+"base": "Reference",
+"class": "NameHint",
+"language": "GDScript",
+"path": "res://data/skills/NameHint.gd"
+}, {
 "base": "Resource",
 "class": "PriorityQueue",
 "language": "GDScript",
@@ -83,6 +88,11 @@ _global_script_classes=[ {
 "class": "Skill",
 "language": "GDScript",
 "path": "res://data/skills/Skill.gd"
+}, {
+"base": "Reference",
+"class": "SkillName",
+"language": "GDScript",
+"path": "res://data/skills/SkillName.gd"
 }, {
 "base": "Resource",
 "class": "SkillTree",
@@ -113,8 +123,10 @@ _global_script_class_icons={
 "EncounterState": "",
 "Foo": "",
 "Map": "",
+"NameHint": "",
 "PriorityQueue": "",
 "Skill": "",
+"SkillName": "",
 "SkillTree": "",
 "StatBlock": "",
 "Tile": ""

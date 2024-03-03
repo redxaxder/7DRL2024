@@ -2,6 +2,8 @@ extends Resource
 
 class_name Ability
 
+# debuffs are just buffs with negative power
+
 enum TargetKind {Self, Enemies, Allies, Any}
 enum TriggerEffectKind {Damage, Activated} # TODO add more
 enum AbilityEffectKind {Damage, Buff} # TODO add more

@@ -57,12 +57,7 @@ func update_button_visibility():
 	get_node("%RESTART").visible = gameover
 
 func go():
-	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lash Out", 0)
 	var player = driver.cur_state.get_player()
-	player.append_ability(abil)
-	var abil2 = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Activated, Ability.AbilityEffectKind.Buff, 1, Ability.TargetKind.Self, "Get Swole", 20)
-	SkillTree.apply_buff(abil2, Ability.BuffKind.Brawn)
-	player.append_ability(abil2)
 	for skill in skill_tree.unlocks:
 		if skill.kind == Skill.SkillKind.Ability:
 			player.append_ability(skill.ability)
