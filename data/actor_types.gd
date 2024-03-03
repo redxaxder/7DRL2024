@@ -5,6 +5,7 @@ enum Type{
 	Squid,
 	Blorp,
 	Snake,
+	Crab,
 	}
 
 const SPRITES = [ \
@@ -13,6 +14,7 @@ const SPRITES = [ \
 	preload("res://graphics/squid.tscn"),
 	preload("res://graphics/blorp.tscn"),
 	preload("res://graphics/snake.tscn"),
+	preload("res://graphics/crab.tscn"),
   ]
 
 # [brawn, brains, guts, eyesight, footwork, hustle]
@@ -22,6 +24,7 @@ const STAT_BLOCKS = [ \
 	[5, 15, 10, 10, 3, 3],
 	[5, 2, 12, 2, 2, 8],
 	[2, 8, 16, 8, 20, 15], # ironically snakes have incredible footwork
+	[12, 2, 15, 5, 15, 1]
 ]
 
 const NAMES = [ \
@@ -30,6 +33,7 @@ const NAMES = [ \
 	"Squid",
 	"Blorp",
 	"Snake",
+	"Crab",
 ]
 
 static func get_sprite(t) -> PackedScene:
@@ -47,6 +51,7 @@ static func get_type(t):
 		2: return Type.Squid
 		3: return Type.Blorp
 		4: return Type.Snake
+		5: return Type.Crab
 
 static func get_name(t):
 	return NAMES[t]

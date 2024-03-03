@@ -106,7 +106,7 @@ func make_encounter(use_seed: int = 0):
 	state.add_actor(player, Vector2(1, 1))
 	
 
-	for _i in range(3):
+	for _i in range(randi() % 3 + 1):
 		var nme = create_enemy()
 		var nme_loc = Vector2(randi() % 5 + 5, randi() % 10)
 		for _retry in 5: 
