@@ -28,7 +28,7 @@ const STAT_BLOCKS = [ \
 ]
 
 const NAMES = [ \
-	"Player",
+	"You",
 	"Wolf",
 	"Squid",
 	"Blorp",

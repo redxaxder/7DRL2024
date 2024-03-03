@@ -15,3 +15,6 @@ static func negate_faction(faction: int) -> int:
 
 static func matches_mask(faction: int, faction_mask: int) -> bool:
 	return faction & faction_mask > 0
+
+
+const CLEAR_COLOR: Color = Color(0.086275, 0.082353, 0.098039)

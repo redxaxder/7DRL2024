@@ -22,6 +22,7 @@ func lookup_actor(location: Vector2) -> CombatEntity:
 
 func remove_actor(actor_ix: int):
 	var a = actors[actor_ix]
+# warning-ignore:return_value_discarded
 	map.erase(a.location)
 	a.location = Vector2(-1000,-1000)
 

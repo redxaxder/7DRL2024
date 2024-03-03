@@ -90,18 +90,18 @@ func createSprites(display: Control):
 	for x in Constants.MAP_BOUNDARIES.size.x:
 		for y in Constants.MAP_BOUNDARIES.size.y:
 			var tile = tiles[x][y]
-			var sprite = tile.sprite
-			display.add_child(sprite)
-			sprite.position = Vector2(100 * x, 100 *y)
-			sprite.centered = false
+			var spr = tile.sprite
+			display.add_child(spr)
+			spr.position = Vector2(100 * x, 100 *y)
+			spr.centered = false
 
 func updateSprites(scaled_size, scale_factor):
 	for x in Constants.MAP_BOUNDARIES.size.x:
 		for y in Constants.MAP_BOUNDARIES.size.y:
 			var tile = tiles[x][y]
-			var sprite = tile.sprite
-			sprite.position = Vector2(x * scaled_size, y * scaled_size)
-			sprite.scale = Vector2(scale_factor, scale_factor)
+			var spr = tile.sprite
+			spr.position = Vector2(x * scaled_size, y * scaled_size)
+			spr.scale = Vector2(scale_factor, scale_factor)
 			# TODO: 
 		
 func can_move(loc: Vector2) -> bool:

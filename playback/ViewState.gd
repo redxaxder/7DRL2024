@@ -8,6 +8,9 @@ const subject_color: Color = Color(1, 1, 1)
 const target_actor_color: Color = Color(0.871094, 0.740798, 0.349911)
 const target_location_color: Color = Color(0.439489, 0.349911, 0.871094)
 
+signal actor_hovered(actor)
+
+
 func init_view(s: EncounterState, m: Map):
 	var terrain = get_node("%terrain")
 	for child in terrain.get_children():
@@ -25,9 +28,27 @@ func init_view(s: EncounterState, m: Map):
 		var actor = state.actors[i]
 		var sprite = Actor.get_sprite(actor.actor_type).instance()
 		actors.add_child(sprite)
-		sprite.position = Vector2(100,100)
 		sprite.centered = false
+		var hotspot = Control.new()
+		sprite.add_child(hotspot)
+		hotspot.rect_size = Constants.TILE_SIZE * Vector2(1,1)
+		hotspot.connect("mouse_entered", self, "actor_hover", [true, i])
+		hotspot.connect("mouse_exited", self, "actor_hover", [false, i])
 	update_view(s)
+
+var hover_index = -1
+func actor_hover(is_hover: bool, index: int):
+	if is_hover:
+		hover_index = index
+	elif index == hover_index:
+		hover_index = -1
+	emit_hover()
+
+func emit_hover():
+	if hover_index >= 0:
+		emit_signal("actor_hovered", state.actors[hover_index])
+	else:
+		emit_signal("actor_hovered", null)
 
 static func display_scale(display_size: Vector2, grid_size: Vector2) -> float:
 	var tile_bounds = display_size / grid_size
@@ -72,4 +93,5 @@ func update_view(s: EncounterState, what: EncounterEvent = null):
 		$location_highlight.visible = false
 		
 	map.updateSprites(scaled_size, scale_factor)
+	emit_hover()
 

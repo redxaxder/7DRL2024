@@ -91,11 +91,14 @@ margin_bottom = 518.0
 icon = ExtResource( 2 )
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
-margin_left = 794.0
+margin_left = 755.0
 margin_top = 4.0
-margin_right = 1016.0
-margin_bottom = 404.0
+margin_right = 1021.0
+margin_bottom = 424.0
+scroll_horizontal_enabled = false
 
 [node name="combat_log" type="VBoxContainer" parent="ScrollContainer"]
 unique_name_in_owner = true
+margin_right = 266.0
+size_flags_horizontal = 3
 custom_constants/separation = 0
