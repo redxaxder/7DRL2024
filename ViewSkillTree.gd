@@ -138,12 +138,17 @@ func selectSkill(skill: Skill, button: Button = null):
 		_draw()
 		drawButtonSelected(button)
 	
+
+func get_skill(i: int, j: int) -> Skill:
+	if i < 0 or i >= skill_tree.skills.size(): return null
+	var row = skill_tree.skills[i]
+	if j<0 or j >= row.size(): return null
+	return row[j]
+
 func markSkillAvailable(i: int, j: int):
-	if(i<0 || i >= skill_tree.skillsPerRow ||
-	j<0 || j >= skill_tree.numRows):
-		return
-	var neighbor_skill = skill_tree.skills[i][j]
-	available_skills[neighbor_skill.name] = true
+	var neighbor_skill = get_skill(i,j)
+	if neighbor_skill:
+		available_skills[neighbor_skill.name] = true
 	
 func unlockSkill():
 	for i in skill_tree.skills.size():
