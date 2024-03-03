@@ -1,10 +1,5 @@
 class_name DataUtil
 
-static func dup_state(s: EncounterState) -> EncounterState:
-	var new = deep_dup(s)
-	assert(new is EncounterState)
-	return new
-
 static func deep_dup(what):
 	var t = typeof(what)
 	var it
@@ -35,7 +30,6 @@ static func deep_dup(what):
 			_:  it = what
 	return it
 
-const favored_script = "res://data/skills/Skill.gd"
 static func dup_object(o: Object) -> Object:
 	var script: Script = o.get_script()
 	#WARNING: this will fail if the script has arguments in its
@@ -61,19 +55,6 @@ static func dup_dict(d: Dictionary) -> Dictionary:
 	for k in d.keys():
 		new[k] = deep_dup(d[k])
 	return new
-
-static func update(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
-	match event.kind:
-		EncounterEvent.EventKind.Move:
-			state.set_location(event.actor_idx, event.target_location)
-		EncounterEvent.EventKind.Attack:
-			state.resolve_attack(event.actor_idx, event.target_idx, event.damage)
-			var target = state.actors[event.target_idx]
-			if !target.is_alive():
-				return EncEvent.death_event(event.timestamp, target)
-		EncounterEvent.EventKind.Death:
-			state.remove_actor(event.actor_idx)
-	return null
 
 static func new_array() -> Array:
 	return []

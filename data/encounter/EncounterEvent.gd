@@ -5,7 +5,7 @@ class_name EncounterEvent
 export var delta: int = 0
 
 # note: when an event is changed or added, the code that handles the
-# event is in DataUtil.update()
+# event is in EncounterDriver.update()
 enum EventKind {Attack, Move, Death, AbilityActivation}
 
 # Is this event's log message visible by default?

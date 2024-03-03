@@ -28,7 +28,7 @@ func is_alive():
 	return (cur_hp > 0)
 
 func initialize_with_block(_stats: StatBlock, _faction: int):
-	stats = _stats
+	stats = DataUtil.deep_dup(_stats)
 	cur_hp = stats.max_hp()
 	faction = _faction
 

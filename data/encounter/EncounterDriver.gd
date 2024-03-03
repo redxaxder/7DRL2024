@@ -38,7 +38,7 @@ func initialize(use_seed: int = 0):
 		var nme = create_enemy()
 		insert_entity(nme, Vector2(randi() % 5 + 5, randi() % 10))
 	
-	history.add_state(DataUtil.dup_state(cur_state))
+	history.add_state(DataUtil.deep_dup(cur_state))
 	
 	
 func create_enemy() -> CombatEntity:
@@ -84,8 +84,8 @@ func tick() -> bool:
 	while evt != null:
 		history.add_event(evt)
 	# warning-ignore:return_value_discarded
-		evt = DataUtil.update(cur_state, evt)
-		history.add_state(DataUtil.dup_state(cur_state))
+		evt = update(cur_state, evt)
+		history.add_state(DataUtil.deep_dup(cur_state))
 
 	# 5. If actor is still alive, re-insert it into the priority queue
 	actor.time_spent += int(100.0 / float(actor.stats.speed()))
@@ -127,6 +127,20 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	else:
 		return gen_move(actor)
 
+
+
+static func update(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
+	match event.kind:
+		EncounterEvent.EventKind.Move:
+			state.set_location(event.actor_idx, event.target_location)
+		EncounterEvent.EventKind.Attack:
+			state.resolve_attack(event.actor_idx, event.target_idx, event.damage)
+			var target = state.actors[event.target_idx]
+			if !target.is_alive():
+				return EncEvent.death_event(event.timestamp, target)
+		EncounterEvent.EventKind.Death:
+			state.remove_actor(event.actor_idx)
+	return null
 
 
 const max_dist = 10
