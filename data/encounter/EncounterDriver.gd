@@ -30,8 +30,8 @@ func initialize(use_seed: int = 0):
 	var player = CombatEntity.new()
 	player.initialize(15, 15, 30, 20, 10, 10, Constants.PLAYER_FACTION)
 	player.actor_type = Actor.Type.Player
-	player.append_bonus(SkillTree.create_bonus_skill(Bonus.BonusKind.Brawn, 5))
-	player.append_ability(SkillTree.create_ability_skill(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Counter!"))
+	player.append_bonus(SkillTree.create_bonus(Bonus.BonusKind.Brawn, 5))
+	player.append_ability(SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Counter!"))
 	insert_entity(player, Vector2(1, 1))
 	
 	for _i in range(3):

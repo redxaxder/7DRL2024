@@ -1,7 +1,5 @@
 class_name DataUtil
 
-const EncEvent = preload("res://data/encounter/EncEvent.gd")
-
 static func dup_state(s: EncounterState) -> EncounterState:
 	var new = deep_dup(s)
 	assert(new is EncounterState)

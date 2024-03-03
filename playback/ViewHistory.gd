@@ -1,6 +1,6 @@
 extends Control
 
-const turn_limit = 100
+const turn_limit = 500
 var playback_speed = 5
 
 var d
@@ -31,14 +31,11 @@ func _ready():
 	while driver.tick() and driver.history.size() < turn_limit:
 		pass
 	
-
 	history = driver.history
-#	var last_state = history.get_states().pop_back()
-#	var it = last_state.get_player().is_alive()
-
 	progressbar.max_value = history.get_states().size() - 1
 
 	var events = driver.history.get_events()
+# warning-ignore:return_value_discarded
 	add_log_message("0: Start!", 0)
 	var n = events.size()
 	for i in n:
@@ -87,7 +84,6 @@ func next():
 	step()
 
 func step():
-	var loglines = get_node("%combat_log").get_children()
 	var n = history.get_states().size() - 1
 	var next = min(cursor+1,n)
 	while next < n-1 and !history.get_events()[next].is_animated():
@@ -143,7 +139,6 @@ func allocate_sprites(s: EncounterState):
 		sprites[i] = sprite
 		get_node("%display").add_child(sprite)
 		sprite.position = Vector2(100,100)
-
 
 # hard refresh for viewing new encounters
 # ordinary refresh for viewing different state of same encounter
