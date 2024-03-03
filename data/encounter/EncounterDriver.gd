@@ -3,9 +3,6 @@ extends Resource
 class_name EncounterDriver
 
 
-const EncEvent = preload("res://data/encounter/EncEvent.gd")
-const Map = preload("res://data/map/Map.gd")
-
 var current_time = 0
 var queue: PriorityQueue
 var cur_state: EncounterState
@@ -14,12 +11,11 @@ const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1)
 const cardinal: Array = [Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1)]
 const diagonal: Array = [Vector2(1, 1), Vector2(-1, 1), Vector2(-1, -1), Vector2(1, -1)]
 var history: EncounterHistory
-var cur_idx: int = 0
 
 var map: Map
 
 var encounter_seed
-func initialize(use_seed: int = 0, p_map: Map = null):
+func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 	if use_seed == 0:
 		encounter_seed = randi()
 	else:
@@ -27,43 +23,16 @@ func initialize(use_seed: int = 0, p_map: Map = null):
 	prints("encounter seed", encounter_seed)
 
 	queue = PriorityQueue.new()
-	cur_state = EncounterState.new()
 	history = EncounterHistory.new()
 	
+	cur_state = state
 	map = p_map
 	map.generate()
 	
-	cur_state.actors = []
-	
-	var player = CombatEntity.new()
-	player.initialize(15, 15, 30, 20, 10, 10, Constants.PLAYER_FACTION)
-	player.actor_type = Actor.Type.Player
-	player.append_bonus(SkillTree.create_bonus(Bonus.BonusKind.Brawn, 5))
-	player.append_ability(SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Counter!"))
-	insert_entity(player, Vector2(1, 1))
-	
-	for _i in range(3):
-		var nme = create_enemy()
-		insert_entity(nme, Vector2(randi() % 5 + 5, randi() % 10))
+	for actor in cur_state.actors:
+		queue.insert(actor, actor.time_spent)
 	
 	history.add_state(DataUtil.deep_dup(cur_state))
-	
-	
-func create_enemy() -> CombatEntity:
-	var nme = CombatEntity.new()
-	var reference_nme_idx = randi() % (Actor.Type.size() - 1) + 1
-	nme.initialize_with_block(Actor.get_stat_block(reference_nme_idx), Constants.ENEMY_FACTION)	
-	nme.actor_type = Actor.get_type(reference_nme_idx)
-	return nme
-
-func insert_entity(e: CombatEntity, loc: Vector2):
-	if !cur_state.map.has(loc):
-		e.entity_index = cur_idx
-		cur_state.actors.push_back(e)
-		cur_state.set_location(cur_idx, loc)
-		queue.insert(e, 0)
-		e.time_spent = cur_idx
-		cur_idx += 1
 
 
 func tick() -> bool:
@@ -203,19 +172,6 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 			return cursor
 		cursor = previous
 	return Vector2.ZERO
-
-
-
-func event_text(evt: EncounterEvent) -> String:
-	match evt.kind:
-		EncounterEvent.EventKind.Attack:
-			return "{time}: {a} attacked {t}! {d} damage!".format(evt.dict())
-		EncounterEvent.EventKind.Death:
-			return "{time}: {a} died!".format(evt.dict())
-		EncounterEvent.EventKind.Move:
-			return "{time}: {a} moved! -> {loc}".format(evt.dict())
-	push_warning("Event not handled by logger! {0}".format([evt.kind]))
-	return ""
 
 
 func gen_move(actor: CombatEntity) -> EncounterEvent:

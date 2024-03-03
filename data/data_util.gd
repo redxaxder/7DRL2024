@@ -4,30 +4,30 @@ static func deep_dup(what):
 	var t = typeof(what)
 	var it
 	match t:
-			TYPE_OBJECT:
-				if what is Script:
-					it = what
-				else:
-					it = dup_object(what)
-			TYPE_DICTIONARY:
-				it = dup_dict(what)
-			TYPE_ARRAY:
-				it = dup_array(what)
-			TYPE_RAW_ARRAY:
-				it = what.duplicate()
-			TYPE_INT_ARRAY:
-				it = what.duplicate()
-			TYPE_REAL_ARRAY:
-				it = what.duplicate()
-			TYPE_STRING_ARRAY:
-				it = what.duplicate()
-			TYPE_VECTOR2_ARRAY:
-				it = what.duplicate()
-			TYPE_VECTOR3_ARRAY:
-				it = what.duplicate()
-			TYPE_COLOR_ARRAY:
-				it = what.duplicate()
-			_:  it = what
+		TYPE_OBJECT:
+			if what is Script:
+				it = what
+			else:
+				it = dup_object(what)
+		TYPE_DICTIONARY:
+			it = dup_dict(what)
+		TYPE_ARRAY:
+			it = dup_array(what)
+		TYPE_RAW_ARRAY:
+			it = what.duplicate()
+		TYPE_INT_ARRAY:
+			it = what.duplicate()
+		TYPE_REAL_ARRAY:
+			it = what.duplicate()
+		TYPE_STRING_ARRAY:
+			it = what.duplicate()
+		TYPE_VECTOR2_ARRAY:
+			it = what.duplicate()
+		TYPE_VECTOR3_ARRAY:
+			it = what.duplicate()
+		TYPE_COLOR_ARRAY:
+			it = what.duplicate()
+		_:  it = what
 	return it
 
 static func dup_object(o: Object) -> Object:

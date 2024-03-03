@@ -25,6 +25,13 @@ func remove_actor(actor_ix: int):
 	map.erase(a.location)
 	a.location = Vector2(-1000,-1000)
 
+func add_actor(e: CombatEntity, loc: Vector2):
+	var next_index = actors.size()
+	e.entity_index = next_index
+	actors.push_back(e)
+	set_location(next_index, loc)
+	e.time_spent = next_index
+
 func set_location(actor_id: int, target_loc: Vector2):
 	if map.get(target_loc, null) != null:
 		push_error("Colliding locations! The explosion envelops all.")
@@ -47,8 +54,6 @@ func find_valid_targets(actor_id: int, ability: Ability) -> Array:
 		Ability.TargetKind.Self:
 			return [actors[actor_id].location]
 		Ability.TargetKind.Any:
-			# locations should be all of the locations in ability.range such that
-			# there is one valid target within the ability radius
 			faction_mask = Constants.ANY_FACTION
 		Ability.TargetKind.Enemies:
 			faction_mask = Constants.negate_faction(actors[actor_id].faction)
@@ -56,6 +61,8 @@ func find_valid_targets(actor_id: int, ability: Ability) -> Array:
 			faction_mask = actors[actor_id].faction
 	var position = actors[actor_id].location
 	var locations = []
+	# locations should be all of the locations in ability.range such that
+	# there is at least one valid target within the ability radius
 	for x in range(position.x - ability.ability_range, position.x + ability.ability_range + 1):
 		for y in range(position.y - ability.ability_range, position.y + ability.ability_range + 1):
 			if has_location_in_range(Vector2(x, y), ability.aoe_radius, faction_mask):

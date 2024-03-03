@@ -1,6 +1,5 @@
 extends Control
 
-const turn_limit = 500
 var playback_speed = 5
 
 var d
@@ -8,7 +7,6 @@ var cursor: int = 0
 var history: EncounterHistory
 var map: Map
 func _ready():
-	randomize()
 # warning-ignore:return_value_discarded
 	get_node("%to_start").connect("button_down", self, "to_start")
 # warning-ignore:return_value_discarded
@@ -27,27 +25,42 @@ func _ready():
 	progressbar.min_value = 0
 	progressbar.connect("scrolling", self, "progress_bar_scroll")
 
-	var driver = EncounterDriver.new()
-
-	map = Map.new()
-	driver.initialize(0, map)
-	map.createSprites(get_node("%display"))
-	
-	while driver.tick() and driver.history.size() < turn_limit:
-		pass
-	
-	history = driver.history
+func view(_history: EncounterHistory, _map: Map):
+	cursor = 0
+	history = _history
+	map = _map
+	var progressbar = get_node("%progress_bar")
 	progressbar.max_value = history.get_states().size() - 1
 
-	var events = driver.history.get_events()
+	var display = get_node("%display")
+	for c in display.get_children():
+		c.queue_free()
+	map.createSprites(display)
+
+	var events = history.get_events()
 # warning-ignore:return_value_discarded
+	for c in get_node("%combat_log").get_children():
+		c.queue_free()
 	add_log_message("0: Start!", 0)
 	var n = events.size()
 	for i in n:
 		var event = events[i]
-		var log_node = add_log_message(driver.event_text(event), i)
+		var log_node = add_log_message(event_text(event), i)
 		log_node.visible = event.is_displayed()
+	play()
 	_hard_refresh()
+
+func event_text(evt: EncounterEvent) -> String:
+	match evt.kind:
+		EncounterEvent.EventKind.Attack:
+			return "{time}: {a} attacked {t}! {d} damage!".format(evt.dict())
+		EncounterEvent.EventKind.Death:
+			return "{time}: {a} died!".format(evt.dict())
+		EncounterEvent.EventKind.Move:
+			return "{time}: {a} moved! -> {loc}".format(evt.dict())
+	push_warning("Event not handled by logger! {0}".format([evt.kind]))
+	return ""
+
 
 func add_log_message(text: String, index: int) -> Node:
 	var log_node = preload("res://playback/log_line.tscn").instance()
@@ -68,6 +81,9 @@ func pause():
 
 var elapsed = 0
 func _process(delta):
+	if !history:
+		set_process(false)
+		return
 	elapsed += delta * playback_speed
 	if elapsed >= 1:
 		elapsed -= 1
@@ -149,6 +165,7 @@ func allocate_sprites(s: EncounterState):
 # ordinary refresh for viewing different state of same encounter
 func _hard_refresh(): _refresh(true)
 func _refresh(_hard_refresh: bool = false):
+	if !history: return
 	var display = get_node("%display")
 	var display_size: Vector2 = display.get_rect().size
 	var tile_envelope = Constants.TILE_SIZE + Constants.TILE_MARGIN
