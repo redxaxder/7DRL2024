@@ -19,8 +19,7 @@ func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 	if use_seed == 0:
 		encounter_seed = randi()
 	else:
-		encounter_seed = use_seed
-	prints("encounter seed", encounter_seed)
+		seed(use_seed)
 
 	queue = PriorityQueue.new()
 	history = EncounterHistory.new()

@@ -22,7 +22,7 @@ func _ready():
 # warning-ignore:return_value_discarded
 	get_node("%history_view").connect("updated", self, "history_scroll")
 
-	make_encounter()
+	make_encounter(1234)
 
 
 func history_scroll(s: EncounterState):
@@ -44,7 +44,13 @@ func done():
 	get_node("%GO").visible = true
 	get_node("%NOGO").visible = true
 
-func make_encounter():
+func make_encounter(use_seed: int = 0):
+	var encounter_seed = use_seed
+	if encounter_seed == 0:
+		encounter_seed = randi()
+	prints("encounter seed", encounter_seed)
+
+	seed(encounter_seed)
 	get_node("%history_view").clear()
 	var map = Map.new()
 
@@ -66,7 +72,7 @@ func make_encounter():
 		state.add_actor(nme, nme_loc)
 	
 	driver = EncounterDriver.new()
-	driver.initialize(state, map)
+	driver.initialize(state, map, encounter_seed)
 	while driver.tick() and driver.history.size() < turn_limit:
 		pass
 	get_node("%state_view").init_view(driver.history.initial(), map)
