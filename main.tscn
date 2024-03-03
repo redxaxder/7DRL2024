@@ -54,6 +54,22 @@ text = "DONE"
 align = 1
 valign = 1
 
+[node name="RESTART" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+margin_top = 97.0
+margin_right = 109.0
+margin_bottom = 142.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/RESTART"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "RESTART"
+align = 1
+valign = 1
+
 [node name="NOGO" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
 margin_top = 97.0
@@ -68,3 +84,7 @@ anchor_bottom = 1.0
 text = "NO GO"
 align = 1
 valign = 1
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+margin_right = 8.0
+margin_bottom = 8.0

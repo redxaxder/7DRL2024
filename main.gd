@@ -3,20 +3,18 @@ extends Node2D
 var player_stats: StatBlock
 var player_hp: int = 20
 var skill_tree: SkillTree
-
+var skips = 50
 var driver: EncounterDriver
 
 const turn_limit = 500
 
-func _ready():
-	randomize()
-	player_stats = StatBlock.new()
-	var s = Actor.STAT_BLOCKS[Actor.Type.Player]
-	player_stats.initialize(s[0],s[1],s[2],s[3],s[4],s[5])
-	skill_tree = SkillTree.new()
-	skill_tree.hand_rolled_skill_tree()
-	skill_tree.unlock(skill_tree.skills[0][0])
+# are we waiting for the player to decide to do an encounter, (true) or
+# are we in the history view (false)?
+var gonogo: bool = false
+var gameover: bool = false
 
+
+func _ready():
 # warning-ignore:return_value_discarded
 	get_node("%GO").connect("pressed",self,"go")
 # warning-ignore:return_value_discarded
@@ -24,31 +22,56 @@ func _ready():
 # warning-ignore:return_value_discarded
 	get_node("%DONE").connect("pressed",self,"done")
 # warning-ignore:return_value_discarded
+	get_node("%RESTART").connect("pressed",self,"restart")
+# warning-ignore:return_value_discarded
 	get_node("%history_view").connect("updated", self, "history_scroll")
+	new_game()
 
+
+func new_game():
+	gameover = false
+	randomize()
+
+	skill_tree = SkillTree.new()
+	skill_tree.hand_rolled_skill_tree()
+	skill_tree.unlock(skill_tree.skills[0][0])
+	player_stats = StatBlock.new()
+	var s = Actor.STAT_BLOCKS[Actor.Type.Player]
+	player_stats.initialize(s[0],s[1],s[2],s[3],s[4],s[5])
+	player_hp = 20
 	make_encounter(1234)
 
 
 func history_scroll(s: EncounterState, what: EncounterEvent):
 	get_node("%state_view").update_view(s, what)
 
+
+func update_button_visibility():
+	get_node("%DONE").visible = !gonogo and !gameover
+	get_node("%GO").visible = gonogo and !gameover
+	get_node("%NOGO").visible = gonogo and !gameover and skips > 0
+	get_node("%RESTART").visible = gameover
+
 func go():
 	get_node("%history_view").view(driver.history, driver.map)
-	get_node("%DONE").visible = true
-	get_node("%GO").visible = false
-	get_node("%NOGO").visible = false
+	gonogo = false
+	update_button_visibility()
 
 func no_go():
+	skips -= 1
 	make_encounter()
 
 func done():
-	# apply encounter consequences (none right now)
+	# apply encounter consequences
 	player_hp = driver.history.final().get_player().cur_hp
+	if player_hp > 0:
+		make_encounter()
+	else:
+		gameover = true
+		update_button_visibility()
 
-	make_encounter()
-	get_node("%DONE").visible = false
-	get_node("%GO").visible = true
-	get_node("%NOGO").visible = true
+func restart():
+	new_game()
 
 func make_encounter(use_seed: int = 0):
 	var encounter_seed = use_seed
@@ -64,17 +87,15 @@ func make_encounter(use_seed: int = 0):
 	var player = CombatEntity.new()
 	player.initialize_with_block(player_stats, Constants.PLAYER_FACTION)
 	player.actor_type = Actor.Type.Player
-<<<<<<< HEAD
 	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lashed out!")
 	player.append_ability(abil)
+	assert(player_hp > 0)
 	player.cur_hp = player_hp
-=======
 	for skill in skill_tree.unlocks:
 		if skill.kind == Skill.SkillKind.Ability:
 			player.append_ability(skill.ability)
 		elif skill.kind == Skill.SkillKind.Bonus:
 			player.append_bonus(skill.bonus)
->>>>>>> 66fcb62 (Skill unlocks, skill tree in main)
 	state.add_actor(player, Vector2(1, 1))
 	
 
@@ -91,6 +112,8 @@ func make_encounter(use_seed: int = 0):
 	while driver.tick() and driver.history.size() < turn_limit:
 		pass
 	get_node("%state_view").init_view(driver.history.initial(), map)
+	gonogo = true
+	update_button_visibility()
 
 
 func create_enemy() -> CombatEntity:
