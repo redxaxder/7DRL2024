@@ -2,8 +2,6 @@ extends Resource
 
 class_name EncounterEvent
 
-export var delta: int = 0
-
 # note: when an event is changed or added, the code that handles the
 # event is in EncounterDriver.update()
 enum EventKind {Attack, Move, Death, AbilityActivation}
@@ -26,16 +24,16 @@ func is_animated() -> bool:
 
 var kind
 
-var actor_idx: int
-var target_idx: int
-var damage: int
+var actor_idx: int = -99999
+var target_idx: int = -99999
+var damage: int = -99999
 
-var target_location: Vector2
+var target_location: Vector2 = Vector2(-99999,-99999)
 
-var timestamp: int
+var timestamp: int = -99999
 
 var ability: Ability
-var ab_name: String
+var ab_name: String = "Erroneous String: DO NOT READ"
 
 func dict() -> Dictionary:
 	return 	{

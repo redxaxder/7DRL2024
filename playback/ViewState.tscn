@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://playback/ViewState.gd" type="Script" id=1]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.993382, 0.152941, 1, 0.117647 )
 
 [node name="state_view" type="Control"]
 anchor_right = 1.0
@@ -16,3 +19,8 @@ anchor_bottom = 1.0
 unique_name_in_owner = true
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[node name="location_highlight" type="Panel" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+custom_styles/panel = SubResource( 1 )

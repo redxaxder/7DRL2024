@@ -6,7 +6,7 @@ var cursor: int = 0
 var history: EncounterHistory
 var map: Map
 
-signal updated(encounter_state)
+signal updated(encounter_state, encounter_event)
 
 func _ready():
 # warning-ignore:return_value_discarded
@@ -34,9 +34,12 @@ func clear():
 	map = null
 	for c in get_node("%combat_log").get_children():
 		c.queue_free()
+	for c in get_children():
+		c.visible = false
 
 func view(_history: EncounterHistory, _map: Map):
-	cursor = 0
+	for c in get_children():
+		c.visible = true
 	history = _history
 	map = _map
 	var progressbar = get_node("%progress_bar")
@@ -128,7 +131,7 @@ func prev():
 
 func log_line_click(i):
 	pause()
-	if cursor != i:
+	if cursor != i+1:
 		cursor = i + 1
 		_refresh()
 
@@ -160,8 +163,9 @@ func current_state() -> EncounterState:
 
 func _refresh():
 	if !history: return
-	var events =  history.get_events()
-	var time = events[min(cursor, events.size() - 1)].timestamp
+	var current_event = history.get_events()[max(cursor - 1, 0)]
+
+	var time = current_event.timestamp
 	get_node("%timestamp").text = "%d" % time
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = cursor
@@ -175,4 +179,4 @@ func _refresh():
 		else:
 			loglines[i].highlighted = false
 
-	emit_signal("updated", current_state())
+	emit_signal("updated", current_state(), current_event)

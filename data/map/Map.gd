@@ -29,6 +29,7 @@ func createSprites(display: Control):
 			var sprite = tile.sprite
 			display.add_child(sprite)
 			sprite.position = Vector2(100 * x, 100 *y)
+			sprite.centered = false
 
 func updateSprites(scaled_size, scale_factor):
 	for x in Constants.MAP_BOUNDARIES.size.x:

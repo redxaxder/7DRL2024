@@ -25,8 +25,8 @@ func _ready():
 	make_encounter(1234)
 
 
-func history_scroll(s: EncounterState):
-	get_node("%state_view").update_view(s)
+func history_scroll(s: EncounterState, what: EncounterEvent):
+	get_node("%state_view").update_view(s, what)
 
 func go():
 	get_node("%history_view").view(driver.history, driver.map)
