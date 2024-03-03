@@ -1,7 +1,7 @@
 extends Node2D
 
 var player_stats: StatBlock
-var player_hp: int
+var player_hp: int = 20
 
 var driver: EncounterDriver
 
@@ -39,6 +39,8 @@ func no_go():
 
 func done():
 	# apply encounter consequences (none right now)
+	player_hp = driver.history.final().get_player().cur_hp
+
 	make_encounter()
 	get_node("%DONE").visible = false
 	get_node("%GO").visible = true
@@ -60,6 +62,7 @@ func make_encounter(use_seed: int = 0):
 	player.actor_type = Actor.Type.Player
 	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lashed out!")
 	player.append_ability(abil)
+	player.cur_hp = player_hp
 	state.add_actor(player, Vector2(1, 1))
 	
 

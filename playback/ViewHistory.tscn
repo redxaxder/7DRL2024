@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://playback/ViewHistory.gd" type="Script" id=1]
 [ext_resource path="res://graphics/gui/fast-forward-button.svg" type="Texture" id=2]
@@ -7,6 +7,10 @@
 [ext_resource path="res://graphics/gui/previous-button.svg" type="Texture" id=5]
 [ext_resource path="res://graphics/gui/next-button.svg" type="Texture" id=6]
 [ext_resource path="res://graphics/gui/fast-backward-button.svg" type="Texture" id=7]
+
+[sub_resource type="StyleBoxFlat" id=1]
+border_width_left = 20
+border_width_right = 20
 
 [node name="history_view" type="Control"]
 anchor_right = 1.0
@@ -29,6 +33,7 @@ margin_right = 1008.0
 margin_bottom = 534.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_styles/grabber = SubResource( 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_right = 1.0

@@ -36,6 +36,7 @@ static func display_scale(display_size: Vector2, grid_size: Vector2) -> float:
 
 func update_view(s: EncounterState, what: EncounterEvent = null):
 	state = s
+	get_node("%player_hp").text = "Hp: %d" % max(0,s.get_player().cur_hp)
 	var display_size: Vector2 = get_rect().size
 	var scale_factor = display_scale(display_size, Constants.MAP_BOUNDARIES.size)
 	var scaled_size = scale_factor * Constants.TILE_ENVELOPE

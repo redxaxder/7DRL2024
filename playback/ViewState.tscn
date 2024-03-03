@@ -1,14 +1,31 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://playback/ViewState.gd" type="Script" id=1]
+[ext_resource path="res://fonts/CommitMono-400-Regular.otf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=2]
+size = 24
+font_data = ExtResource( 2 )
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.993382, 0.152941, 1, 0.117647 )
 
 [node name="state_view" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+margin_left = 48.0
+margin_top = 51.0
+margin_right = 548.0
+margin_bottom = 551.0
+rect_min_size = Vector2( 500, 500 )
 script = ExtResource( 1 )
+
+[node name="player_hp" type="Label" parent="."]
+unique_name_in_owner = true
+margin_left = -35.0
+margin_top = -38.0
+margin_right = 91.0
+margin_bottom = -11.0
+custom_fonts/font = SubResource( 2 )
+text = "PLAYER HP"
 
 [node name="terrain" type="Control" parent="."]
 unique_name_in_owner = true
