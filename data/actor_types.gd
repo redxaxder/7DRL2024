@@ -21,6 +21,13 @@ const STAT_BLOCKS = [ \
 	[5, 2, 12, 2, 2, 8],
 ]
 
+const NAMES = [ \
+	"Player",
+	"Wolf",
+	"Squid",
+	"Blorp",
+]
+
 static func get_sprite(t) -> PackedScene:
 	return SPRITES[t]
 
@@ -35,3 +42,6 @@ static func get_type(t):
 		1: return Type.Wolf
 		2: return Type.Squid
 		3: return Type.Blorp
+
+static func get_name(t):
+	return NAMES[t]
