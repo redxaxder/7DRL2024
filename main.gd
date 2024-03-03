@@ -57,10 +57,10 @@ func update_button_visibility():
 	get_node("%RESTART").visible = gameover
 
 func go():
-	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lashed out!", 0)
+	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lash Out", 0)
 	var player = driver.cur_state.get_player()
 	player.append_ability(abil)
-	var abil2 = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Activated, Ability.AbilityEffectKind.Buff, 1, Ability.TargetKind.Self, "Buffed!", 20)
+	var abil2 = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Activated, Ability.AbilityEffectKind.Buff, 1, Ability.TargetKind.Self, "Get Swole", 20)
 	SkillTree.apply_buff(abil2, Ability.BuffKind.Brawn)
 	player.append_ability(abil2)
 	for skill in skill_tree.unlocks:
@@ -102,7 +102,7 @@ func make_encounter(use_seed: int = 0):
 
 	var state = EncounterState.new()
 	var player = CombatEntity.new()
-	player.initialize_with_block(player_stats, Constants.PLAYER_FACTION)
+	player.initialize_with_block(player_stats, Constants.PLAYER_FACTION, "You")
 	player.actor_type = Actor.Type.Player
 	assert(player_hp > 0)
 	player.cur_hp = player_hp
@@ -127,7 +127,7 @@ func make_encounter(use_seed: int = 0):
 func create_enemy() -> CombatEntity:
 	var nme = CombatEntity.new()
 	var reference_nme_idx = randi() % (Actor.Type.size() - 1) + 1
-	nme.initialize_with_block(Actor.get_stat_block(reference_nme_idx), Constants.ENEMY_FACTION)	
+	nme.initialize_with_block(Actor.get_stat_block(reference_nme_idx), Constants.ENEMY_FACTION, Actor.get_name(reference_nme_idx))	
 	nme.actor_type = Actor.get_type(reference_nme_idx)
 	return nme
 

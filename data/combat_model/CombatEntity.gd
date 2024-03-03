@@ -12,25 +12,28 @@ var faction: int
 var entity_index: int # duplicated from driver
 var actor_type: int
 var abilities: Array
+var name: String
 
 # stats that do
 var cur_hp: int
 var location: Vector2 # duplicated from driver
 var time_spent: int
 
-func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int, _faction: int):
+func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int, _faction: int, moniker: String):
 	stats = StatBlock.new()
 	stats.initialize(brawn, brains, guts, eyesight, footwork, hustle)
 	cur_hp = stats.max_hp()
 	faction = _faction
+	name = moniker
 
 func is_alive():
 	return (cur_hp > 0)
 
-func initialize_with_block(_stats: StatBlock, _faction: int):
+func initialize_with_block(_stats: StatBlock, _faction: int, moniker: String):
 	stats = DataUtil.deep_dup(_stats)
 	cur_hp = stats.max_hp()
 	faction = _faction
+	name = moniker
 
 func chance_to_hit_other(other: CombatEntity) -> float:
 	#example: self accuracy 10, other evasion 8

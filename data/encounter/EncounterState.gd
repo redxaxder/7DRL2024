@@ -46,7 +46,7 @@ func set_location(actor_id: int, target_loc: Vector2):
 	a.location = target_loc
 	map[target_loc] = actor_id
 	
-func resolve_attack(_actor_id: int, target_id: int, damage: int):
+func resolve_attack(target_id: int, damage: int):
 	var target: CombatEntity = actors[target_id]
 	target.cur_hp -= damage
 	

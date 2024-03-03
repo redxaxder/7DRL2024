@@ -108,33 +108,35 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterEve
 		EncounterEvent.EventKind.Move:
 			state.set_location(event.actor_idx, event.target_location)
 		EncounterEvent.EventKind.Attack:
-			state.resolve_attack(event.actor_idx, event.target_idx, event.damage)
 			var target = state.actors[event.target_idx]
+			return deal_damage(target, event.damage, event.timestamp)
+		EncounterEvent.EventKind.Death:
+			state.remove_actor(event.actor_idx)
+		EncounterEvent.EventKind.AbilityActivation:
+			return handle_ability_activation(state, event)
+		EncounterEvent.EventKind.Damage:
+			var target = state.actors[event.target_idx]
+			state.resolve_attack(event.target_idx, event.damage)
 			if !target.is_alive():
 				return EncEvent.death_event(event.timestamp, target)
-			# check to see if the target has any abilities that respond to damage
+						# check to see if the target has any abilities that respond to damage
 			var response: EncounterEvent = trigger_damage_ability(state, event)
 			if response != null:
 				assert(event.timestamp > 0)
 				assert(response.timestamp > 0)
 				return response
-		EncounterEvent.EventKind.Death:
-			state.remove_actor(event.actor_idx)
-		EncounterEvent.EventKind.AbilityActivation:
-			handle_ability_activation(state, event)
 	return null
 	
-static func handle_ability_activation(state: EncounterState, event: EncounterEvent):
+static func handle_ability_activation(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
 	var ability = event.ability
 	var target = state.lookup_actor(event.target_location)
 	if target != null:
 		match ability.effect_kind:
 			Ability.AbilityEffectKind.Damage:
-				state.resolve_attack(event.actor_idx, target.entity_index, ability.power)
-				if !target.is_alive():
-					return EncEvent.death_event(event.timestamp, target)
+				return deal_damage(target, ability.power, event.timestamp)
 			Ability.AbilityEffectKind.Buff:
 				state.resolve_buff(target.entity_index, ability.buff_kind, ability.power)
+	return null
 
 static func trigger_damage_ability(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
 	if event.damage > 0:
@@ -226,3 +228,6 @@ static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, 
 		return null
 	ability.use()
 	return EncEvent.ability_event(timestamp, actor, ability, target)
+	
+static func deal_damage(target: CombatEntity, damage: int, timestamp: int) -> EncounterEvent:
+	return EncEvent.damage_event(timestamp, target, damage)

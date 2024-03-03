@@ -4,7 +4,7 @@ class_name EncounterEvent
 
 # note: when an event is changed or added, the code that handles the
 # event is in EncounterDriver.update()
-enum EventKind {Attack, Move, Death, AbilityActivation}
+enum EventKind {Attack, Move, Death, AbilityActivation, Damage}
 
 # Is this event's log message visible by default?
 func is_displayed() -> bool:
@@ -25,7 +25,9 @@ func is_animated() -> bool:
 var kind
 
 var actor_idx: int = -99999
+var actor_name: String = "Erroneous String: DO NOT READ"
 var target_idx: int = -99999
+var target_name: String = "Erroneous String: DO NOT READ"
 var damage: int = -99999
 
 var target_location: Vector2 = Vector2(-99999,-99999)
@@ -42,5 +44,7 @@ func dict() -> Dictionary:
 		"time": timestamp,
 		"d": damage,
 		"loc": target_location,
-		"m": ab_name
+		"m": ab_name,
+		"an": actor_name,
+		"tn": target_name,
 	}
