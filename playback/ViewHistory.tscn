@@ -69,6 +69,7 @@ icon = ExtResource( 3 )
 
 [node name="play" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
+visible = false
 margin_left = 1632.0
 margin_right = 2156.0
 margin_bottom = 518.0
@@ -76,15 +77,15 @@ icon = ExtResource( 4 )
 
 [node name="step_forward" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
-margin_left = 2176.0
-margin_right = 2700.0
+margin_left = 1632.0
+margin_right = 2156.0
 margin_bottom = 518.0
 icon = ExtResource( 6 )
 
 [node name="to_end" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
-margin_left = 2720.0
-margin_right = 3244.0
+margin_left = 2176.0
+margin_right = 2700.0
 margin_bottom = 518.0
 icon = ExtResource( 2 )
 

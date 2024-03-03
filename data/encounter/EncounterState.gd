@@ -27,7 +27,8 @@ func remove_actor(actor_ix: int):
 
 func set_location(actor_id: int, target_loc: Vector2):
 	if map.get(target_loc, null) != null:
-		push_error("Collising locations! The explosion envelops all.")
+		push_error("Colliding locations! The explosion envelops all.")
+		assert(false)
 	var a = actors[actor_id]
 	# remove current location from map
 # warning-ignore:return_value_discarded

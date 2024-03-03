@@ -14,7 +14,14 @@ var history: EncounterHistory
 var cur_idx: int = 0
 
 
-func initialize():
+var encounter_seed
+func initialize(use_seed: int = 0):
+	if use_seed == 0:
+		encounter_seed = randi()
+	else:
+		encounter_seed = use_seed
+	prints("encounter seed", encounter_seed)
+
 	queue = PriorityQueue.new()
 	cur_state = EncounterState.new()
 	history = EncounterHistory.new()

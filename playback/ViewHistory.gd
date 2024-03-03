@@ -1,6 +1,7 @@
 extends Control
 
 const turn_limit = 100
+var playback_speed = 5
 
 var d
 var cursor: int = 0
@@ -15,6 +16,10 @@ func _ready():
 	get_node("%step_forward").connect("button_down", self, "next")
 # warning-ignore:return_value_discarded
 	get_node("%step_backward").connect("button_down", self, "prev")
+# warning-ignore:return_value_discarded
+	get_node("%play").connect("button_down", self, "play")
+# warning-ignore:return_value_discarded
+	get_node("%pause").connect("button_down", self, "pause")
 
 	var progressbar = get_node("%progress_bar")
 	progressbar.step = 1
@@ -23,7 +28,6 @@ func _ready():
 
 	var driver = EncounterDriver.new()
 	driver.initialize()
-	var player_is_alive = true
 	while driver.tick() and driver.history.size() < turn_limit:
 		pass
 	
@@ -45,32 +49,61 @@ func _ready():
 		get_node("%combat_log").add_child(log_node)
 	_hard_refresh()
 
+func play():
+	get_node("%play").visible = false
+	get_node("%pause").visible = true
+	set_process(true)
+
+func pause():
+	get_node("%play").visible = true
+	get_node("%pause").visible = false
+	set_process(false)
+
+var elapsed = 0
+func _process(delta):
+	elapsed += delta * playback_speed
+	if elapsed >= 1:
+		elapsed -= 1
+		step()
 
 func to_start():
+	pause()
 	cursor = 0
+	elapsed = 0
 	_refresh()
 
 func to_end():
+	pause()
 	cursor = history.get_states().size() - 1
 	_refresh()
 
 func next():
-# warning-ignore:narrowing_conversion
-	cursor = min(cursor+1, history.get_states().size() - 1)
-	_refresh()
+	pause()
+	step()
 
+func step():
+	var next = min(cursor+1, history.get_states().size() - 1) 
+	if next > cursor:
+		cursor = next
+		_refresh()
+	else:
+		pause()
+	
 func prev():
 # warning-ignore:narrowing_conversion
+	pause()
 	cursor = max(cursor-1, 0)
 	_refresh()
 
 func log_line_click(i):
+	pause()
 	if cursor != i:
 		cursor = i
 		_refresh()
 
 func progress_bar_scroll():
 	var progressbar = get_node("%progress_bar")
+	pause()
 	if cursor != progressbar.value:
 		cursor = progressbar.value
 		_refresh()
@@ -80,6 +113,9 @@ func _unhandled_input(event):
 	if event.is_action_pressed("down"): to_end()
 	if event.is_action_pressed("right"): next()
 	if event.is_action_pressed("left"): prev()
+	if event.is_action_pressed("toggle"):
+		if get_node("%play").visible: play()
+		elif get_node("%pause").visible: pause()
 	
 func _gui_input(event):
 	if event.is_action_pressed("ui_up"): to_start()
