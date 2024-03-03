@@ -37,7 +37,8 @@ func make_encounter():
 	var player = CombatEntity.new()
 	player.initialize_with_block(player_stats, Constants.PLAYER_FACTION)
 	player.actor_type = Actor.Type.Player
-#	player.acquire_bonus(SkillTree.create_bonus_skill(Skill.BonusKind.Brawn, 5))
+	var abil = SkillTree.create_ability(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, "Lashed out!")
+	player.append_ability(abil)
 	state.add_actor(player, Vector2(1, 1))
 	
 	for _i in range(3):

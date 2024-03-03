@@ -35,6 +35,7 @@ var target_location: Vector2
 var timestamp: int
 
 var ability: Ability
+var ab_name: String
 
 func dict() -> Dictionary:
 	return 	{
@@ -43,4 +44,5 @@ func dict() -> Dictionary:
 		"time": timestamp,
 		"d": damage,
 		"loc": target_location,
+		"m": ab_name
 	}

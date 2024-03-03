@@ -54,6 +54,8 @@ func event_text(evt: EncounterEvent) -> String:
 			return "{time}: {a} died!".format(evt.dict())
 		EncounterEvent.EventKind.Move:
 			return "{time}: {a} moved! -> {loc}".format(evt.dict())
+		EncounterEvent.EventKind.AbilityActivation:
+			return "{time}: {a} activated ability - {m}".format(evt.dict())
 	push_warning("Event not handled by logger! {0}".format([evt.kind]))
 	return ""
 

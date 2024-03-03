@@ -40,7 +40,9 @@ static func death_event(timestamp: int, actor: CombatEntity) -> EncounterEvent:
 static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability, target: Vector2) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
+	evt.kind = EncounterEvent.EventKind.AbilityActivation
 	evt.actor_idx = actor.entity_index
 	evt.target_location = target
 	evt.ability = ability
+	evt.ab_name = ability.message
 	return evt

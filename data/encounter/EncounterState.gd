@@ -29,8 +29,9 @@ func add_actor(e: CombatEntity, loc: Vector2):
 	var next_index = actors.size()
 	e.entity_index = next_index
 	actors.push_back(e)
-	set_location(next_index, loc)
-	e.time_spent = next_index
+	if !map.has(loc):
+		set_location(next_index, loc)
+		e.time_spent = next_index
 
 func set_location(actor_id: int, target_loc: Vector2):
 	if map.get(target_loc, null) != null:
@@ -48,9 +49,16 @@ func resolve_attack(_actor_id: int, target_id: int, damage: int):
 	var target: CombatEntity = actors[target_id]
 	target.cur_hp -= damage
 	
+func get_ability_target(actor_id: int, ability: Ability) -> Vector2:
+	var targets = find_valid_targets(actor_id, ability)
+	if targets.size() > 0:
+		targets.shuffle()
+		return targets[0]
+	return Vector2.INF
+	
 func find_valid_targets(actor_id: int, ability: Ability) -> Array:
 	var faction_mask: int = 0
-	match ability.ability_target_kind:
+	match ability.effect_target_kind:
 		Ability.TargetKind.Self:
 			return [actors[actor_id].location]
 		Ability.TargetKind.Any:

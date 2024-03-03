@@ -75,13 +75,12 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	#   Yes - attack and return attack event
 	var targets: Array = []
 	var dirs = []
-#	actor.abilities.shuffle()
-#	for ability in actor.abilities:
-#		var ability_targets: Array = cur_state.find_valid_targets(actor.entity_index, ability) #TODO
-#		if ability_targets.size() > 0:
-#			ability_targets.shuffle()
-#			var atarget = ability_targets[0]
-#			return use_ability(actor, atarget, ability)
+	actor.abilities.shuffle()
+	for ability in actor.abilities:
+		if ability.trigger_effect_kind == Ability.TriggerEffectKind.Activated:
+			var atarget = cur_state.get_ability_target(actor.entity_index, ability)
+			if atarget != Vector2.INF:
+				return use_ability(actor, atarget, ability)
 		
 	current_time = actor.time_spent
 	cardinal.shuffle()
@@ -107,8 +106,6 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	else:
 		return gen_move(actor)
 
-
-
 static func update(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
 	match event.kind:
 		EncounterEvent.EventKind.Move:
@@ -118,11 +115,36 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterEve
 			var target = state.actors[event.target_idx]
 			if !target.is_alive():
 				return EncEvent.death_event(event.timestamp, target)
+			# check to see if the target has any abilities that respond to damage
+			var response: EncounterEvent = trigger_damage_ability(state, event)
+			if response != null:
+				return response
 		EncounterEvent.EventKind.Death:
 			state.remove_actor(event.actor_idx)
+		EncounterEvent.EventKind.AbilityActivation:
+			handle_ability_activation(state, event)
 	return null
+	
+static func handle_ability_activation(state: EncounterState, event: EncounterEvent):
+	var ability = event.ability
+	match ability.effect_kind:
+		Ability.AbilityEffectKind.Damage:
+			var target = state.lookup_actor(event.target_location)
+			if target != null:
+				state.resolve_attack(event.actor_idx, target.entity_index, ability.power)
+				if !target.is_alive():
+					return EncEvent.death_event(event.timestamp, target)
 
-
+static func trigger_damage_ability(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
+	if event.damage > 0:
+		var responder: CombatEntity = state.actors[event.target_idx]
+		for ab in responder.abilities:
+			if ab.trigger_effect_kind == Ability.TriggerEffectKind.Damage && ab.trigger_target_kind == Ability.TargetKind.Self:
+				var atarget = state.get_ability_target(responder.entity_index, ab)
+				if atarget != Vector2.INF:
+					return EncEvent.ability_event(event.timestamp, responder, ab, atarget)
+	return null
+	
 const max_dist = 10
 func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 	var dist: int = 1
