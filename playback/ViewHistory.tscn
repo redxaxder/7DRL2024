@@ -20,6 +20,14 @@ margin_top = 23.0
 margin_right = 905.0
 margin_bottom = 379.0
 
+[node name="timestamp" type="Label" parent="."]
+unique_name_in_owner = true
+margin_left = 42.0
+margin_top = 388.0
+margin_right = 114.0
+margin_bottom = 410.0
+text = "lorem"
+
 [node name="progress_bar" type="HScrollBar" parent="."]
 unique_name_in_owner = true
 margin_left = 34.0

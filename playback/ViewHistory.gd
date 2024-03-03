@@ -112,6 +112,10 @@ func _refresh(_hard_refresh: bool = false):
 	var scaled_size = scale_factor * tile_envelope
 	var current_state = history.get_states()[cursor]
 
+	var events =  history.get_events()
+	var time =events[min(cursor, events.size() - 1)].timestamp
+	get_node("%timestamp").text = "%d" % time
+	
 	if _hard_refresh:
 		allocate_sprites(current_state)
 
