@@ -35,6 +35,7 @@ func add_actor(e: CombatEntity, loc: Vector2):
 
 func set_location(actor_id: int, target_loc: Vector2):
 	if map.get(target_loc, null) != null:
+		print("Colliding locations! {0}  {1}".format([actor_id, map.get(target_loc, null)]))
 		push_error("Colliding locations! The explosion envelops all.")
 		assert(false)
 	var a = actors[actor_id]

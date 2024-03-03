@@ -89,10 +89,7 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	for d in dirs:
 		var neighbor = actor.location + d
 		if !Constants.MAP_BOUNDARIES.has_point(neighbor):
-#		 || !map.is_passable(neighbor):
 			continue
-#		if(neighbor.y < 0):
-#			pass
 		var target = cur_state.lookup_actor(neighbor)
 		if target and target.faction != actor.faction:
 			targets.push_back(target)
@@ -177,7 +174,7 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 				if target != null && here != start:
 					assert(target.faction == friendly_faction)
 					continue
-				if !breadcrumbs.has(neighbor):
+				if !breadcrumbs.has(neighbor) && map.can_move(neighbor):
 					breadcrumbs[neighbor] = here
 					next_frontier.append(neighbor)
 		frontier = next_frontier

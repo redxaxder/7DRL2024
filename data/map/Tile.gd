@@ -18,15 +18,17 @@ const floor_sprite = preload("res://graphics/floor.tscn")
 func _ready():
 	pass # Replace with function body.
 	
-func _init(x, y, passable):
-	x = x;
-	y = y;
-	passable = passable;
+func _init(p_x, p_y, p_passable):
+	x = p_x;
+	y = p_y;
+	passable = p_passable;
 	
 	if(passable):
 		sprite = floor_sprite.instance()
+		sprite.modulate = Color("#523c42")
 	else:
 		sprite = wall_sprite.instance()
+		sprite.modulate = Color("#67968a")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
