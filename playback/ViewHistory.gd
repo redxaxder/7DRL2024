@@ -6,6 +6,7 @@ var d
 var cursor: int = 0
 var history: EncounterHistory
 func _ready():
+	randomize()
 # warning-ignore:return_value_discarded
 	get_node("%to_start").connect("button_down", self, "to_start")
 # warning-ignore:return_value_discarded
