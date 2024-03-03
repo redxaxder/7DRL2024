@@ -1,7 +1,11 @@
-extends Button
+extends Control
 
 export var highlighted: bool = false setget set_highlighted
 
+signal pressed
+
+func _ready():
+	$button.connect("pressed", self, "emit_signal", ["pressed"])
 func set_highlighted(x):
 	highlighted = x
 	_update()
@@ -11,12 +15,10 @@ func set_label(x):
 	$Label.text = x
 	_update()
 
-func _ready():
-	_update()
-
 func _update():
+	if !$button: return
 	if highlighted:
-		add_stylebox_override("normal", preload("res://playback/style/log_line_highlighted.tres"))
+		$button.add_stylebox_override("normal", preload("res://playback/style/log_line_highlighted.tres"))
 	else:
-		add_stylebox_override("normal", preload("res://playback/style/log_line_normal.tres"))
-	
+		$button.add_stylebox_override("normal", preload("res://playback/style/log_line_normal.tres"))
+

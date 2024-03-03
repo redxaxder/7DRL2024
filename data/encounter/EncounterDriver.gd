@@ -200,8 +200,13 @@ func gen_move(actor: CombatEntity) -> EncounterEvent:
 		return EncEvent.move_event(current_time, actor, move_to)
 	#move randomly
 	else:
-		var dir = dirs[randi() % dirs.size()] # TODO track random state
-		move_to = actor.location + dir
+		move_to = actor.location
+		dirs.shuffle()
+		for dir in dirs:
+			var candidate = actor.location + dir
+			if map.can_move(candidate):
+				move_to = candidate
+				break
 	return EncEvent.move_event(current_time, actor, move_to)
 
 func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:

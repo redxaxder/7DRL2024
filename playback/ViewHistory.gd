@@ -21,6 +21,9 @@ func _ready():
 	get_node("%play").connect("button_down", self, "play")
 # warning-ignore:return_value_discarded
 	get_node("%pause").connect("button_down", self, "pause")
+	var combat_log = get_node("%combat_log")
+	combat_log.connect("mouse_entered",self, "log_hover", [true])
+	combat_log.connect("mouse_exited",self, "log_hover", [false])
 
 	var progressbar = get_node("%progress_bar")
 	progressbar.step = 1
@@ -75,7 +78,25 @@ func add_log_message(text: String, index: int) -> Node:
 	log_node.set_label(text)
 	log_node.connect("pressed", self, "log_line_click", [index])
 	get_node("%combat_log").add_child(log_node)
+	log_node.connect("mouse_entered", self, "log_line_hover", [index])
 	return log_node
+
+var last_log_hover = -1
+func log_line_hover(index: int):
+	if last_log_hover != index:
+		last_log_hover = index
+		_refresh()
+
+func log_line_click(i):
+	pause()
+	if cursor != i + 1:
+		cursor = i + 1
+		_refresh()
+
+var log_is_hovered:bool = false
+func log_hover(is_hovered: bool):
+	log_is_hovered = is_hovered
+	_refresh()
 
 func play():
 	get_node("%play").visible = false
@@ -91,6 +112,8 @@ var elapsed = 0
 func _process(delta):
 	if !history:
 		set_process(false)
+		return
+	if log_is_hovered:
 		return
 	elapsed += delta * playback_speed
 	if elapsed >= 1:
@@ -129,12 +152,6 @@ func prev():
 	cursor = max(cursor-1, 0)
 	_refresh()
 
-func log_line_click(i):
-	pause()
-	if cursor != i+1:
-		cursor = i + 1
-		_refresh()
-
 func progress_bar_scroll():
 	var progressbar = get_node("%progress_bar")
 	pause()
@@ -157,26 +174,26 @@ func _gui_input(event):
 	if event.is_action_pressed("ui_right"): next()
 	if event.is_action_pressed("ui_left"): prev()
 
-func current_state() -> EncounterState:
-	if !history: return null
-	return history.get_states()[cursor]
-
 func _refresh():
 	if !history: return
-	var current_event = history.get_events()[max(cursor - 1, 0)]
+	var index = cursor
+	if log_is_hovered and last_log_hover >= 0:
+		index = last_log_hover+1
 
+	var current_event = history.get_events()[max(index - 1, 0)]
 	var time = current_event.timestamp
 	get_node("%timestamp").text = "%d" % time
 	var progressbar = get_node("%progress_bar")
-	progressbar.value = cursor
+	progressbar.value = index
 	var loglines = get_node("%combat_log").get_children()
 	var highlighted_line = 0
 	for i in loglines.size():
-		if i <= cursor and loglines[i].visible:
+		if i <= index and loglines[i].visible:
 			loglines[highlighted_line].highlighted = false
 			highlighted_line = i
 			loglines[i].highlighted = true
 		else:
 			loglines[i].highlighted = false
-
-	emit_signal("updated", current_state(), current_event)
+	
+	var current_state = history.get_states()[index]
+	emit_signal("updated", current_state, current_event)
