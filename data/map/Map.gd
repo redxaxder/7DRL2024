@@ -26,6 +26,14 @@ func generate() -> bool:
 	
 # returns the number of passable tiles
 func generate_tiles():
+	var r = randf()
+	var fill_percent = 0.1;
+	if r<.333:
+		fill_percent = 0.3
+	elif r<.66:
+		fill_percent = 0.5
+	
+	
 	tiles = [];
 	for x in Constants.MAP_BOUNDARIES.size.x:
 		tiles.append([])
@@ -33,7 +41,7 @@ func generate_tiles():
 			var is_passable = true
 			if(x == 0 || x == Constants.MAP_BOUNDARIES.size.x-1
 			|| y == 0 || y == Constants.MAP_BOUNDARIES.size.y-1
-			|| randf() < .6):
+			|| randf() < fill_percent):
 				is_passable = false
 			tiles[x].append(Tile.new(x,y,is_passable))
 	

@@ -55,7 +55,6 @@ func set_skills(st: SkillTree):
 			var button = Button.new()
 			button.connect("pressed", self, 'selectSkill', [skill, button])
 			containers[i].add_child(button)
-#			$VBoxContainer/GridContainer.add_child(button)
 			button.rect_min_size = Vector2(100, 100)
 			print(button.rect_min_size)
 	
@@ -73,8 +72,6 @@ func _draw():
 	for i in skill_tree.skills.size():
 		for j in skill_tree.skills[i].size():
 			var skill : Skill = skill_tree.skills[i][j]
-#			var buttonIndex = j*skill_tree.skills[i].size() + i
-#			var button : Control = $VBoxContainer/GridContainer.get_child(buttonIndex)
 			var button = containers[i].get_child(j)
 			button.text = skill.name[0]
 			

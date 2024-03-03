@@ -34,7 +34,7 @@ func add_actor(e: CombatEntity, loc: Vector2):
 		set_location(next_index, loc)
 		e.time_spent = next_index
 
-func is_occupied(target_loc: Vector2):
+func is_occupied(target_loc: Vector2) -> bool:
 	return map.get(target_loc, null) != null
 
 func set_location(actor_id: int, target_loc: Vector2):
