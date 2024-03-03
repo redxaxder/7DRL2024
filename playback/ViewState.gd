@@ -4,14 +4,17 @@ export var state: Resource
 export var map: Resource
 
 func init_view(s: EncounterState, m: Map):
-
 	var terrain = get_node("%terrain")
-	for child in terrain.get_children(): child.queue_free()
+	for child in terrain.get_children():
+		child.queue_free()
+		terrain.remove_child(child)
 	map = m
 	map.createSprites(terrain)
-
 	var actors = get_node("%actors")
-	for child in actors.get_children(): child.queue_free()
+	for child in actors.get_children():
+		child.queue_free()
+		actors.remove_child(child)
+
 	state = s
 	for i in state.actors.size():
 		var actor = state.actors[i]
@@ -30,26 +33,14 @@ func update_view(s: EncounterState):
 	var display_size: Vector2 = get_rect().size
 	var scale_factor = display_scale(display_size, Constants.MAP_BOUNDARIES.size)
 	var scaled_size = scale_factor * Constants.TILE_ENVELOPE
-#	assert(scale_factor > 0)
 
 	var n = s.actors.size()
-	var actors = get_node("%actors").get_children()
+	var actorsprites = get_node("%actors").get_children()
+	assert(n == actorsprites.size())
 	for i in n:
 		var actor = s.actors[i]
-		actors[i].position = actor.location * scaled_size
-		actors[i].scale = Vector2(scale_factor, scale_factor)
-		actors[i].visible = actor.is_alive()
-	
+		actorsprites[i].position = actor.location * scaled_size
+		actorsprites[i].scale = Vector2(scale_factor, scale_factor)
+		actorsprites[i].visible = actor.is_alive()
+
 	map.updateSprites(scaled_size, scale_factor)
-
-func _refresh():
-	if !state: return
-	pass
-
-func get_tile_scale() -> int:
-	var display_size: Vector2 = get_rect().size
-	var tile_envelope = Constants.TILE_SIZE + Constants.TILE_MARGIN
-	var tile_bounds = display_size / Constants.MAP_BOUNDARIES.size
-	var scale_factor = floor(min(tile_bounds.x, tile_bounds.y)/ tile_envelope)
-	return scale_factor
-	var scaled_size = scale_factor * tile_envelope

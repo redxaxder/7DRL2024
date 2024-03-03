@@ -2,10 +2,12 @@ extends Control
 
 var playback_speed = 5
 
-var d
 var cursor: int = 0
 var history: EncounterHistory
 var map: Map
+
+signal updated(encounter_state)
+
 func _ready():
 # warning-ignore:return_value_discarded
 	get_node("%to_start").connect("button_down", self, "to_start")
@@ -25,6 +27,14 @@ func _ready():
 	progressbar.min_value = 0
 	progressbar.connect("scrolling", self, "progress_bar_scroll")
 
+func clear():
+	pause()
+	cursor = 0
+	history = null
+	map = null
+	for c in get_node("%combat_log").get_children():
+		c.queue_free()
+
 func view(_history: EncounterHistory, _map: Map):
 	cursor = 0
 	history = _history
@@ -32,11 +42,8 @@ func view(_history: EncounterHistory, _map: Map):
 	var progressbar = get_node("%progress_bar")
 	progressbar.max_value = history.get_states().size() - 1
 
-
 	var events = history.get_events()
 # warning-ignore:return_value_discarded
-	for c in get_node("%combat_log").get_children():
-		c.queue_free()
 	add_log_message("0: Start!", 0)
 	var n = events.size()
 	for i in n:
@@ -44,7 +51,7 @@ func view(_history: EncounterHistory, _map: Map):
 		var log_node = add_log_message(event_text(event), i)
 		log_node.visible = event.is_displayed()
 	play()
-	_hard_refresh()
+	_refresh()
 
 func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
@@ -147,23 +154,15 @@ func _gui_input(event):
 	if event.is_action_pressed("ui_right"): next()
 	if event.is_action_pressed("ui_left"): prev()
 
-# hard refresh for viewing new encounters
-# ordinary refresh for viewing different state of same encounter
-func _hard_refresh(): _refresh(true)
-func _refresh(do_hard_refresh: bool = false):
+func current_state() -> EncounterState:
+	if !history: return null
+	return history.get_states()[cursor]
+
+func _refresh():
 	if !history: return
-	var stateview = get_node("%state_view")
-	var current_state = history.get_states()[cursor]
-
-	if do_hard_refresh:
-		stateview.init_view(current_state, map)
-	else:
-		stateview.update_view(current_state)
-
 	var events =  history.get_events()
 	var time = events[min(cursor, events.size() - 1)].timestamp
 	get_node("%timestamp").text = "%d" % time
-
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = cursor
 	var loglines = get_node("%combat_log").get_children()
@@ -175,3 +174,5 @@ func _refresh(do_hard_refresh: bool = false):
 			loglines[i].highlighted = true
 		else:
 			loglines[i].highlighted = false
+
+	emit_signal("updated", current_state())

@@ -13,26 +13,41 @@ func _ready():
 	var s = Actor.STAT_BLOCKS[Actor.Type.Player]
 	player_stats.initialize(s[0],s[1],s[2],s[3],s[4],s[5])
 
-	make_encounter()
-
 # warning-ignore:return_value_discarded
 	get_node("%GO").connect("pressed",self,"go")
 # warning-ignore:return_value_discarded
 	get_node("%NOGO").connect("pressed",self,"no_go")
+# warning-ignore:return_value_discarded
+	get_node("%DONE").connect("pressed",self,"done")
+# warning-ignore:return_value_discarded
+	get_node("%history_view").connect("updated", self, "history_scroll")
 
+	make_encounter()
+
+
+func history_scroll(s: EncounterState):
+	get_node("%state_view").update_view(s)
 
 func go():
-	while driver.tick() and driver.history.size() < turn_limit:
-		pass
-	var history_viewer = get_node("%history_view")
-	history_viewer.view(driver.history, driver.map)
-	make_encounter()
+	get_node("%history_view").view(driver.history, driver.map)
+	get_node("%DONE").visible = true
+	get_node("%GO").visible = false
+	get_node("%NOGO").visible = false
 
 func no_go():
 	make_encounter()
 
+func done():
+	# apply encounter consequences (none right now)
+	make_encounter()
+	get_node("%DONE").visible = false
+	get_node("%GO").visible = true
+	get_node("%NOGO").visible = true
+
 func make_encounter():
+	get_node("%history_view").clear()
 	var map = Map.new()
+
 	var state = EncounterState.new()
 	var player = CombatEntity.new()
 	player.initialize_with_block(player_stats, Constants.PLAYER_FACTION)
@@ -41,6 +56,7 @@ func make_encounter():
 	player.append_ability(abil)
 	state.add_actor(player, Vector2(1, 1))
 	
+
 	for _i in range(3):
 		var nme = create_enemy()
 		var nme_loc = Vector2(randi() % 5 + 5, randi() % 10)
@@ -51,6 +67,9 @@ func make_encounter():
 	
 	driver = EncounterDriver.new()
 	driver.initialize(state, map)
+	while driver.tick() and driver.history.size() < turn_limit:
+		pass
+	get_node("%state_view").init_view(driver.history.initial(), map)
 
 
 func create_enemy() -> CombatEntity:
