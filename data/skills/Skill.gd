@@ -2,7 +2,10 @@ extends Resource
 
 class_name Skill
 
+enum SkillKind {Ability, Bonus}
+
 export var name: String
 
-func _init(skillName: String):
-	name = skillName
+var ability: Ability = null
+var bonus: Bonus = null
+	
