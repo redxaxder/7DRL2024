@@ -6,6 +6,7 @@ var skill_tree: SkillTree
 var skips = 50
 
 var driver_seed: int
+var current_encounter_seed: int
 var next_encounter_base_state: EncounterState # without player buffs applied
 var next_encounter_map: Map
 var next_encounter_outcome: EncounterHistory
@@ -48,6 +49,7 @@ func _ready():
 
 func consume_health_potion():
 	player_hp += 25
+	make_encounter(current_encounter_seed)
 
 func new_game():
 	gameover = false
@@ -72,6 +74,7 @@ func update_button_visibility():
 	get_node("%GO").visible = gonogo and !gameover
 	get_node("%NOGO").visible = gonogo and !gameover and skips > 0
 	get_node("%RESTART").visible = gameover
+	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
 
 func apply_player_mods(s: EncounterState) -> EncounterState:
 	var st = DataUtil.deep_dup(s)
@@ -112,6 +115,7 @@ func make_encounter(use_seed: int = 0):
 	prints("encounter seed", encounter_seed)
 
 	seed(encounter_seed)
+	current_encounter_seed = encounter_seed
 	driver_seed = randi()
 
 	get_node("%history_view").clear()
@@ -152,7 +156,8 @@ func update_preview():
 
 func toggle_skill_tree():
 	$SkillTreePanel.visible = !$SkillTreePanel.visible
-
+	
+	update_button_visibility()
 	update_preview()
 	update_outcome()
 
