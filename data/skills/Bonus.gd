@@ -2,12 +2,11 @@ extends Resource
 
 class_name Bonus
 
-enum Kind {Brawn, Brains, Guts, Eyesight, Footwork, Hustle}
-var kind
+var stat: int = 0
 var power: int = 0
 
-func initialize_bonus(bkind, bpower: int):
-	kind = bkind
+func initialize_bonus(_stat: int, bpower: int):
+	stat = _stat
 	power = bpower
 
 func generate_description() -> String:
@@ -16,19 +15,7 @@ func generate_description() -> String:
 		description += "Permanently raises "
 	else:
 		description += "Permanently lowers "
-	match kind:
-		Kind.Brawn:
-			description += "Brawn"
-		Kind.Brains:
-			description += "Brains"
-		Kind.Guts:
-			description += "Guts"
-		Kind.Eyesight:
-			description += "Eyesight"
-		Kind.Footwork:
-			description += "Footwork"
-		Kind.Hustle:
-			description += "Hustle"
+	description += Stat.NAME[stat]
 	if power > 0:
 		description += " by {0}".format([power])
 	else:

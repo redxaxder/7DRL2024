@@ -21,8 +21,10 @@ func add_state(st: EncounterState):
 func add_event(evt: EncounterEvent):
 	_events.append(evt)
 
-func get_states() -> Array:
-	return _states
+func get_state(i: int) -> EncounterState:
+	if i < 0 or i >= _states.size(): return null
+	return _states[i]
 
-func get_events() -> Array:
-	return _events
+func get_event(i: int) -> EncounterEvent:
+	if i < 0 or i >= _events.size(): return null
+	return _events[i]

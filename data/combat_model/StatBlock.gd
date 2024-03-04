@@ -2,84 +2,46 @@ extends Resource
 
 class_name StatBlock
 
-# core stats
-var brawn: int setget ,_get_brawn
-var brains: int setget ,_get_brains
-var guts: int setget ,_get_guts
-var eyesight: int setget ,_get_eyesight
-var footwork: int setget ,_get_footwork
-var hustle: int setget ,_get_hustle
+var stats: Array = [0,0,0,0,0,0]
 
 # bonuses
 var bonuses: Array
 
-# setters and getters
-func _get_brawn():
-	var accumulated_power: int = 0
+func get_base_stat(stat: int) -> int:
+	if stat < 6:
+		return stats[stat]
+	else:
+		match stat:
+			Stat.Kind.Health: return brawn() + guts()
+			Stat.Kind.Accuracy: return eyesight() + brains()
+			Stat.Kind.Speed: 	return footwork() + hustle()
+			Stat.Kind.Evasion: return footwork() + guts()
+			Stat.Kind.Damage: return brawn() + brains()
+			Stat.Kind.Crit: return eyesight() + hustle()
+	return 0
+
+func get_modified_stat(stat: int) -> int:
+	var accumulated: int = get_base_stat(stat)
 	for bonus in bonuses:
-		if bonus.kind == Bonus.Kind.Brawn:
-			accumulated_power += bonus.power
-	return brawn + accumulated_power
-	
-func _get_brains():
-	var accumulated_power: int = 0
-	for bonus in bonuses:
-		if bonus.kind == Bonus.Kind.Brains:
-			accumulated_power += bonus.power
-	return brains + accumulated_power
-	
-func _get_guts():
-	var accumulated_power: int = 0
-	for bonus in bonuses:
-		if bonus.kind == Bonus.Kind.Guts:
-			accumulated_power += bonus.power
-	return guts + accumulated_power
-	
-func _get_eyesight():
-	var accumulated_power: int = 0
-	for bonus in bonuses:
-		if bonus.kind == Bonus.Kind.Eyesight:
-			accumulated_power += bonus.power
-	return eyesight + accumulated_power
-	
-func _get_footwork():
-	var accumulated_power: int = 0
-	for bonus in bonuses:
-		if bonus.kind == Bonus.Kind.Footwork:
-			accumulated_power += bonus.power
-	return footwork + accumulated_power
-	
-func _get_hustle():
-	var accumulated_power: int = 0
-	for bonus in bonuses:
-		if bonus.kind == Bonus.Kind.Hustle:
-			accumulated_power += bonus.power
-	return hustle + accumulated_power
+		if bonus.stat == stat:
+			accumulated += bonus.power
+	return accumulated
+
+func brawn(): return get_modified_stat(Stat.Kind.Brawn)
+func brains(): return get_modified_stat(Stat.Kind.Brains)
+func guts(): return get_modified_stat(Stat.Kind.Guts)
+func eyesight(): return get_modified_stat(Stat.Kind.Eyesight)
+func footwork(): return get_modified_stat(Stat.Kind.Footwork)
+func hustle(): return get_modified_stat(Stat.Kind.Hustle)
 
 # derived stats
-func max_hp() -> int:
-	return _get_brawn() + _get_guts()
-	
-func accuracy() -> int:
-	return _get_eyesight() + _get_brains()
-	
-func speed() -> int:
-	return _get_footwork() + _get_hustle()
-	
-func evasion() -> int:
-	return _get_footwork() + _get_guts()
-
-func damage() -> int:
-	return _get_brawn() + _get_brains()
-	
-func crit() -> int:
-	return _get_eyesight() + _get_hustle()
+func max_hp() -> int: return get_modified_stat(Stat.Kind.Health)
+func accuracy() -> int: return get_modified_stat(Stat.Kind.Accuracy)
+func speed() -> int: return get_modified_stat(Stat.Kind.Speed)
+func evasion() -> int: return get_modified_stat(Stat.Kind.Evasion)
+func damage() -> int: return get_modified_stat(Stat.Kind.Damage)
+func crit() -> int: return get_modified_stat(Stat.Kind.Crit)
 
 func initialize(_brawn: int, _brains: int, _guts: int, _eyesight: int, _footwork: int, _hustle: int):
-	brawn = _brawn
-	brains = _brains
-	guts = _guts
-	eyesight = _eyesight
-	footwork = _footwork
-	hustle = _hustle
+	stats = [_brawn, _brains, _guts, _eyesight, _footwork, _hustle]
 	bonuses = []

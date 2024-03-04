@@ -52,7 +52,9 @@ static func handle_ability_activation(state: EncounterState, event: EncounterEve
 			Ability.AbilityEffectKind.Damage:
 				return deal_damage(target, ability.power, event.timestamp, event.elements)
 			Ability.AbilityEffectKind.Buff:
-				state.resolve_buff(target.entity_index, ability.buff_kind, ability.power)
+				match ability.buff_kind:
+					Ability.BuffKind.Stat:
+						state.resolve_stat_buff(target.entity_index, ability.buff_stat, ability.power)
 	return null
 
 static func trigger_damage_ability(state: EncounterState, event: EncounterEvent) -> EncounterEvent:

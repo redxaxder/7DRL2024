@@ -46,14 +46,13 @@ func view(_history: EncounterHistory, _map: Map):
 	history = _history
 	map = _map
 	var progressbar = get_node("%progress_bar")
-	progressbar.max_value = history.get_states().size() - 1
+	progressbar.max_value = history.size() - 1
 
-	var events = history.get_events()
 # warning-ignore:return_value_discarded
 	add_log_message("0: Start!", 0)
-	var n = events.size()
+	var n = history.size() - 1
 	for i in n:
-		var event = events[i]
+		var event = history.get_event(i)
 		var log_node = add_log_message(event_text(event), i)
 		log_node.visible = event.is_displayed()
 	play()
@@ -130,7 +129,7 @@ func to_start():
 
 func to_end():
 	pause()
-	cursor = history.get_states().size() - 1
+	cursor = history.size() - 1
 	_refresh()
 
 func next():
@@ -138,9 +137,9 @@ func next():
 	step()
 
 func step():
-	var n = history.get_states().size() - 1
+	var n = history.size() - 1
 	var next = min(cursor+1,n)
-	while next < n-1 and !history.get_events()[next].is_animated():
+	while next < n-1 and !history.get_event(next).is_animated():
 		next += 1
 	if next > cursor:
 		cursor = next
@@ -182,8 +181,9 @@ func _refresh():
 	if log_is_hovered and last_log_hover >= 0:
 		index = last_log_hover+1
 
-	var current_event = history.get_events()[max(index - 1, 0)]
-	var time = current_event.timestamp
+	var current_event = history.get_event(max(index - 1, 0))
+	var time = 0
+	if current_event: time = current_event.timestamp
 	get_node("%timestamp").text = "%d" % time
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = index
@@ -197,5 +197,5 @@ func _refresh():
 		else:
 			loglines[i].highlighted = false
 	
-	var current_state = history.get_states()[index]
+	var current_state = history.get_state(index)
 	emit_signal("updated", current_state, current_event)

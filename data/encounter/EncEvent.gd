@@ -5,6 +5,7 @@ static func move_event(timestamp:int , actor: CombatEntity, move_to: Vector2) ->
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.Move
+# warning-ignore:return_value_discarded
 	set_actor(evt, actor)
 	evt.target_location = move_to
 	evt.timestamp = timestamp
@@ -14,7 +15,9 @@ static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEnti
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.Attack
+# warning-ignore:return_value_discarded
 	set_actor(evt, actor)
+# warning-ignore:return_value_discarded
 	set_target(evt, target)
 	evt.damage = damage
 	evt.timestamp = timestamp
@@ -25,7 +28,9 @@ static func miss_event(timestamp: int, actor: CombatEntity, target: CombatEntity
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.Attack
+# warning-ignore:return_value_discarded
 	set_actor(evt, actor)
+# warning-ignore:return_value_discarded
 	set_target(evt, target)
 	evt.timestamp = timestamp
 	return evt
@@ -34,6 +39,7 @@ static func death_event(timestamp: int, actor: CombatEntity) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.Death
+# warning-ignore:return_value_discarded
 	set_actor(evt, actor)
 	evt.timestamp = timestamp
 	return evt
@@ -42,6 +48,7 @@ static func damage_event(timestamp: int, target: CombatEntity, damage: int, elem
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.Damage
+# warning-ignore:return_value_discarded
 	set_target(evt, target)
 	evt.timestamp = timestamp
 	evt.damage = damage
@@ -52,6 +59,7 @@ static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability,
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.AbilityActivation
+# warning-ignore:return_value_discarded
 	set_actor(evt, actor)
 	evt.target_location = target
 	evt.ability = ability

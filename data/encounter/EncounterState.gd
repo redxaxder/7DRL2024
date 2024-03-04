@@ -1,14 +1,10 @@
 extends Resource
 
 class_name EncounterState
-# note for when state is changed
-#  - the code that handles duplicating states is DataUtil.dup_state()
-#  - the code that handles displaying states is ViewHistory._refresh()
 
 var player: int
 var actors: Array # [CombatEntity]
 var map: Dictionary # [location Vector2, index in the actor array]
-					# represent walls etc with -1?
 var elapsed_time: int = 0
 
 func get_player() -> CombatEntity:
@@ -96,8 +92,7 @@ func has_location_in_range(location: Vector2, radius: int, faction_mask: int):
 			return true
 	return false
 
-# state.resolve_buff(target.entity_index, ability.buff_kind, ability.power)
-func resolve_buff(actor_id: int, buff_kind, power: int):
-	assert(buff_kind != null)
-	var bonus: Bonus = SkillTree.create_bonus(buff_kind, power)
+func resolve_stat_buff(actor_id: int, stat: int, power: int):
+	var bonus: Bonus = SkillTree.create_bonus(stat, power)
 	actors[actor_id].append_bonus(bonus)
+

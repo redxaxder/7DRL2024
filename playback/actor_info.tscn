@@ -110,7 +110,7 @@ valign = 1
 margin_top = 36.0
 margin_right = 57.0
 margin_bottom = 50.0
-text = "Damage"
+text = "Power"
 valign = 1
 
 [node name="damageval" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]

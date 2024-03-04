@@ -24,6 +24,7 @@ func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int
 	stats = StatBlock.new()
 	stats.initialize(brawn, brains, guts, eyesight, footwork, hustle)
 	cur_hp = stats.max_hp()
+	assert(cur_hp > 0)
 	faction = _faction
 	name = moniker
 
@@ -38,6 +39,7 @@ func pass_time(t: int):
 func initialize_with_block(_stats: StatBlock, _faction: int, moniker: String):
 	stats = DataUtil.deep_dup(_stats)
 	cur_hp = stats.max_hp()
+	assert(cur_hp > 0)
 	faction = _faction
 	name = moniker
 

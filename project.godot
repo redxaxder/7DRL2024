@@ -109,6 +109,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://data/skills/SkillTree.gd"
 }, {
+"base": "Reference",
+"class": "Stat",
+"language": "GDScript",
+"path": "res://data/skills/Stat.gd"
+}, {
 "base": "Resource",
 "class": "StatBlock",
 "language": "GDScript",
@@ -140,6 +145,7 @@ _global_script_class_icons={
 "Skill": "",
 "SkillName": "",
 "SkillTree": "",
+"Stat": "",
 "StatBlock": "",
 "Tile": ""
 }

@@ -7,7 +7,7 @@ class_name Ability
 enum TargetKind {Self, Enemies, Allies, Any}
 enum TriggerEffectKind {Damage, Activated} # TODO add more
 enum AbilityEffectKind {Damage, Buff} # TODO add more
-enum BuffKind {Brawn, Brains, Guts, Eyesight, Footwork, Hustle}
+enum BuffKind {Stat}
 
 var trigger_target_kind
 var trigger_effect_kind
@@ -18,6 +18,7 @@ var name: String = ""
 var aoe_radius: int = 0 # 0 means single target
 var ability_range: int = 1 # 1 means melee
 var buff_kind
+var buff_stat
 var cooldown: int = 0
 var cooldown_max: int = 1
 var elements: Array
@@ -72,78 +73,14 @@ func generate_description() -> String:
 	match effect_kind:
 		AbilityEffectKind.Buff:
 			match buff_kind:
-				BuffKind.Brawn:
-					match effect_target_kind:
-						TargetKind.Self:
-							if power > 0:
-								abil_dict[key] = "get more swole"
-							else:
-								abil_dict[key] = "get less swole"
-						_:
-							if power > 0:
-								abil_dict[key] = "buff its Brawn"
-							else:
-								abil_dict[key] = "debuff its Brawn"
-				BuffKind.Brains:
-					match effect_target_kind:
-						TargetKind.Self:
-							if power > 0:
-								abil_dict[key] = "put on your thinking cap"
-							else:
-								abil_dict[key] = "put on your dunce cap"
-						_:
-							if power > 0:
-								abil_dict[key] = "buff its Brain"
-							else:
-								abil_dict[key] = "debuff its Brains"
-				BuffKind.Guts:
-					match effect_target_kind:
-						TargetKind.Self:
-							if power > 0:
-								abil_dict[key] = "steel yourself"
-							else:
-								abil_dict[key] = "get nervous"
-						_:
-							if power > 0:
-								abil_dict[key] = "buff its Guts"
-							else:
-								abil_dict[key] = "debuff its Guts"
-				BuffKind.Eyesight:
-					match effect_target_kind:
-						TargetKind.Self:
-							if power > 0:
-								abil_dict[key] = "clear your vision"
-							else:
-								abil_dict[key] = "get something in your eye"
-						_:
-							if power > 0:
-								abil_dict[key] = "buff its Eyesight"
-							else:
-								abil_dict[key] = "debuff its Eyesight"
-				BuffKind.Footwork:
-					match effect_target_kind:
-						TargetKind.Self:
-							if power > 0:
-								abil_dict[key] = "bob and weave"
-							else:
-								abil_dict[key] = "trip over your own feet"
-						_:
-							if power > 0:
-								abil_dict[key] = "buff its Footwork"
-							else:
-								abil_dict[key] = "debuff its Footwork"
-				BuffKind.Hustle:
-					match effect_target_kind:
-						TargetKind.Self:
-							if power > 0:
-								abil_dict[key] = "put a little hustle on"
-							else:
-								abil_dict[key] = "become lethargic"
-						_:
-							if power > 0:
-								abil_dict[key] = "buff its Hustle"
-							else:
-								abil_dict[key] = "debuff its Hustle"
+				BuffKind.Stat:
+					var increase = "increase"
+					if power < 0: increase = "decrease"
+					var target = "your"
+					if effect_target_kind != TargetKind.Self:
+						target = "target"
+					abil_dict[key] = "{increase} {target} {stat}".format(
+						{"increase": increase, "target": target, "stat": Stat.NAME[buff_stat]})
 		AbilityEffectKind.Damage:
 			abil_dict[key] = "damage"
 	key = "ability_target"
