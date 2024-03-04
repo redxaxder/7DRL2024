@@ -36,9 +36,18 @@ func _ready():
 	get_node("%OpenSkillTree").connect("pressed", self, "toggle_skill_tree")
 # warning-ignore:return_value_discarded
 	get_node("%state_view").connect("actor_hovered", get_node("%actor_info"), "set_actor")
-
+# warning-ignore:return_value_discarded
+	get_node("%ConsumablesContainer").connect("consume_teleport", self, "no_go")
+# warning-ignore:return_value_discarded
+	get_node("%ConsumablesContainer").connect("consume_health", self, "consume_health_potion")
+	#TODO: get rewards vs no rewards in teleport
+# warning-ignore:return_value_discarded
+	get_node("%ConsumablesContainer").connect("consume_invisibility", self, "no_go")
+	
 	new_game()
 
+func consume_health_potion():
+	player_hp += 25
 
 func new_game():
 	gameover = false
@@ -159,4 +168,3 @@ static func drive_encounter(mod_state: EncounterState, m: Map, ds: int) -> Encou
 	while driver.tick() and driver.current_time < time_limit:
 		pass
 	return driver.history
-
