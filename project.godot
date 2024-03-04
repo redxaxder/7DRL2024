@@ -152,6 +152,7 @@ window/stretch/aspect="keep"
 
 scen=false
 scene=false
+clear=false
 
 [gui]
 
