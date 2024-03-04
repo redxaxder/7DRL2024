@@ -13,6 +13,7 @@ var entity_index: int # duplicated from driver
 var actor_type: int
 var abilities: Array
 var name: String
+var elements: Elements
 
 # stats that do
 var cur_hp: int
@@ -66,6 +67,10 @@ func basic_attack_damage_to_other(other: CombatEntity) -> Array:
 	max_damage = int(max(max_damage, 0))
 	min_damage = int(max(min_damage, 0))
 	return [min_damage, max_damage]
+	
+func defense_against(element) -> float:
+	if elements == null: return 1.0
+	return elements.defense_modifiers.get(element, 1.0)
 
 func append_bonus(skill: Bonus):
 	stats.bonuses.append(skill)

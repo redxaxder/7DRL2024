@@ -36,6 +36,25 @@ const NAMES = [ \
 	"Crab",
 ]
 
+# make_elements( [list of atk elements], {dict of modifiers}
+var ELEMENTS = [\
+	make_elements([], {}),
+	make_elements([Elements.Kind.Physical], {Elements.Kind.Fire: 1.5}),
+	make_elements([Elements.Kind.Physical], {}),
+	make_elements([Elements.Kind.Poison], {Elements.Kind.Ice: 1.5, Elements.Kind.Poison: 0.1}),
+	make_elements([Elements.Kind.Poison, Elements.Kind.Physical], {Elements.Kind.Physical: 1.2}),
+	make_elements([Elements.Kind.Physical], {Elements.Kind.Fire: 1.2})
+]
+
+static func make_elements(atk_mods: Array, def_mods: Dictionary) -> Elements:
+	var e = Elements.new()
+	var am: Dictionary = {}
+	for a in atk_mods:
+		am[a] = true
+	e.attack_modifiers = am
+	e.defense_modifiers = def_mods
+	return e
+
 static func get_sprite(t) -> PackedScene:
 	return SPRITES[t]
 
@@ -53,5 +72,8 @@ static func get_type(t):
 		4: return Type.Snake
 		5: return Type.Crab
 
-static func get_name(t):
+static func get_name(t) -> String:
 	return NAMES[t]
+
+func get_elements(t) -> Elements:
+	return ELEMENTS[t]

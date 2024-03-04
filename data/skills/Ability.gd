@@ -20,8 +20,9 @@ var ability_range: int = 1 # 1 means melee
 var buff_kind
 var cooldown: int = 0
 var cooldown_max: int = 1
+var elements: Array
 
-func initialize_ability(trigger_target, trigger_effect, ability_effect, apower: int, ability_target, aname: String, acooldown: int):
+func initialize_ability(trigger_target, trigger_effect, ability_effect, apower: int, ability_target, aname: String, acooldown: int, aelements: Array):
 	trigger_target_kind = trigger_target
 	trigger_effect_kind = trigger_effect
 	effect_kind = ability_effect
@@ -29,6 +30,7 @@ func initialize_ability(trigger_target, trigger_effect, ability_effect, apower: 
 	effect_target_kind = ability_target
 	name = aname
 	cooldown_max = acooldown
+	elements = aelements
 
 func on_cooldown() -> bool:
 	return cooldown > 0

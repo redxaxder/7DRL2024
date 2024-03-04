@@ -11,7 +11,7 @@ static func move_event(timestamp:int , actor: CombatEntity, move_to: Vector2) ->
 	print("moved to: {0},{1} {2} ".format([move_to.x, move_to.y, evt.actor_idx]))
 	return evt
 
-static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEntity, damage) -> EncounterEvent:
+static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEntity, damage: int, elements: Array) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.Attack
@@ -19,6 +19,7 @@ static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEnti
 	set_target(evt, target)
 	evt.damage = damage
 	evt.timestamp = timestamp
+	evt.elements = elements
 	return evt
 
 static func miss_event(timestamp: int, actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
@@ -38,16 +39,17 @@ static func death_event(timestamp: int, actor: CombatEntity) -> EncounterEvent:
 	evt.timestamp = timestamp
 	return evt
 	
-static func damage_event(timestamp: int, target: CombatEntity, damage: int) -> EncounterEvent:
+static func damage_event(timestamp: int, target: CombatEntity, damage: int, elements: Array) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.Damage
 	set_target(evt, target)
 	evt.timestamp = timestamp
 	evt.damage = damage
+	evt.elements = elements
 	return evt
 
-static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability, target: Vector2) -> EncounterEvent:
+static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability, target: Vector2, elements: Array) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEvent.Kind.AbilityActivation
@@ -56,6 +58,7 @@ static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability,
 	evt.ability = ability
 	evt.ab_name = ability.name
 	evt.timestamp = timestamp
+	evt.elements = elements
 	return evt
 
 static func set_actor(evt: EncounterEvent, actor: CombatEntity) -> EncounterEvent:

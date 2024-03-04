@@ -108,14 +108,14 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterEve
 			state.set_location(event.actor_idx, event.target_location)
 		EncounterEvent.Kind.Attack:
 			var target = state.actors[event.target_idx]
-			return deal_damage(target, event.damage, event.timestamp)
+			return deal_damage(target, event.damage, event.timestamp, event.elements)
 		EncounterEvent.Kind.Death:
 			state.remove_actor(event.actor_idx)
 		EncounterEvent.Kind.AbilityActivation:
 			return handle_ability_activation(state, event)
 		EncounterEvent.Kind.Damage:
 			var target = state.actors[event.target_idx]
-			state.resolve_attack(event.target_idx, event.damage)
+			state.resolve_attack(event.target_idx, get_damage_with_elements(state, event))
 			if !target.is_alive():
 				return EncEvent.death_event(event.timestamp, target)
 						# check to see if the target has any abilities that respond to damage
@@ -126,13 +126,21 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterEve
 				return response
 	return null
 	
+static func get_damage_with_elements(state: EncounterState, event: EncounterEvent):
+	assert(event.kind == EncounterEvent.Kind.Damage)
+	var damage: float = float(event.damage)
+	var target = state.actors[event.target_idx]
+	for e in event.elements:
+		damage *= target.defense_against(e)
+	return damage
+	
 static func handle_ability_activation(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
 	var ability = event.ability
 	var target = state.lookup_actor(event.target_location)
 	if target != null:
 		match ability.effect_kind:
 			Ability.AbilityEffectKind.Damage:
-				return deal_damage(target, ability.power, event.timestamp)
+				return deal_damage(target, ability.power, event.timestamp, event.elements)
 			Ability.AbilityEffectKind.Buff:
 				state.resolve_buff(target.entity_index, ability.buff_kind, ability.power)
 	return null
@@ -197,7 +205,6 @@ func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
 		cursor = previous
 	return Vector2.ZERO
 
-
 func gen_move(actor: CombatEntity) -> EncounterEvent:
 	var move_to = breadth_first_search(actor.location, actor.faction)
 	if move_to != Vector2.ZERO && !cur_state.is_occupied(move_to):
@@ -219,7 +226,10 @@ func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
 	if randf() < actor.chance_to_hit_other(target): # TODO track random state
 		var damage_range = actor.basic_attack_damage_to_other(target)
 		var damage = rand_range(damage_range[0], damage_range[1]) # TODO track random state
-		return EncEvent.attack_event(current_time, actor, target, damage)
+		var elements = []
+		if actor.elements != null:
+			elements = actor.elements.attack_modifiers.keys()
+		return EncEvent.attack_event(current_time, actor, target, damage, elements)
 	else:
 		return EncEvent.miss_event(current_time, actor, target)
 
@@ -227,7 +237,7 @@ static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, 
 	if ability.on_cooldown():
 		return null
 	ability.use()
-	return EncEvent.ability_event(timestamp, actor, ability, target)
+	return EncEvent.ability_event(timestamp, actor, ability, target, ability.elements)
 	
-static func deal_damage(target: CombatEntity, damage: int, timestamp: int) -> EncounterEvent:
-	return EncEvent.damage_event(timestamp, target, damage)
+static func deal_damage(target: CombatEntity, damage: int, timestamp: int, elements: Array) -> EncounterEvent:
+	return EncEvent.damage_event(timestamp, target, damage, elements)

@@ -45,14 +45,14 @@ static func create_bonus(bonus_kind, power: int) -> Bonus:
 	skill.initialize_bonus(bonus_kind, power)
 	return skill
 
-static func create_ability(trigger_target, trigger, effect, power: int, target, message: String, cooldown: int) -> Ability:
+static func create_ability(trigger_target, trigger, effect, power: int, target, message: String, cooldown: int, elements: Array) -> Ability:
 	assert(cooldown >= 0)
 	var skill = Ability.new()
-	skill.initialize_ability(trigger_target, trigger, effect, power, target, message, cooldown)
+	skill.initialize_ability(trigger_target, trigger, effect, power, target, message, cooldown, elements)
 	return skill
 	
-static func create_ability_skill(trigger_target, trigger, effect, power: int, target, message: String, cooldown: int) -> Skill:
-	var ab = create_ability(trigger_target, trigger, effect, power, target, message, cooldown)
+static func create_ability_skill(trigger_target, trigger, effect, power: int, target, message: String, cooldown: int, elements: Array) -> Skill:
+	var ab = create_ability(trigger_target, trigger, effect, power, target, message, cooldown, elements)
 	var skill = Skill.new()
 	skill.name = message
 	skill.kind = Skill.Kind.Ability
@@ -80,8 +80,8 @@ func hand_rolled_skill_tree():
 	skills = []
 	for i in numRows:
 		skills.append([])
-	var abil: Skill = create_ability_skill(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, SkillName.generate_name(), 0)
-	var abil2: Skill = create_ability_skill(Ability.TargetKind.Self, Ability.TriggerEffectKind.Activated, Ability.AbilityEffectKind.Buff, 1, Ability.TargetKind.Self, SkillName.generate_name(), 20)
+	var abil: Skill = create_ability_skill(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, SkillName.generate_name(), 0, [Elements.Kind.Physical])
+	var abil2: Skill = create_ability_skill(Ability.TargetKind.Self, Ability.TriggerEffectKind.Activated, Ability.AbilityEffectKind.Buff, 1, Ability.TargetKind.Self, SkillName.generate_name(), 20, [])
 	apply_buff_to_skill(abil2, Ability.BuffKind.Brawn)
 	append_skill(abil2, 0)
 	append_skill(abil, 1)
