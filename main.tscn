@@ -4,13 +4,13 @@
 [ext_resource path="res://playback/ViewHistory.tscn" type="PackedScene" id=2]
 [ext_resource path="res://playback/ViewState.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ViewSkillTree.tscn" type="PackedScene" id=4]
+
 [ext_resource path="res://playback/actor_info.tscn" type="PackedScene" id=5]
 [ext_resource path="res://fonts/CommitMono-400-Regular.otf" type="DynamicFontData" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 24
 font_data = ExtResource( 6 )
-
 [node name="main" type="Node2D"]
 script = ExtResource( 1 )
 
@@ -122,6 +122,7 @@ margin_right = 995.0
 margin_bottom = 69.0
 text = "Close"
 
+
 [node name="actor_info" parent="." instance=ExtResource( 5 )]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -140,3 +141,22 @@ margin_right = 276.0
 margin_bottom = 39.0
 custom_fonts/font = SubResource( 1 )
 text = "PREVIEW"
+
+[node name="ConsumablesContainer" type="HBoxContainer" parent="."]
+margin_left = 43.0
+margin_top = 530.0
+margin_right = 210.0
+margin_bottom = 544.0
+rect_scale = Vector2( 0.1, 0.1 )
+custom_constants/separation = 60
+
+[node name="Button" type="Button" parent="."]
+margin_left = 240.0
+margin_top = 45.0
+margin_right = 390.0
+margin_bottom = 195.0
+
+[node name="Label" type="Label" parent="Button"]
+margin_right = 40.0
+margin_bottom = 14.0
+text = "Hello"

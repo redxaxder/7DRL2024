@@ -36,6 +36,7 @@ func _ready():
 	get_node("%OpenSkillTree").connect("pressed", self, "toggle_skill_tree")
 # warning-ignore:return_value_discarded
 	get_node("%state_view").connect("actor_hovered", get_node("%actor_info"), "set_actor")
+
 	new_game()
 
 
@@ -142,6 +143,7 @@ func update_preview():
 
 func toggle_skill_tree():
 	$SkillTreePanel.visible = !$SkillTreePanel.visible
+
 	update_preview()
 	update_outcome()
 
