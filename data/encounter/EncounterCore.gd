@@ -1,12 +1,11 @@
 class_name EncounterCore
 
 
-#TODO: return an array
-static func update(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
+static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ EncounterEvent ]
 	match event.kind:
 		EncounterEvent.Kind.Move:
 			if state.lookup_actor(event.target_location) != null:
-				return null
+				return []
 			state.set_location(event.actor_idx, event.target_location)
 		EncounterEvent.Kind.Attack:
 			var target = state.actors[event.target_idx]
@@ -19,17 +18,17 @@ static func update(state: EncounterState, event: EncounterEvent) -> EncounterEve
 			var target = state.actors[event.target_idx]
 			state.resolve_attack(event.target_idx, get_damage_with_elements(state, event))
 			if !target.is_alive():
-				return EncEvent.death_event(event.timestamp, target)
-	return null
+				return [EncEvent.death_event(event.timestamp, target)]
+	return []
 
-static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> EncounterEvent:
+static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> Array: # [ EncounterEvent ]
 	if ability.on_cooldown():
-		return null
+		return []
 	ability.use()
-	return EncEvent.ability_event(timestamp, actor, ability, target, ability.effect.elements)
+	return [EncEvent.ability_event(timestamp, actor, ability, target, ability.effect.elements)]
 	
-static func deal_damage(target: CombatEntity, damage: int, timestamp: int, elements: Array) -> EncounterEvent:
-	return EncEvent.damage_event(timestamp, target, damage, elements)
+static func deal_damage(target: CombatEntity, damage: int, timestamp: int, elements: Array) -> Array: # [ EncounterEvent ]
+	return [EncEvent.damage_event(timestamp, target, damage, elements)]
 
 static func get_damage_with_elements(state: EncounterState, event: EncounterEvent) -> float:
 	assert(event.kind == EncounterEvent.Kind.Damage)
@@ -39,7 +38,7 @@ static func get_damage_with_elements(state: EncounterState, event: EncounterEven
 		damage *= target.defense_against(e)
 	return damage
 	
-static func handle_ability_activation(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
+static func handle_ability_activation(state: EncounterState, event: EncounterEvent) -> Array: # [ EncounterEvent ]
 	var ability = event.ability #TODO: handle AOEs
 	var target = state.lookup_actor(event.target_location)
 	if target != null:
@@ -48,7 +47,7 @@ static func handle_ability_activation(state: EncounterState, event: EncounterEve
 				return deal_damage(target, ability.effect.power, event.timestamp, event.elements)
 			SkillsCore.EffectType.StatBuff:
 				state.resolve_stat_buff(target.entity_index, ability.effect.mod_stat, ability.effect.power)
-	return null
+	return []
 
 #TODO: bring back triggers
 #static func trigger_damage_ability(state: EncounterState, event: EncounterEvent) -> EncounterEvent:

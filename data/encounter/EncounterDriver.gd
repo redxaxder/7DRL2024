@@ -61,13 +61,22 @@ func tick() -> bool:
 		return false
 	# 2. run its AI
 	#    AI produces an EncounterEvent
-	var evt: EncounterEvent = tick_ai(actor)
+	var events = tick_ai(actor)
+	assert(events.size() > 0)
 
-	# 3. record that event
-	while evt != null:
+	# 3. record that event, run it, and run events it triggers
+	while events.size() > 0:
+		var evt = events.pop_front()
+		assert(evt != null)
+		assert(typeof(evt) != TYPE_ARRAY)
 		history.add_event(evt)
-		evt = EncounterCore.update(cur_state, evt)
+		var triggered_events = EncounterCore.update(cur_state, evt)
+		for t in triggered_events:
+			assert(t != null)
+			assert(typeof(t) != TYPE_ARRAY)
 		history.add_state(DataUtil.deep_dup(cur_state))
+		triggered_events.shuffle()
+		events.append_array(triggered_events)
 
 	# 5. If actor is still alive, re-insert it into the priority queue
 	actor.pass_time(int(100.0 / float(actor.stats.speed())))
@@ -75,7 +84,7 @@ func tick() -> bool:
 	
 	return true
 
-func tick_ai(actor: CombatEntity) -> EncounterEvent:
+func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent
 	#1. can I attack?
 	#   Yes - attack and return attack event
 	var targets: Array = []
@@ -87,7 +96,8 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 			var atarget = cur_state.get_ability_target(actor.entity_index, ability)
 			if atarget != Vector2.INF:
 				var ab_evt = EncounterCore.use_ability(actor, atarget, ability, current_time)
-				if ab_evt != null: return ab_evt
+				if ab_evt.size() > 0: 
+					return ab_evt
 		
 	current_time = actor.time_spent
 	cardinal.shuffle()
@@ -104,11 +114,11 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	if targets.size() > 0:
 		targets.shuffle()
 		var target = targets[0]
-		return attack_roll(actor, target)
+		return [attack_roll(actor, target)]
 	#2. TODO can I use a different ability?
 	#3. Approach closest target (breadth-first search)
 	else:
-		return gen_move(actor)
+		return [gen_move(actor)]
 
 
 const max_dist = 50
