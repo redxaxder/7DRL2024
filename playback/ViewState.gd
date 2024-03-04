@@ -26,9 +26,8 @@ func init_view(s: EncounterState, m: Map):
 	state = s
 	for i in state.actors.size():
 		var actor = state.actors[i]
-		var sprite = Actor.get_sprite(actor.actor_type).instance()
+		var sprite = Actor.make_sprite(actor.actor_type)
 		actors.add_child(sprite)
-		sprite.centered = false
 		var hotspot = Control.new()
 		sprite.add_child(hotspot)
 		hotspot.rect_size = Constants.TILE_SIZE * Vector2(1,1)

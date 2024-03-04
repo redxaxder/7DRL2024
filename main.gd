@@ -145,10 +145,10 @@ func make_encounter(use_seed: int = 0):
 func create_enemy() -> CombatEntity:
 	var nme = CombatEntity.new()
 	var a = Actor.new()
-	var reference_nme_idx = randi() % (Actor.Type.size() - 1) + 1
-	nme.initialize_with_block(Actor.get_stat_block(reference_nme_idx), Constants.ENEMY_FACTION, Actor.get_name(reference_nme_idx))	
-	nme.actor_type = Actor.get_type(reference_nme_idx)
-	nme.elements = a.get_elements(reference_nme_idx)
+	var reference_nme_type = randi() % (Actor.Type.size() - 1) + 1
+	nme.initialize_with_block(Actor.get_stat_block(reference_nme_type), Constants.ENEMY_FACTION, Actor.get_name(reference_nme_type))	
+	nme.actor_type = reference_nme_type
+	nme.elements = a.get_elements(reference_nme_type)
 	return nme
 
 func update_preview():
