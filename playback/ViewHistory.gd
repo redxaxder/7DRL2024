@@ -30,6 +30,10 @@ func _ready():
 	progressbar.min_value = 0
 	progressbar.connect("scrolling", self, "progress_bar_scroll")
 
+func _end():
+	if !history: return 0
+	return history.size() - 1
+
 func clear():
 	pause()
 	cursor = 0
@@ -46,12 +50,11 @@ func view(_history: EncounterHistory, _map: Map):
 	history = _history
 	map = _map
 	var progressbar = get_node("%progress_bar")
-	progressbar.max_value = history.size() - 1
+	progressbar.max_value = _end()
 
 # warning-ignore:return_value_discarded
 	add_log_message("0: Start!", 0)
-	var n = history.size() - 1
-	for i in n:
+	for i in _end():
 		var event = history.get_event(i)
 		var log_node = add_log_message(event_text(event), i)
 		log_node.visible = event.is_displayed()
@@ -129,7 +132,7 @@ func to_start():
 
 func to_end():
 	pause()
-	cursor = history.size() - 1
+	cursor = _end()
 	_refresh()
 
 func next():
@@ -137,7 +140,7 @@ func next():
 	step()
 
 func step():
-	var n = history.size() - 1
+	var n = _end()
 	var next = min(cursor+1,n)
 	while next < n-1 and !history.get_event(next).is_animated():
 		next += 1
