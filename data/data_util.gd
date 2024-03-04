@@ -1,5 +1,16 @@
 class_name DataUtil
 
+
+# takes all the values in the dict with names matching names of object properties
+# and assigns them to the object
+static func assign_from_dict(o: Object, dict: Dictionary):
+	var props = o.get_property_list()
+	for prop_info in props:
+		var prop_name = prop_info["name"]
+		var dv = dict.get(prop_name, null)
+		if dv != null:
+			o.set(prop_name, dv)
+
 static func deep_dup(what):
 	var t = typeof(what)
 	var it

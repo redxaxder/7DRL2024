@@ -14,6 +14,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://data/skills/Ability.gd"
 }, {
+"base": "Resource",
+"class": "Activation",
+"language": "GDScript",
+"path": "res://data/skills/Activation.gd"
+}, {
 "base": "Reference",
 "class": "Actor",
 "language": "GDScript",
@@ -38,6 +43,11 @@ _global_script_classes=[ {
 "class": "DataUtil",
 "language": "GDScript",
 "path": "res://data/data_util.gd"
+}, {
+"base": "Resource",
+"class": "Effect",
+"language": "GDScript",
+"path": "res://data/skills/Effect.gd"
 }, {
 "base": "Resource",
 "class": "Elements",
@@ -110,6 +120,11 @@ _global_script_classes=[ {
 "path": "res://data/skills/SkillTree.gd"
 }, {
 "base": "Reference",
+"class": "SkillsCore",
+"language": "GDScript",
+"path": "res://data/skills/SkillsCore.gd"
+}, {
+"base": "Reference",
 "class": "Stat",
 "language": "GDScript",
 "path": "res://data/skills/Stat.gd"
@@ -126,11 +141,13 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Ability": "",
+"Activation": "",
 "Actor": "",
 "Bonus": "",
 "CombatEntity": "",
 "Constants": "",
 "DataUtil": "",
+"Effect": "",
 "Elements": "",
 "EncEvent": "",
 "EncounterCore": "",
@@ -145,6 +162,7 @@ _global_script_class_icons={
 "Skill": "",
 "SkillName": "",
 "SkillTree": "",
+"SkillsCore": "",
 "Stat": "",
 "StatBlock": "",
 "Tile": ""

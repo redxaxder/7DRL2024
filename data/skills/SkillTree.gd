@@ -45,28 +45,12 @@ static func create_bonus(stat, power: int) -> Bonus:
 	skill.initialize_bonus(stat, power)
 	return skill
 
-static func create_ability(trigger_target, trigger, effect, power: int, target, message: String, cooldown: int, elements: Array) -> Ability:
-	assert(cooldown >= 0)
-	var skill = Ability.new()
-	skill.initialize_ability(trigger_target, trigger, effect, power, target, message, cooldown, elements)
-	return skill
-	
-static func create_ability_skill(trigger_target, trigger, effect, power: int, target, message: String, cooldown: int, elements: Array) -> Skill:
-	var ab = create_ability(trigger_target, trigger, effect, power, target, message, cooldown, elements)
+static func create_ability_skill(ability: Ability) -> Skill:
 	var skill = Skill.new()
-	skill.name = message
+	skill.name = ability.name
 	skill.kind = Skill.Kind.Ability
-	skill.ability = ab
+	skill.ability = ability
 	return skill
-	
-static func apply_buff(ability: Ability, buff_kind):
-	assert(buff_kind != null)
-	ability.buff_kind = buff_kind
-	
-static func apply_stat_buff_to_skill(skill: Skill, stat: int):
-	assert(skill.kind == Skill.Kind.Ability)
-	skill.ability.buff_kind = Ability.BuffKind.Stat
-	skill.ability.buff_stat = stat
 	
 static func create_bonus_skill(stat: int, power: int, skill_name: String) -> Skill:
 	var bonus: Bonus = create_bonus(stat, power)
@@ -76,14 +60,38 @@ static func create_bonus_skill(stat: int, power: int, skill_name: String) -> Ski
 	skill.bonus = bonus
 	return skill
 
+static func build_ability(d: Dictionary) -> Ability:
+	var result = Ability.new()
+	result.name = d.get("label", "unnamed")
+	result.effect = Effect.new()
+	result.effect.set_script(preload("res://data/skills/Effect.gd"))
+	DataUtil.assign_from_dict(result.effect, d)
+	result.activation = Activation.new()
+	result.activation.set_script(preload("res://data/skills/Activation.gd"))
+	DataUtil.assign_from_dict(result.activation, d)
+	return result
+
 func hand_rolled_skill_tree():
 	name = "Jack of All Trades"
 	skills = []
 	for i in numRows:
 		skills.append([])
-	var abil: Skill = create_ability_skill(Ability.TargetKind.Self, Ability.TriggerEffectKind.Damage, Ability.AbilityEffectKind.Damage, 1, Ability.TargetKind.Enemies, SkillName.generate_name(), 0, [Elements.Kind.Physical])
-	var abil2: Skill = create_ability_skill(Ability.TargetKind.Self, Ability.TriggerEffectKind.Activated, Ability.AbilityEffectKind.Buff, 1, Ability.TargetKind.Self, SkillName.generate_name(), 20, [])
-	apply_stat_buff_to_skill(abil2, Stat.Kind.Speed)
+	var abil: Skill = create_ability_skill(build_ability({
+		"label": SkillName.generate_name(),
+		"trigger_listen": SkillsCore.Target.Self,
+		"trigger_aim": SkillsCore.TriggerAim.Random,
+		"trigger_effect": SkillsCore.EffectType.Damage,
+		"effect_type": SkillsCore.EffectType.Damage,
+		"power": 4,
+		"target": SkillsCore.Target.Enemies,
+		}))
+	var abil2: Skill = create_ability_skill(build_ability({
+		"label": SkillName.generate_name(),
+		"target": SkillsCore.Target.Self,
+		"effect_type": SkillsCore.EffectType.StatBuff,
+		"mod_stat": Stat.Kind.Health,
+		"power": 20,
+		}))
 	append_skill(abil2, 0)
 	append_skill(abil, 1)
 	append_skill(create_bonus_skill(Stat.Kind.Brawn, 5, SkillName.generate_name()), 0)

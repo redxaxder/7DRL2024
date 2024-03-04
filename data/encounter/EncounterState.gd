@@ -64,32 +64,35 @@ func get_ability_target(actor_id: int, ability: Ability) -> Vector2:
 	return Vector2.INF
 	
 func find_valid_targets(actor_id: int, ability: Ability) -> Array:
-	var faction_mask: int = 0
-	match ability.effect_target_kind:
-		Ability.TargetKind.Self:
-			return [actors[actor_id].location]
-		Ability.TargetKind.Any:
-			faction_mask = Constants.ANY_FACTION
-		Ability.TargetKind.Enemies:
-			faction_mask = Constants.negate_faction(actors[actor_id].faction)
-		Ability.TargetKind.Allies:
-			faction_mask = actors[actor_id].faction
-	var position = actors[actor_id].location
 	var locations = []
+	var can_target_empty = Constants.matches_mask(SkillsCore.Target.Empty, ability.effect.targets)
+	if Constants.matches_mask(SkillsCore.Target.Self, ability.effect.targets):
+		locations.append(actors[actor_id].location)
+	var faction_mask: int = 0
+	if Constants.matches_mask(SkillsCore.Target.Enemies, ability.effect.targets):
+		faction_mask = faction_mask | Constants.negate_faction(actors[actor_id].faction)
+	if Constants.matches_mask(SkillsCore.Target.Allies, ability.effect.targets):
+		faction_mask = faction_mask | actors[actor_id].faction
+	var position = actors[actor_id].location
 	# locations should be all of the locations in ability.range such that
 	# there is at least one valid target within the ability radius
-	for x in range(position.x - ability.ability_range, position.x + ability.ability_range + 1):
-		for y in range(position.y - ability.ability_range, position.y + ability.ability_range + 1):
-			if has_location_in_range(Vector2(x, y), ability.aoe_radius, faction_mask):
+	var r = ability.activation.ability_range
+	for x in range(position.x - r, position.x + r + 1):
+		for y in range(position.y - r, position.y + r + 1):
+			if has_location_in_range(Vector2(x, y), ability.activation.radius, faction_mask, can_target_empty):
 				locations.append(Vector2(x, y))
 	return locations
 
-func has_location_in_range(location: Vector2, radius: int, faction_mask: int):
-	for actor in actors: 
-		var vec: Vector2 = (actor.location - location).abs()
-		var distance = max(vec.x, vec.y)
-		if distance <= radius and Constants.matches_mask(actor.faction, faction_mask):
-			return true
+func has_location_in_range(p: Vector2, radius: int, faction_mask: int, can_target_empty: bool):
+	for x in range(p.x - radius, p.x + radius + 1):
+		for y in range(p.y - radius, p.y + radius + 1):
+			var effect_location = Vector2(x,y)
+			var effect_target = lookup_actor(effect_location)
+			if effect_target == null:
+				if can_target_empty: return true
+				else: continue
+			if Constants.matches_mask(effect_target.faction, faction_mask):
+				return true
 	return false
 
 func resolve_stat_buff(actor_id: int, stat: int, power: int):
