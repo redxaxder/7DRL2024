@@ -92,7 +92,7 @@ func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent
 	use_seeded_rng()
 	actor.abilities.shuffle()
 	for ability in actor.abilities:
-		if ability.activation.trigger_effect == SkillsCore.Trigger.Action:
+		if ability.activation.trigger == SkillsCore.Trigger.Action:
 			var atarget = cur_state.get_ability_target(actor.entity_index, ability)
 			if atarget != Vector2.INF:
 				var ab_evt = EncounterCore.use_ability(actor, atarget, ability, current_time)

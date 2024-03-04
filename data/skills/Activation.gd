@@ -2,8 +2,8 @@ extends Resource
 
 class_name Activation
 
-# what specifically triggers this?
-var trigger_effect = SkillsCore.Trigger.Action
+# what kind of event triggers this?
+var trigger = SkillsCore.Trigger.Action
 # for automatic triggers: events involving which actors are listened for?
 var trigger_listen = SkillsCore.Target.Self
 # for automatic triggers: where does the effect get applied

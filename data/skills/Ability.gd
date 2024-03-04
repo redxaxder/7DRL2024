@@ -32,7 +32,7 @@ func generate_description() -> String:
 #			abil_dict[key] = "an enemy"
 #		TargetKind.Self:
 #			abil_dict[key] = "you"
-#	key = "trigger_effect"
+#	key = "trigger"
 #	match trigger_effect_kind:
 #		TriggerEffectKind.Activated:
 #			match trigger_target_kind:

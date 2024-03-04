@@ -79,3 +79,6 @@ func append_bonus(skill: Bonus):
 	
 func append_ability(skill: Ability):
 	abilities.append(skill)
+
+func event_reactions() -> Array:
+	return [] #TODO: collect reactions

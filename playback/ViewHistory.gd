@@ -66,7 +66,7 @@ func event_text(evt: EncounterEvent) -> String:
 		EncounterEvent.Kind.Attack:
 			return "{time}: {an} attacked {tn}!".format(evt.dict())
 		EncounterEvent.Kind.Death:
-			return "{time}: {an} died!".format(evt.dict())
+			return "{time}: {tn} died!".format(evt.dict())
 		EncounterEvent.Kind.Move:
 			return "{time}: {an} moved! -> {loc}".format(evt.dict())
 		EncounterEvent.Kind.AbilityActivation:
