@@ -150,3 +150,10 @@ margin_right = 43.0
 margin_bottom = 523.0
 custom_constants/separation = 24
 script = ExtResource( 5 )
+
+[node name="Inventory" type="HBoxContainer" parent="ConsumablesContainer"]
+unique_name_in_owner = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ConsumablesContainer"]
+margin_left = 24.0
+margin_right = 24.0

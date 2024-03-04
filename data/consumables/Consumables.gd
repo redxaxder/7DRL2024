@@ -48,9 +48,15 @@ func _ready():
 		better_button.rect_min_size = Vector2(size,size)
 		better_button.rect_size = Vector2(size,size)
 		better_button.connect("pressed",self,"use_consumable", [c])
+		better_button.connect("mouse_entered",self,"hover_style", [c])
 
+# TODO: make this work
+func hover_style(c):
+	print('mousey')
+	CONSUMABLE_TYPES[c].button.self_modulate = Color(1,1,1)
 	
 func use_consumable(type: String):
+	print("pressed")
 	if consumable_inventory[type] > 0:	
 		consumable_inventory[type] = consumable_inventory[type]-1
 		emit_signal("consume_"+type)
