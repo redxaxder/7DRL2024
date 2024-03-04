@@ -33,9 +33,8 @@ func initialize_ability(trigger_target, trigger_effect, ability_effect, apower: 
 func on_cooldown() -> bool:
 	return cooldown > 0
 	
-func cool():
-	assert(cooldown > 0)
-	cooldown -= 1
+func cool(t: int):
+	cooldown = max(0, cooldown - t)
 
 func use():
 	assert(cooldown == 0)

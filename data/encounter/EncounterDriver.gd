@@ -63,7 +63,7 @@ func tick() -> bool:
 		history.add_state(DataUtil.deep_dup(cur_state))
 
 	# 5. If actor is still alive, re-insert it into the priority queue
-	actor.time_spent += int(100.0 / float(actor.stats.speed()))
+	actor.pass_time(int(100.0 / float(actor.stats.speed())))
 	queue.insert(actor, actor.time_spent)
 	
 	return true
@@ -225,7 +225,6 @@ func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
 
 static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> EncounterEvent:
 	if ability.on_cooldown():
-		ability.cool()
 		return null
 	ability.use()
 	return EncEvent.ability_event(timestamp, actor, ability, target)

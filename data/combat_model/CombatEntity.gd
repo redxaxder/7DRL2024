@@ -29,6 +29,11 @@ func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int
 func is_alive():
 	return (cur_hp > 0)
 
+func pass_time(t: int):
+	time_spent += t
+	for a in abilities:
+		a.cool(t)
+
 func initialize_with_block(_stats: StatBlock, _faction: int, moniker: String):
 	stats = DataUtil.deep_dup(_stats)
 	cur_hp = stats.max_hp()
