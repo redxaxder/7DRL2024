@@ -8,7 +8,7 @@ enum Type{
 	Crab,
 	Imp,
 	Shrine,
-	Golbin,
+	Goblin,
 	Gazer,
 	}
 
@@ -48,23 +48,20 @@ const NAMES = [ \
 	"Crab",
 	"Imp",
 	"Shrine",
-	"Golbin",
+	"Goblin",
 	"Gazer",
 ]
 
 # make_elements( [list of atk elements], {dict of modifiers}
-var ELEMENTS = [\
-	make_elements([], {}),
-	make_elements([Elements.Kind.Physical], {Elements.Kind.Fire: 1.5}),
-	make_elements([Elements.Kind.Physical], {}),
-	make_elements([Elements.Kind.Poison], {Elements.Kind.Ice: 1.5, Elements.Kind.Poison: 0.1}),
-	make_elements([Elements.Kind.Poison, Elements.Kind.Physical], {Elements.Kind.Physical: 1.2}),
-	make_elements([Elements.Kind.Physical], {Elements.Kind.Fire: 1.2}),
-	make_elements([], {}),
-	make_elements([], {}),
-	make_elements([], {}),
-	make_elements([], {}),
-]
+var NO_ELEMENTS = make_elements([], {})
+var ELEMENTS = { \
+	Type.Wolf: 	make_elements([Elements.Kind.Physical], {Elements.Kind.Fire: 1.5}),
+	Type.Squid:	make_elements([Elements.Kind.Physical], {}),
+	Type.Blorp:	make_elements([Elements.Kind.Poison], {Elements.Kind.Ice: 1.5, Elements.Kind.Poison: 0.1}),
+	Type.Snake:	make_elements([Elements.Kind.Poison, Elements.Kind.Physical], {Elements.Kind.Physical: 1.2}),
+	Type.Crab:	make_elements([Elements.Kind.Physical], {Elements.Kind.Fire: 1.2}),
+}
+
 
 static func make_elements(atk_mods: Array, def_mods: Dictionary) -> Elements:
 	var e = Elements.new()
@@ -89,11 +86,11 @@ static func make_sprite(t) -> Sprite:
 
 static func get_stat_block(t: int) -> StatBlock:
 	var sb = StatBlock.new()
-	sb.initialize(STAT_BLOCKS[t][0], STAT_BLOCKS[t][1], STAT_BLOCKS[t][2], STAT_BLOCKS[t][3], STAT_BLOCKS[t][4], STAT_BLOCKS[t][5])
+	sb.initialize_array(STAT_BLOCKS[t])
 	return sb
 
 static func get_name(t: int) -> String:
 	return NAMES[t]
 
 func get_elements(t: int) -> Elements:
-	return ELEMENTS[t]
+	return ELEMENTS.get(t, NO_ELEMENTS)

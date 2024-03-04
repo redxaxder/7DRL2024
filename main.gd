@@ -60,7 +60,7 @@ func new_game():
 	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = StatBlock.new()
 	var s = Actor.STAT_BLOCKS[Actor.Type.Player]
-	player_stats.initialize(s[0],s[1],s[2],s[3],s[4],s[5])
+	player_stats.initialize_array(s)
 	player_hp = 20
 	make_encounter(1234)
 

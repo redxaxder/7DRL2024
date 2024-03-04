@@ -42,6 +42,10 @@ func evasion() -> int: return get_modified_stat(Stat.Kind.Evasion)
 func damage() -> int: return get_modified_stat(Stat.Kind.Damage)
 func crit() -> int: return get_modified_stat(Stat.Kind.Crit)
 
+func initialize_array(array: Array):
+	stats  = array.duplicate()
+	bonuses = []
+
 func initialize(_brawn: int, _brains: int, _guts: int, _eyesight: int, _footwork: int, _hustle: int):
 	stats = [_brawn, _brains, _guts, _eyesight, _footwork, _hustle]
 	bonuses = []
