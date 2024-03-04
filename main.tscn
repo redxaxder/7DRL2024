@@ -1,10 +1,15 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://playback/ViewHistory.tscn" type="PackedScene" id=2]
 [ext_resource path="res://playback/ViewState.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ViewSkillTree.tscn" type="PackedScene" id=4]
 [ext_resource path="res://playback/actor_info.tscn" type="PackedScene" id=5]
+[ext_resource path="res://fonts/CommitMono-400-Regular.otf" type="DynamicFontData" id=6]
+
+[sub_resource type="DynamicFont" id=1]
+size = 24
+font_data = ExtResource( 6 )
 
 [node name="main" type="Node2D"]
 script = ExtResource( 1 )
@@ -126,3 +131,12 @@ margin_left = 547.0
 margin_top = 65.0
 margin_right = 727.0
 margin_bottom = 160.0
+
+[node name="damage_preview" type="Label" parent="."]
+unique_name_in_owner = true
+margin_left = 165.0
+margin_top = 12.0
+margin_right = 276.0
+margin_bottom = 39.0
+custom_fonts/font = SubResource( 1 )
+text = "PREVIEW"

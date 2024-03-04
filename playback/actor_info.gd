@@ -20,4 +20,3 @@ func _refresh():
 	get_node("%evasionval").text = "{0}".format([actor.stats.evasion()])
 	get_node("%damageval").text = "{0}".format([actor.stats.damage()])
 	get_node("%critval").text = "{0}".format([actor.stats.crit()])
-	print("refresh!")

@@ -15,11 +15,19 @@ var history: EncounterHistory
 var map: Map
 
 var encounter_seed
+
+var rng: int
+
+func use_seeded_rng():
+	seed(rng)
+	rng = randi()
+
 func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 	if use_seed == 0:
 		encounter_seed = randi()
 	else:
 		seed(use_seed)
+	rng = randi()
 
 	queue = PriorityQueue.new()
 	history = EncounterHistory.new()
@@ -73,6 +81,7 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 	#   Yes - attack and return attack event
 	var targets: Array = []
 	var dirs = []
+	use_seeded_rng()
 	actor.abilities.shuffle()
 	for ability in actor.abilities:
 		if ability.trigger_effect_kind == Ability.TriggerEffectKind.Activated:
@@ -105,6 +114,8 @@ func tick_ai(actor: CombatEntity) -> EncounterEvent:
 static func update(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
 	match event.kind:
 		EncounterEvent.Kind.Move:
+			if state.lookup_actor(event.target_location) != null:
+				return null
 			state.set_location(event.actor_idx, event.target_location)
 		EncounterEvent.Kind.Attack:
 			var target = state.actors[event.target_idx]
@@ -157,6 +168,7 @@ static func trigger_damage_ability(state: EncounterState, event: EncounterEvent)
 	
 const max_dist = 50
 func breadth_first_search(start: Vector2, friendly_faction: int) -> Vector2:
+	use_seeded_rng()
 	var dist: int = 1
 	var frontier = [start]
 	var visited: Dictionary = {}
@@ -223,6 +235,7 @@ func gen_move(actor: CombatEntity) -> EncounterEvent:
 	return EncEvent.move_event(current_time, actor, move_to)
 
 func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
+	use_seeded_rng()
 	if randf() < actor.chance_to_hit_other(target): # TODO track random state
 		var damage_range = actor.basic_attack_damage_to_other(target)
 		var damage = rand_range(damage_range[0], damage_range[1]) # TODO track random state

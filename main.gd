@@ -4,9 +4,14 @@ var player_stats: StatBlock
 var player_hp: int = 20
 var skill_tree: SkillTree
 var skips = 50
-var driver: EncounterDriver
 
-const turn_limit = 500
+var driver_seed: int
+var next_encounter_base_state: EncounterState # without player buffs applied
+var next_encounter_map: Map
+var next_encounter_outcome: EncounterHistory
+
+
+const time_limit = 9999
 
 # are we waiting for the player to decide to do an encounter, (true) or
 # are we in the history view (false)?
@@ -58,16 +63,19 @@ func update_button_visibility():
 	get_node("%NOGO").visible = gonogo and !gameover and skips > 0
 	get_node("%RESTART").visible = gameover
 
-func go():
-	var player = driver.cur_state.get_player()
+func apply_player_mods(s: EncounterState) -> EncounterState:
+	var st = DataUtil.deep_dup(s)
+	var player = st.get_player()
 	for skill in skill_tree.unlocks:
 		if skill.kind == Skill.Kind.Ability:
 			player.append_ability(skill.ability)
 		elif skill.kind == Skill.Kind.Bonus:
 			player.append_bonus(skill.bonus)
-	while driver.tick() and driver.history.size() < turn_limit:
-		pass
-	get_node("%history_view").view(driver.history, driver.map)
+	return st
+
+
+func go():
+	get_node("%history_view").view(next_encounter_outcome, map)
 	gonogo = false
 	update_button_visibility()
 
@@ -77,7 +85,7 @@ func no_go():
 
 func done():
 	# apply encounter consequences
-	player_hp = driver.history.final().get_player().cur_hp
+	player_hp = next_encounter_outcome.final().get_player().cur_hp
 	if player_hp > 0:
 		make_encounter()
 	else:
@@ -94,8 +102,9 @@ func make_encounter(use_seed: int = 0):
 	prints("encounter seed", encounter_seed)
 
 	seed(encounter_seed)
+	driver_seed = randi()
+
 	get_node("%history_view").clear()
-	
 	map.generate()
 
 	var state = EncounterState.new()
@@ -111,11 +120,12 @@ func make_encounter(use_seed: int = 0):
 		var nme = create_enemy()
 		state.add_actor(nme, map.random_passable_tile(state).loc)
 	
-	driver = EncounterDriver.new()
-	driver.initialize(state, map, encounter_seed)
-	get_node("%state_view").init_view(DataUtil.deep_dup(state), map)
+	next_encounter_base_state = state
 	gonogo = true
 	update_button_visibility()
+	get_node("%state_view").init_view(apply_player_mods(next_encounter_base_state), map)
+	update_preview()
+	update_outcome()
 
 
 func create_enemy() -> CombatEntity:
@@ -127,5 +137,24 @@ func create_enemy() -> CombatEntity:
 	nme.elements = a.get_elements(reference_nme_idx)
 	return nme
 
+func update_preview():
+	get_node("%state_view").update_view(apply_player_mods(next_encounter_base_state))
+
 func toggle_skill_tree():
 	$SkillTreePanel.visible = !$SkillTreePanel.visible
+	update_preview()
+	update_outcome()
+
+func update_outcome():
+	var mod_state = apply_player_mods(next_encounter_base_state)
+	next_encounter_outcome = drive_encounter(mod_state, map, driver_seed)
+	var encounter_damage = player_hp - next_encounter_outcome.final().get_player().cur_hp
+	get_node("%damage_preview").text = "[ - %d ]" % encounter_damage
+	
+static func drive_encounter(mod_state: EncounterState, m: Map, ds: int) -> EncounterHistory:
+	var driver = EncounterDriver.new()
+	driver.initialize(mod_state, m, ds)
+	while driver.tick() and driver.current_time < time_limit:
+		pass
+	return driver.history
+
