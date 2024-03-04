@@ -48,7 +48,7 @@ func _ready():
 	new_game()
 
 func consume_health_potion():
-	player_hp += 25
+	player_hp += get_node("%ConsumablesContainer").health_potion_amount
 	make_encounter(current_encounter_seed)
 
 func new_game():
