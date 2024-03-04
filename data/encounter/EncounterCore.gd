@@ -2,6 +2,7 @@ class_name EncounterCore
 
 static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ EncounterEvent ]
 	assert(event.target_location != Vector2(-99999,-99999))
+	assert(event.actor_idx >= 0)
 	var result = []
 
 	match event.kind:
@@ -62,16 +63,21 @@ static func get_event_source(state: EncounterState, event: EncounterEvent) -> Co
 static func get_event_target(state: EncounterState, event: EncounterEvent) -> CombatEntity:
 	return state.actors[event.target_idx]
 
+
 static func trigger_reaction(state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
-	return [] #TODO
-#	var trigger_focus
+	return []
+#	var trigger_focus = null
 #	match reaction.activation.trigger:
 #		SkillsCore.Trigger.Action:
 #			push_error("Inconceivable! Automatically triggering an activated ability?")
 #			assert(false)
 #		SkillsCore.Trigger.DamageTaken:
-#			trigger_focus = event.
+#			trigger_focus = state.lookup_actor(event.target_location)
+#		SkillsCore.Trigger.DamageDealt:
+#			trigger_focus = state.actors[event.actor_idx]
+#	if trigger
 #	var does_it_trigger: bool = false
+#	if trigger_actor == null and Constants.matches_mask(reaction.activation.trigger_listen,SkillsCore.Target.Empty)
 #	match reaction.activation.trigger_listen:
 #		SkillsCore.Target.Self:
 	
@@ -84,3 +90,46 @@ static func trigger_reaction(state: EncounterState, event: EncounterEvent, react
 #				if atarget != Vector2.INF:
 #					return use_ability(responder, atarget, ab, event.timestamp)
 #	return null
+
+
+
+static func get_ability_target(state: EncounterState, actor_id: int, ability: Ability) -> Vector2:
+	var targets = find_valid_targets(state, actor_id, ability)
+	if targets.size() > 0:
+		targets.shuffle()
+		return targets[0]
+	return Vector2.INF
+
+
+static func find_valid_targets(state: EncounterState, actor_id: int, ability: Ability) -> Array:
+	var locations = []
+	var can_target_empty = Constants.matches_mask(SkillsCore.Target.Empty, ability.effect.targets)
+	if Constants.matches_mask(SkillsCore.Target.Self, ability.effect.targets):
+		locations.append(state.actors[actor_id].location)
+	var faction_mask: int = 0
+	if Constants.matches_mask(SkillsCore.Target.Enemies, ability.effect.targets):
+		faction_mask = faction_mask | Constants.negate_faction(state.actors[actor_id].faction)
+	if Constants.matches_mask(SkillsCore.Target.Allies, ability.effect.targets):
+		faction_mask = faction_mask | state.actors[actor_id].faction
+	var position = state.actors[actor_id].location
+	# locations should be all of the locations in ability.range such that
+	# there is at least one valid target within the ability radius
+	var r = ability.activation.ability_range
+	for x in range(position.x - r, position.x + r + 1):
+		for y in range(position.y - r, position.y + r + 1):
+			if has_location_in_range(state, Vector2(x, y), ability.activation.radius, faction_mask, can_target_empty):
+				locations.append(Vector2(x, y))
+	return locations
+
+
+static func has_location_in_range(state: EncounterState, p: Vector2, radius: int, faction_mask: int, can_target_empty: bool):
+	for x in range(p.x - radius, p.x + radius + 1):
+		for y in range(p.y - radius, p.y + radius + 1):
+			var effect_location = Vector2(x,y)
+			var effect_target = state.lookup_actor(effect_location)
+			if effect_target == null:
+				if can_target_empty: return true
+				else: continue
+			if Constants.matches_mask(effect_target.faction, faction_mask):
+				return true
+	return false

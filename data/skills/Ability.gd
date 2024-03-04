@@ -6,6 +6,8 @@ var name: String = ""
 var activation: Activation
 var effect: Effect
 
+#TODO (part C?): move all instance state out of here and into the owning actor
+# this will let us alias the abilities when duplicating encounter states
 var cooldown = 0
 
 func on_cooldown() -> bool:

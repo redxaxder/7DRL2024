@@ -4,8 +4,13 @@ enum EffectType { Damage, StatBuff } #TBD: other kinds of buffs; summons
 
 enum Trigger { 
 	Action, # the actor initiates the skill using their turn
-	DamageTaken # automatic: actor takes a hit
+	Automatic, # automatic listens for events
 	}
+
+# Ex: trigger when event happens TO me
+# Ex: trigger when event happens TO ally
+# Ex: trigger when event happens BY me, TO enemy
+	
 enum TriggerAim { 
 	Self, # trigger aims at the owner of the ability
 	EventSource, # trigger aims at the originator of the event that tripped it

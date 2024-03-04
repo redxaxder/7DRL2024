@@ -93,7 +93,7 @@ func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent
 	actor.abilities.shuffle()
 	for ability in actor.abilities:
 		if ability.activation.trigger == SkillsCore.Trigger.Action:
-			var atarget = cur_state.get_ability_target(actor.entity_index, ability)
+			var atarget = EncounterCore.get_ability_target(cur_state, actor.entity_index, ability)
 			if atarget != Vector2.INF:
 				var ab_evt = EncounterCore.use_ability(actor, atarget, ability, current_time)
 				if ab_evt.size() > 0: 

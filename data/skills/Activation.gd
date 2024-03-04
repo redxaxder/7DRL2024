@@ -4,8 +4,12 @@ class_name Activation
 
 # what kind of event triggers this?
 var trigger = SkillsCore.Trigger.Action
-# for automatic triggers: events involving which actors are listened for?
-var trigger_listen = SkillsCore.Target.Self
+
+# for automatic triggers: which events will trigger this?
+var filter_event_type = -1
+var fiter_event_source = SkillsCore.TargetAny
+var fiter_event_target = SkillsCore.TargetAny
+
 # for automatic triggers: where does the effect get applied
 var trigger_aim = SkillsCore.TriggerAim.Random
 
