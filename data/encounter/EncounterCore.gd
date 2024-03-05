@@ -111,8 +111,10 @@ static func trigger_reaction(timestamp: int, state: EncounterState, event: Encou
 			return [FireRandomAbilityPlaceHolder.new(timestamp, reactor, reaction)]
 		SkillsCore.TriggerAim.Self:
 			target_loc = reactor.location
-	var step = abs(target_loc - reaction.position)
+	var step = (target_loc - reactor.location).abs()
 	if max(step.x,step.y) > reaction.activation.ability_range:
+		return []
+	if !actor_filter_match(state, reactor, target_loc, reaction.effect.targets):
 		return []
 	return use_ability(reactor, target_loc, reaction, timestamp)
 
@@ -142,16 +144,24 @@ static func find_valid_targets(state: EncounterState, actor_id: int, ability: Ab
 	# locations should be all of the locations in ability.range such that
 	# there is at least one valid target within the ability radius
 	var r = ability.activation.ability_range
-	for x in range(position.x - r, position.x + r + 1):
-		for y in range(position.y - r, position.y + r + 1):
+	var min_x = int(max(position.x-r, Constants.MAP_BOUNDARIES.position.x))
+	var max_x = int(min(position.x+r, Constants.MAP_BOUNDARIES.size.x + Constants.MAP_BOUNDARIES.position.x))
+	var min_y = int(max(position.y-r, Constants.MAP_BOUNDARIES.position.y))
+	var max_y = int(min(position.y+r, Constants.MAP_BOUNDARIES.size.y + Constants.MAP_BOUNDARIES.position.y))
+	for x in range(min_x, max_x + 1):
+		for y in range(min_y, max_y + 1):
 			if has_location_in_range(state, Vector2(x, y), ability.activation.radius, faction_mask, can_target_empty):
 				locations.append(Vector2(x, y))
 	return locations
 
 
 static func has_location_in_range(state: EncounterState, p: Vector2, radius: int, faction_mask: int, can_target_empty: bool):
-	for x in range(p.x - radius, p.x + radius + 1):
-		for y in range(p.y - radius, p.y + radius + 1):
+	var min_x = int(max(p.x-radius, Constants.MAP_BOUNDARIES.position.x))
+	var max_x = int(min(p.x+radius, Constants.MAP_BOUNDARIES.size.x + Constants.MAP_BOUNDARIES.position.x))
+	var min_y = int(max(p.y-radius, Constants.MAP_BOUNDARIES.position.y))
+	var max_y = int(min(p.y+radius, Constants.MAP_BOUNDARIES.size.y + Constants.MAP_BOUNDARIES.position.y))
+	for x in range(min_x, max_x + 1):
+		for y in range(min_y, max_y + 1):
 			var effect_location = Vector2(x,y)
 			var effect_target = state.lookup_actor(effect_location)
 			if effect_target == null:

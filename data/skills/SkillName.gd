@@ -50,6 +50,7 @@ const adjectives = [
 	"Phantom",
 	"Crimson",
 	"Vivid",
+	"Vintage",
 	"Emerald",
 	"Amber",
 	"Indigo",
@@ -61,6 +62,7 @@ const adjectives = [
 	"Explosive",
 	"Sapphire",
 	"Sparkling",
+	"Opportunistic",
 	"Silent",
 	"Echoing",
 	"Whispering",
@@ -78,16 +80,10 @@ const adjectives = [
 	"Ruined",
 	"Derelict",
 	"Deserted",
+	"Unbecoming",
 ]
 
 const trailers = [
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
-	"",
 	"of the World",
 	"against Greed",
 	"against Strength",
@@ -157,6 +153,7 @@ const mains = [
 	"Vortex",
 	"Elysium",
 	"Ascendancy",
+	"Opportunity",
 ]
 
 static func generate_name() -> String:
