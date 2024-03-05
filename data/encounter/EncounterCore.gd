@@ -67,17 +67,6 @@ static func get_event_target(state: EncounterState, event: EncounterEvent) -> Co
 
 
 
-static func actor_filter_match(state: EncounterState, observer: CombatEntity, location: Vector2, filter: int) -> bool:
-	var occupant = state.lookup_actor(location)
-	if occupant == null:
-		return Constants.matches_mask(SkillsCore.Target.Empty, filter)
-	elif occupant == observer:
-		return Constants.matches_mask(SkillsCore.Target.Self, filter)
-	elif occupant.faction == observer.faction:
-		return Constants.matches_mask(SkillsCore.Target.Allies, filter)
-	elif occupant.faction != observer.faction:
-		return Constants.matches_mask(SkillsCore.Target.Enemies, filter)
-	return false
 
 
 class FireRandomAbilityPlaceHolder:
@@ -108,22 +97,22 @@ static func trigger_reaction(timestamp: int, state: EncounterState, event: Encou
 		SkillsCore.TriggerAim.EventTarget:
 			target_loc = event.target_location
 		SkillsCore.TriggerAim.Random: 
-			target_loc = get_ability_target(state, reactor.entity_index, reaction)
+			target_loc = get_ability_target(state, reactor, reaction)
 			if target_loc == Vector2.INF: return []
 		SkillsCore.TriggerAim.Self:
 			target_loc = reactor.location
 	var step = (target_loc - reactor.location).abs()
 	if max(step.x,step.y) > reaction.activation.ability_range:
 		return []
-	if !actor_filter_match(state, reactor, target_loc, reaction.effect.targets):
+	if !has_target(state, target_loc, reaction.activation.radius, reactor, reaction.effect.targets):
 		return []
 	return use_ability(reactor, target_loc, reaction, timestamp)
 
 
 
 
-static func get_ability_target(state: EncounterState, actor_id: int, ability: Ability) -> Vector2:
-	var targets = find_valid_targets(state, actor_id, ability)
+static func get_ability_target(state: EncounterState, actor:CombatEntity, ability: Ability) -> Vector2:
+	var targets = find_valid_targets(state, actor, ability)
 	if targets.size() > 0:
 		targets.shuffle()
 		return targets[0]
@@ -131,17 +120,9 @@ static func get_ability_target(state: EncounterState, actor_id: int, ability: Ab
 
 
 #TODO: pass Actor instead of actor id
-static func find_valid_targets(state: EncounterState, actor_id: int, ability: Ability) -> Array:
+static func find_valid_targets(state: EncounterState, actor:CombatEntity, ability: Ability) -> Array:
 	var locations = []
-	var can_target_empty = Constants.matches_mask(SkillsCore.Target.Empty, ability.effect.targets)
-	if Constants.matches_mask(SkillsCore.Target.Self, ability.effect.targets):
-		locations.append(state.actors[actor_id].location)
-	var faction_mask: int = 0
-	if Constants.matches_mask(SkillsCore.Target.Enemies, ability.effect.targets):
-		faction_mask = faction_mask | Constants.negate_faction(state.actors[actor_id].faction)
-	if Constants.matches_mask(SkillsCore.Target.Allies, ability.effect.targets):
-		faction_mask = faction_mask | state.actors[actor_id].faction
-	var position = state.actors[actor_id].location
+	var position = actor.location
 	# locations should be all of the locations in ability.range such that
 	# there is at least one valid target within the ability radius
 	var r = ability.activation.ability_range
@@ -151,23 +132,31 @@ static func find_valid_targets(state: EncounterState, actor_id: int, ability: Ab
 	var max_y = int(min(position.y+r, Constants.MAP_BOUNDARIES.size.y + Constants.MAP_BOUNDARIES.position.y))
 	for x in range(min_x, max_x + 1):
 		for y in range(min_y, max_y + 1):
-			if has_location_in_range(state, Vector2(x, y), ability.activation.radius, faction_mask, can_target_empty):
+			if has_target(state, Vector2(x, y), ability.activation.radius, actor, ability.effect.targets):
 				locations.append(Vector2(x, y))
 	return locations
 
-
-static func has_location_in_range(state: EncounterState, p: Vector2, radius: int, faction_mask: int, can_target_empty: bool) -> bool:
+static func has_target(state: EncounterState, p: Vector2, radius: int, source: CombatEntity, filter: int) -> bool:
 	var min_x = int(max(p.x-radius, Constants.MAP_BOUNDARIES.position.x))
 	var max_x = int(min(p.x+radius, Constants.MAP_BOUNDARIES.size.x + Constants.MAP_BOUNDARIES.position.x))
 	var min_y = int(max(p.y-radius, Constants.MAP_BOUNDARIES.position.y))
 	var max_y = int(min(p.y+radius, Constants.MAP_BOUNDARIES.size.y + Constants.MAP_BOUNDARIES.position.y))
 	for x in range(min_x, max_x + 1):
 		for y in range(min_y, max_y + 1):
-			var effect_location = Vector2(x,y)
-			var effect_target = state.lookup_actor(effect_location)
-			if effect_target == null:
-				if can_target_empty: return true
-				else: continue
-			if Constants.matches_mask(effect_target.faction, faction_mask):
+			if actor_filter_match(state, source, p, filter):
 				return true
+	return false
+
+static func actor_filter_match(state: EncounterState, observer: CombatEntity, location: Vector2, filter: int) -> bool:
+	var occupant = state.lookup_actor(location)
+	if occupant == null:
+		return Constants.matches_mask(SkillsCore.Target.Empty, filter)
+	elif !occupant.is_alive():
+		return false
+	elif occupant == observer:
+		return Constants.matches_mask(SkillsCore.Target.Self, filter)
+	elif occupant.faction == observer.faction:
+		return Constants.matches_mask(SkillsCore.Target.Allies, filter)
+	elif occupant.faction != observer.faction:
+		return Constants.matches_mask(SkillsCore.Target.Enemies, filter)
 	return false

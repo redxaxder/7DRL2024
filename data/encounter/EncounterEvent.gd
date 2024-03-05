@@ -8,7 +8,7 @@ class_name EncounterEvent
 # Is this event's log message visible by default?
 func is_displayed() -> bool:
 	match kind:
-#		EncounterEventKind.Kind.Move: return false
+		EncounterEventKind.Kind.Move: return false
 		_: return true
 
 # When the sim is in playback mode, does it play this event 
