@@ -78,6 +78,16 @@ static func actor_filter_match(state: EncounterState, observer: CombatEntity, lo
 		return Constants.matches_mask(SkillsCore.Target.Enemies, filter)
 	return false
 
+
+class FireRandomAbilityPlaceHolder:
+	var timestamp: int
+	var source: CombatEntity
+	var ability: Ability
+	func _init(_timestamp, _source, _ability):
+		timestamp = _timestamp
+		source = _source
+		ability = _ability
+
 static func trigger_reaction(timestamp: int, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
 	assert(reaction.activation.trigger == SkillsCore.Trigger.Automatic)
 	# does the event type match the event filter?
@@ -96,9 +106,8 @@ static func trigger_reaction(timestamp: int, state: EncounterState, event: Encou
 			target_loc = source_location
 		SkillsCore.TriggerAim.EventTarget:
 			target_loc = event.target_location
-#		 #TODO: figure outhow to do this while keeping rng inside driver
-#		SkillsCore.TriggerAim.Random: 
-#			return []
+		SkillsCore.TriggerAim.Random: 
+			return [FireRandomAbilityPlaceHolder.new(timestamp, reactor, reaction)]
 		SkillsCore.TriggerAim.Self:
 			target_loc = reactor.location
 	return use_ability(reactor, target_loc, reaction, timestamp)
@@ -114,7 +123,7 @@ static func get_ability_target(state: EncounterState, actor_id: int, ability: Ab
 	return Vector2.INF
 
 
-
+#TODO: pass Actor instead of actor id
 static func find_valid_targets(state: EncounterState, actor_id: int, ability: Ability) -> Array:
 	var locations = []
 	var can_target_empty = Constants.matches_mask(SkillsCore.Target.Empty, ability.effect.targets)

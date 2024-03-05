@@ -70,10 +70,17 @@ func tick() -> bool:
 		assert(evt != null)
 		assert(typeof(evt) != TYPE_ARRAY)
 		history.add_event(evt)
-		var triggered_events = EncounterCore.update(cur_state, evt)
-		for t in triggered_events:
-			assert(t != null)
-			assert(typeof(t) != TYPE_ARRAY)
+		var reactions = EncounterCore.update(cur_state, evt)
+		var triggered_events = []
+		for r in reactions:
+			assert(r != null)
+			assert(typeof(r) != TYPE_ARRAY)
+			if r is EncounterCore.FireRandomAbilityPlaceHolder:
+				var target = EncounterCore.get_ability_target(cur_state, r.source.entity_index, r.ability)
+				if target == Vector2.INF: continue
+				triggered_events.append_array(EncounterCore.use_ability(r.source, target, r.ability, r.timestamp))
+			else:
+				triggered_events.append(r)
 		history.add_state(DataUtil.deep_dup(cur_state))
 		triggered_events.shuffle()
 		events.append_array(triggered_events)
