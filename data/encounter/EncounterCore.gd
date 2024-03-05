@@ -26,6 +26,7 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 				result.append(EncEvent.death_event(event.timestamp, killer, target))
 	for reactor in state.actors:
 		for reaction in reactor.event_reactions():
+			if reaction.on_cooldown(): continue
 			result.append_array(trigger_reaction(event.timestamp, state, event, reactor, reaction))
 	return result
 
@@ -110,6 +111,9 @@ static func trigger_reaction(timestamp: int, state: EncounterState, event: Encou
 			return [FireRandomAbilityPlaceHolder.new(timestamp, reactor, reaction)]
 		SkillsCore.TriggerAim.Self:
 			target_loc = reactor.location
+	var step = abs(target_loc - reaction.position)
+	if max(step.x,step.y) > reaction.activation.ability_range:
+		return []
 	return use_ability(reactor, target_loc, reaction, timestamp)
 
 
