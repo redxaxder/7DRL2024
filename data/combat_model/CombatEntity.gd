@@ -11,7 +11,8 @@ var stats: StatBlock
 var faction: int
 var entity_index: int # duplicated from driver
 var actor_type: int
-var abilities: Array
+var actions: Array
+var reactions: Array
 var name: String
 var elements: Elements
 
@@ -33,7 +34,9 @@ func is_alive():
 
 func pass_time(t: int):
 	time_spent += t
-	for a in abilities:
+	for a in actions:
+		a.cool(t)
+	for a in reactions:
 		a.cool(t)
 
 func initialize_with_block(_stats: StatBlock, _faction: int, moniker: String):
@@ -78,7 +81,11 @@ func append_bonus(skill: Bonus):
 	stats.bonuses.append(skill)
 	
 func append_ability(skill: Ability):
-	abilities.append(skill)
+	match skill.activation.trigger:
+		SkillsCore.Trigger.Action:
+			actions.append(skill)
+		SkillsCore.Trigger.Automatic:
+			reactions.append(skill)
 
 func event_reactions() -> Array:
-	return [] #TODO: collect reactions
+	return reactions

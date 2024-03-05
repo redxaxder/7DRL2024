@@ -19,13 +19,14 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			result.append_array(handle_ability_activation(state, event))
 		EncounterEvent.Kind.Damage:
 			var target = state.actors[event.target_idx]
+# warning-ignore:narrowing_conversion
 			state.resolve_attack(event.target_idx, get_damage_with_elements(state, event))
 			if !target.is_alive():
 				var killer = state.actors[event.actor_idx]
 				result.append(EncEvent.death_event(event.timestamp, killer, target))
 	for reactor in state.actors:
 		for reaction in reactor.event_reactions():
-			result.append_array(trigger_reaction(state, event, reactor, reaction))
+			result.append_array(trigger_reaction(event.timestamp, state, event, reactor, reaction))
 	return result
 
 static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> Array: # [ EncounterEvent ]
@@ -64,32 +65,44 @@ static func get_event_target(state: EncounterState, event: EncounterEvent) -> Co
 	return state.actors[event.target_idx]
 
 
-static func trigger_reaction(state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
-	return []
-#	var trigger_focus = null
-#	match reaction.activation.trigger:
-#		SkillsCore.Trigger.Action:
-#			push_error("Inconceivable! Automatically triggering an activated ability?")
-#			assert(false)
-#		SkillsCore.Trigger.DamageTaken:
-#			trigger_focus = state.lookup_actor(event.target_location)
-#		SkillsCore.Trigger.DamageDealt:
-#			trigger_focus = state.actors[event.actor_idx]
-#	if trigger
-#	var does_it_trigger: bool = false
-#	if trigger_actor == null and Constants.matches_mask(reaction.activation.trigger_listen,SkillsCore.Target.Empty)
-#	match reaction.activation.trigger_listen:
-#		SkillsCore.Target.Self:
-	
-#static func trigger_damage_ability(state: EncounterState, event: EncounterEvent) -> EncounterEvent:
-#	if event.damage > 0:
-#		var responder: CombatEntity = state.actors[event.target_idx]
-#		for ab in responder.abilities:
-#			if ab.trigger_effect_kind == Ability.TriggerEffectKind.Damage && ab.trigger_target_kind == Ability.TargetKind.Self:
-#				var atarget = state.get_ability_target(responder.entity_index, ab)
-#				if atarget != Vector2.INF:
-#					return use_ability(responder, atarget, ab, event.timestamp)
-#	return null
+
+static func actor_filter_match(state: EncounterState, observer: CombatEntity, location: Vector2, filter: int) -> bool:
+	var occupant = state.lookup_actor(location)
+	if occupant == null:
+		return Constants.matches_mask(SkillsCore.Target.Empty, filter)
+	elif occupant == observer:
+		return Constants.matches_mask(SkillsCore.Target.Self, filter)
+	elif occupant.faction == observer.faction:
+		return Constants.matches_mask(SkillsCore.Target.Allies, filter)
+	elif occupant.faction != observer.faction:
+		return Constants.matches_mask(SkillsCore.Target.Enemies, filter)
+	return false
+
+static func trigger_reaction(timestamp: int, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
+	assert(reaction.activation.trigger == SkillsCore.Trigger.Automatic)
+	# does the event type match the event filter?
+	if reaction.activation.filter_event_type != event.kind:
+		return []
+	# does the event source match the source filter?
+	var source_location = state.actors[event.actor_idx].location
+	if !actor_filter_match(state, reactor, source_location, reaction.activation.filter_event_source):
+		return []
+	# does the event target match the target filter?
+	if !actor_filter_match(state, reactor, event.target_location, reaction.activation.filter_event_target):
+		return []
+	var target_loc
+	match reaction.activation.trigger_aim:
+		SkillsCore.TriggerAim.EventSource: 
+			target_loc = source_location
+		SkillsCore.TriggerAim.EventTarget:
+			target_loc = event.target_location
+#		 #TODO: figure outhow to do this while keeping rng inside driver
+#		SkillsCore.TriggerAim.Random: 
+#			return []
+		SkillsCore.TriggerAim.Self:
+			target_loc = reactor.location
+	return use_ability(reactor, target_loc, reaction, timestamp)
+
 
 
 
@@ -99,6 +112,7 @@ static func get_ability_target(state: EncounterState, actor_id: int, ability: Ab
 		targets.shuffle()
 		return targets[0]
 	return Vector2.INF
+
 
 
 static func find_valid_targets(state: EncounterState, actor_id: int, ability: Ability) -> Array:

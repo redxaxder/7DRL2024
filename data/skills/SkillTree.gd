@@ -71,6 +71,16 @@ static func build_ability(d: Dictionary) -> Ability:
 	DataUtil.assign_from_dict(result.activation, d)
 	return result
 
+
+var trigger = SkillsCore.Trigger.Action
+
+# for automatic triggers: which events will trigger this?
+var filter_event_type = -1
+var filter_event_source = SkillsCore.TargetAny
+var filter_event_target = SkillsCore.TargetAny
+
+# for automatic triggers: where does the effect get applied
+var trigger_aim = SkillsCore.TriggerAim.EventSource
 func hand_rolled_skill_tree():
 	name = "Jack of All Trades"
 	skills = []
@@ -78,22 +88,28 @@ func hand_rolled_skill_tree():
 		skills.append([])
 	var abil: Skill = create_ability_skill(build_ability({
 		"label": SkillName.generate_name(),
-		"trigger_listen": SkillsCore.Target.Self,
-		"trigger_aim": SkillsCore.TriggerAim.Random,
+		"trigger": SkillsCore.Trigger.Automatic,
+		"filter_event_type": EncounterEvent.Kind.Damage,
+		"filter_event_target": SkillsCore.Target.Self,
+		"trigger_aim": SkillsCore.TriggerAim.EventSource,
 		"trigger_effect": SkillsCore.EffectType.Damage,
 		"effect_type": SkillsCore.EffectType.Damage,
 		"power": 4,
 		"target": SkillsCore.Target.Enemies,
 		}))
-	var abil2: Skill = create_ability_skill(build_ability({
-		"label": SkillName.generate_name(),
-		"target": SkillsCore.Target.Self,
-		"effect_type": SkillsCore.EffectType.StatBuff,
-		"mod_stat": Stat.Kind.Health,
-		"power": 20,
-		}))
-	append_skill(abil2, 0)
+#	var abil2: Skill = create_ability_skill(build_ability({
+#		"label": SkillName.generate_name(),
+#		"target": SkillsCore.Target.Self,
+#		"effect_type": SkillsCore.EffectType.StatBuff,
+#		"mod_stat": Stat.Kind.Health,
+#		"power": 20,
+#		}))
+#	append_skill(abil2, 0)
 	append_skill(abil, 1)
+#	append_skill(create_ability_skill(build_ability({
+#		"label": SkillName.generate_name(),
+#
+#		})), 2)
 	append_skill(create_bonus_skill(Stat.Kind.Brawn, 5, SkillName.generate_name()), 0)
 	append_skill(create_bonus_skill(Stat.Kind.Brains, 5, SkillName.generate_name()), 1)
 	append_skill(create_bonus_skill(Stat.Kind.Guts, 5, SkillName.generate_name()), 2)

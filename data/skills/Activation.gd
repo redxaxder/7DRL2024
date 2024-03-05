@@ -7,11 +7,11 @@ var trigger = SkillsCore.Trigger.Action
 
 # for automatic triggers: which events will trigger this?
 var filter_event_type = -1
-var fiter_event_source = SkillsCore.TargetAny
-var fiter_event_target = SkillsCore.TargetAny
+var filter_event_source = SkillsCore.TargetAny
+var filter_event_target = SkillsCore.TargetAny
 
 # for automatic triggers: where does the effect get applied
-var trigger_aim = SkillsCore.TriggerAim.Random
+var trigger_aim = SkillsCore.TriggerAim.EventSource
 
 # how many spaces around the targeted one get hit
 # the effect is applied to all appropriate targets within the radius

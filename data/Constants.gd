@@ -13,8 +13,8 @@ const ANY_FACTION: int = PLAYER_FACTION | ENEMY_FACTION
 static func negate_faction(faction: int) -> int:
 	return ANY_FACTION ^ faction
 
-static func matches_mask(faction: int, faction_mask: int) -> bool:
-	return faction & faction_mask > 0
+static func matches_mask(mask_1: int, mask2: int) -> bool:
+	return mask_1 & mask2 > 0
 
 
 const CLEAR_COLOR: Color = Color(0.086275, 0.082353, 0.098039)
