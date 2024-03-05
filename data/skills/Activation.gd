@@ -5,10 +5,27 @@ class_name Activation
 # what kind of event triggers this?
 var trigger = SkillsCore.Trigger.Action
 
-# for automatic triggers: which events will trigger this?
-var filter_event_type = -1
-var filter_event_source = SkillsCore.TargetAny
-var filter_event_target = SkillsCore.TargetAny
+
+
+enum FilterFocus { Source, Target }
+enum Filter{ DamageDealt, DamageRecieved }
+const FILTER_FOCUS = [ FilterFocus.Source, FilterFocus.Target]
+const FILTER_EVENT = [ EncounterEventKind.Kind.Damage, EncounterEventKind.Kind.Damage ]
+var filter: int = 0
+var filter_actor = 0# me, ally, enemy, any
+
+
+func filter_event_type():
+	return FILTER_EVENT[filter]
+func filter_event_source():
+	if FILTER_FOCUS[filter] == FilterFocus.Source:
+		return filter_actor
+	return SkillsCore.TargetAny
+func filter_event_target():
+	if FILTER_FOCUS[filter] == FilterFocus.Target:
+		return filter_actor
+	return SkillsCore.TargetAny
+
 
 # for automatic triggers: where does the effect get applied
 var trigger_aim = SkillsCore.TriggerAim.EventSource

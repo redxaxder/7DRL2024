@@ -70,17 +70,10 @@ func tick() -> bool:
 		assert(evt != null)
 		assert(typeof(evt) != TYPE_ARRAY)
 		history.add_event(evt)
-		var reactions = EncounterCore.update(cur_state, evt)
-		var triggered_events = []
-		for r in reactions:
+		var triggered_events = EncounterCore.update(cur_state, evt)
+		for r in triggered_events:
 			assert(r != null)
 			assert(typeof(r) != TYPE_ARRAY)
-			if r is EncounterCore.FireRandomAbilityPlaceHolder:
-				var target = EncounterCore.get_ability_target(cur_state, r.source.entity_index, r.ability)
-				if target == Vector2.INF: continue
-				triggered_events.append_array(EncounterCore.use_ability(r.source, target, r.ability, r.timestamp))
-			else:
-				triggered_events.append(r)
 		history.add_state(DataUtil.deep_dup(cur_state))
 		triggered_events.shuffle()
 		events.append_array(triggered_events)
@@ -99,12 +92,12 @@ func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent
 	use_seeded_rng()
 	actor.actions.shuffle()
 	for ability in actor.actions:
-		if ability.activation.trigger == SkillsCore.Trigger.Action:
-			var atarget = EncounterCore.get_ability_target(cur_state, actor.entity_index, ability)
-			if atarget != Vector2.INF:
-				var ab_evt = EncounterCore.use_ability(actor, atarget, ability, current_time)
-				if ab_evt.size() > 0: 
-					return ab_evt
+		assert(ability.activation.trigger == SkillsCore.Trigger.Action)
+		var atarget = EncounterCore.get_ability_target(cur_state, actor.entity_index, ability)
+		if atarget == Vector2.INF: continue
+		var ab_evt = EncounterCore.use_ability(actor, atarget, ability, current_time)
+		if ab_evt.size() > 0: 
+			return ab_evt
 		
 	current_time = actor.time_spent
 	cardinal.shuffle()

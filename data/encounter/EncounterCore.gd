@@ -6,18 +6,18 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 	var result = []
 
 	match event.kind:
-		EncounterEvent.Kind.Move:
+		EncounterEventKind.Kind.Move:
 			if state.lookup_actor(event.target_location) == null:
 				state.set_location(event.actor_idx, event.target_location)
-		EncounterEvent.Kind.Attack:
+		EncounterEventKind.Kind.Attack:
 			var source = state.actors[event.actor_idx]
 			var target = state.actors[event.target_idx]
 			result.append(deal_damage(source, target, event.damage, event.timestamp, event.elements))
-		EncounterEvent.Kind.Death:
+		EncounterEventKind.Kind.Death:
 			state.remove_actor(event.target_idx)
-		EncounterEvent.Kind.AbilityActivation:
+		EncounterEventKind.Kind.AbilityActivation:
 			result.append_array(handle_ability_activation(state, event))
-		EncounterEvent.Kind.Damage:
+		EncounterEventKind.Kind.Damage:
 			var target = state.actors[event.target_idx]
 # warning-ignore:narrowing_conversion
 			state.resolve_attack(event.target_idx, get_damage_with_elements(state, event))
@@ -40,7 +40,7 @@ static func deal_damage(source: CombatEntity, target: CombatEntity, damage: int,
 	return EncEvent.damage_event(timestamp, source, target, damage, elements)
 
 static func get_damage_with_elements(state: EncounterState, event: EncounterEvent) -> float:
-	assert(event.kind == EncounterEvent.Kind.Damage)
+	assert(event.kind == EncounterEventKind.Kind.Damage)
 	var damage: float = float(event.damage)
 	var target = state.actors[event.target_idx]
 	for e in event.elements:
@@ -92,14 +92,14 @@ class FireRandomAbilityPlaceHolder:
 static func trigger_reaction(timestamp: int, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
 	assert(reaction.activation.trigger == SkillsCore.Trigger.Automatic)
 	# does the event type match the event filter?
-	if reaction.activation.filter_event_type != event.kind:
+	if reaction.activation.filter_event_type() != event.kind:
 		return []
 	# does the event source match the source filter?
 	var source_location = state.actors[event.actor_idx].location
-	if !actor_filter_match(state, reactor, source_location, reaction.activation.filter_event_source):
+	if !actor_filter_match(state, reactor, source_location, reaction.activation.filter_event_source()):
 		return []
 	# does the event target match the target filter?
-	if !actor_filter_match(state, reactor, event.target_location, reaction.activation.filter_event_target):
+	if !actor_filter_match(state, reactor, event.target_location, reaction.activation.filter_event_target()):
 		return []
 	var target_loc
 	match reaction.activation.trigger_aim:
@@ -108,7 +108,8 @@ static func trigger_reaction(timestamp: int, state: EncounterState, event: Encou
 		SkillsCore.TriggerAim.EventTarget:
 			target_loc = event.target_location
 		SkillsCore.TriggerAim.Random: 
-			return [FireRandomAbilityPlaceHolder.new(timestamp, reactor, reaction)]
+			target_loc = get_ability_target(state, reactor.entity_index, reaction)
+			if target_loc == Vector2.INF: return []
 		SkillsCore.TriggerAim.Self:
 			target_loc = reactor.location
 	var step = (target_loc - reactor.location).abs()
@@ -155,7 +156,7 @@ static func find_valid_targets(state: EncounterState, actor_id: int, ability: Ab
 	return locations
 
 
-static func has_location_in_range(state: EncounterState, p: Vector2, radius: int, faction_mask: int, can_target_empty: bool):
+static func has_location_in_range(state: EncounterState, p: Vector2, radius: int, faction_mask: int, can_target_empty: bool) -> bool:
 	var min_x = int(max(p.x-radius, Constants.MAP_BOUNDARIES.position.x))
 	var max_x = int(min(p.x+radius, Constants.MAP_BOUNDARIES.size.x + Constants.MAP_BOUNDARIES.position.x))
 	var min_y = int(max(p.y-radius, Constants.MAP_BOUNDARIES.position.y))

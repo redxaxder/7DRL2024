@@ -89,14 +89,13 @@ func hand_rolled_skill_tree():
 	var abil: Skill = create_ability_skill(build_ability({
 		"label": SkillName.generate_name(),
 		"trigger": SkillsCore.Trigger.Automatic,
-		"filter_event_type": EncounterEvent.Kind.Damage,
-		"filter_event_target": SkillsCore.Target.Self,
+		"filter": Activation.Filter.DamageRecieved,
+		"filter_actor": SkillsCore.Target.Enemies,
 		"trigger_aim": SkillsCore.TriggerAim.Random,
 		"trigger_effect": SkillsCore.EffectType.Damage,
-		"effect_type": SkillsCore.EffectType.StatBuff,
-		"mod_stat": Stat.Kind.Speed,
-		"ability_range": 5,
-		"power": -40,
+		"effect_type": SkillsCore.EffectType.Damage,
+		"ability_range": 3,
+		"power": 5,
 		"target": SkillsCore.Target.Enemies,
 		}))
 #	var abil2: Skill = create_ability_skill(build_ability({
