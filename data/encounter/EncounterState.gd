@@ -23,7 +23,7 @@ func remove_actor(actor_ix: int):
 	a.location = Vector2(-1000,-1000)
 
 func add_actor(e: CombatEntity, loc: Vector2):
-	print("actor spawn: {0},{1}".format([loc.x, loc.y]))
+#	print("actor spawn: {0},{1}".format([loc.x, loc.y]))
 	var next_index = actors.size()
 	e.entity_index = next_index
 	actors.push_back(e)
