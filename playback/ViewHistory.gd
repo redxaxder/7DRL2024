@@ -2,8 +2,13 @@ extends Control
 
 var playback_speed = 5
 
-var show_extra_history = false
+var show_extra_history = false setget set_show_extra_history
+func set_show_extra_history(x):
+	show_extra_history = x
+	_refresh()
+
 var cursor: int = 0
+var max_cursor: int = 0
 var history: EncounterHistory
 var map: Map
 
@@ -49,6 +54,7 @@ func view(_history: EncounterHistory, _map: Map):
 	for c in get_children():
 		c.visible = true
 	history = _history
+	max_cursor = 0
 	map = _map
 	var progressbar = get_node("%progress_bar")
 	progressbar.max_value = _end()
@@ -58,7 +64,6 @@ func view(_history: EncounterHistory, _map: Map):
 	for i in _end():
 		var event = history.get_event(i)
 		var log_node = add_log_message(event_text(event), i)
-		log_node.visible = event.is_displayed() or show_extra_history
 	play()
 	_refresh()
 
@@ -187,24 +192,37 @@ func _gui_input(event):
 func _refresh():
 	if !history: return
 	var index = cursor
+	var next_max = max(max_cursor, cursor)
+	var max_cursor_increased = next_max > max_cursor 
+	max_cursor = next_max
 	if log_is_hovered and last_log_hover >= 0:
 		index = last_log_hover+1
-
 	var current_event = history.get_event(max(index - 1, 0))
 	var time = 0
 	if current_event: time = current_event.timestamp
 	get_node("%timestamp").text = "%d" % time
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = index
-	var loglines = get_node("%combat_log").get_children()
+	var combat_log = get_node("%combat_log")
+	var loglines = combat_log.get_children()
 	var highlighted_line = 0
 	for i in loglines.size():
+		var should_show = i == 0 or show_extra_history or history.get_event(i-1).is_displayed()
+		loglines[i].visible = should_show and i <= max_cursor
 		if i <= index and loglines[i].visible:
 			loglines[highlighted_line].highlighted = false
 			highlighted_line = i
 			loglines[i].highlighted = true
 		else:
 			loglines[i].highlighted = false
+		if i == max_cursor and max_cursor_increased:
+			 # TODO (C?): scroll active log message into view generally, not just when max increases
+			call_deferred("chain_scroll", 2)
 	
 	var current_state = history.get_state(index)
 	emit_signal("updated", current_state, current_event)
+
+func chain_scroll(chain: int):
+	$ScrollContainer.scroll_vertical = get_node("%combat_log").rect_size.y
+	if chain > 0:
+		call_deferred("chain_scroll", chain -1)

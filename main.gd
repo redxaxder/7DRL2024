@@ -1,9 +1,9 @@
 extends Node2D
 
 
-export var show_extra_history = true setget set_show_extra_history
+export var show_extra_history:bool = true setget set_show_extra_history
 func set_show_extra_history(x):
-	x = show_extra_history
+	show_extra_history = x
 	var h = get_node_or_null("%history_view")
 	if h:
 		h.show_extra_history = show_extra_history
