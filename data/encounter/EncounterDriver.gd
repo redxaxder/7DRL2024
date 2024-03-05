@@ -194,10 +194,7 @@ func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
 	if randf() < actor.chance_to_hit_other(target): # TODO track random state
 		var damage_range = actor.basic_attack_damage_to_other(target)
 		var damage = rand_range(damage_range[0], damage_range[1]) # TODO track random state
-		var elements = []
-		if actor.elements != null:
-			elements = actor.elements.attack_modifiers.keys()
-		return EncEvent.attack_event(current_time, actor, target, damage, elements)
+		return EncEvent.attack_event(current_time, actor, target, damage, actor.element)
 	else:
 		return EncEvent.miss_event(current_time, actor, target)
 

@@ -64,7 +64,10 @@ func view(_history: EncounterHistory, _map: Map):
 func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
 		EncounterEventKind.Kind.Attack:
-			return "{time}: {an} attacked {tn}!".format(evt.dict())
+			if evt.damage > 0:
+				return "{time}: {an} attacked {tn}!".format(evt.dict())
+			else:
+				return "{time}: {an} missed {tn}!".format(evt.dict())
 		EncounterEventKind.Kind.Death:
 			return "{time}: {tn} died!".format(evt.dict())
 		EncounterEventKind.Kind.Move:

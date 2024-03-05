@@ -10,4 +10,4 @@ var targets: int = SkillsCore.Target.Enemies
 var mod_stat: int = -1 # if this is a buff/debuff, which stat is affected?
 var power: int # damage amount or buff amount
 var duration: int = 0
-var elements: Array = []
+var element: int = Elements.Kind.Physical

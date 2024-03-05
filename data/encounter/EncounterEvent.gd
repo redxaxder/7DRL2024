@@ -9,6 +9,7 @@ class_name EncounterEvent
 func is_displayed() -> bool:
 	match kind:
 		EncounterEventKind.Kind.Move: return false
+		EncounterEventKind.Kind.PrepareReaction: return false
 		_: return true
 
 # When the sim is in playback mode, does it play this event 
@@ -28,7 +29,7 @@ var actor_name: String = "Erroneous String: DO NOT READ"
 var target_idx: int = -99999
 var target_name: String = "Erroneous String: DO NOT READ"
 var damage: int = -99999
-var elements: Array
+var element: int = Elements.Kind.Physical
 
 var target_location: Vector2 = Vector2(-99999,-99999)
 

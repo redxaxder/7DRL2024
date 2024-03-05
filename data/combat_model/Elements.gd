@@ -4,9 +4,7 @@ class_name Elements
 
 enum Kind {Physical, Fire, Ice, Poison}
 
-# if present, attack has this elementx
-var attack_modifiers: Dictionary # <Kind, bool>
+const ATTACK = [Stat.Kind.Physical, Stat.Kind.Fire, Stat.Kind.Ice, Stat.Kind.Poison ]
+const DEFENSE = [Stat.Kind.PhysicalResist, Stat.Kind.FireResist, Stat.Kind.IceResist, Stat.Kind.PoisonResist ]
 
-# if resistance, 0 < float < 1
-# if weakness float > 1
-var defense_modifiers: Dictionary # <Kind, float>
+const MAX_RESIST = 90

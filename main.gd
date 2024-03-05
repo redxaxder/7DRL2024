@@ -1,5 +1,9 @@
 extends Node2D
 
+
+const time_limit = 3000
+
+
 var player_stats: StatBlock
 var player_hp: int = 20
 var skill_tree: SkillTree
@@ -10,9 +14,6 @@ var current_encounter_seed: int
 var next_encounter_base_state: EncounterState # without player buffs applied
 var next_encounter_map: Map
 var next_encounter_outcome: EncounterHistory
-
-
-const time_limit = 9999
 
 # are we waiting for the player to decide to do an encounter, (true) or
 # are we in the history view (false)?
@@ -58,9 +59,7 @@ func new_game():
 	skill_tree = SkillTree.new()
 	skill_tree.hand_rolled_skill_tree()
 	get_node("%ViewSkillTree").set_skills(skill_tree)
-	player_stats = StatBlock.new()
-	var s = Actor.STAT_BLOCKS[Actor.Type.Player]
-	player_stats.initialize_array(s)
+	player_stats = Actor.get_stat_block(Actor.Type.Player)
 	player_hp = 20
 	make_encounter(1234)
 
@@ -148,7 +147,7 @@ func create_enemy() -> CombatEntity:
 	var reference_nme_type = randi() % (Actor.Type.size() - 1) + 1
 	nme.initialize_with_block(Actor.get_stat_block(reference_nme_type), Constants.ENEMY_FACTION, Actor.get_name(reference_nme_type))	
 	nme.actor_type = reference_nme_type
-	nme.elements = a.get_elements(reference_nme_type)
+	nme.element = a.get_element(reference_nme_type)
 	return nme
 
 func update_preview():

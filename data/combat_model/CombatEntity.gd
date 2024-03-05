@@ -14,7 +14,7 @@ var actor_type: int
 var actions: Array
 var reactions: Array
 var name: String
-var elements: Elements
+var element: int = Elements.Kind.Physical
 
 # stats that do
 var cur_hp: int
@@ -73,9 +73,11 @@ func basic_attack_damage_to_other(other: CombatEntity) -> Array:
 	min_damage = int(max(min_damage, 0))
 	return [min_damage, max_damage]
 	
-func defense_against(element) -> float:
-	if elements == null: return 1.0
-	return elements.defense_modifiers.get(element, 1.0)
+func element_resist_multiplier(damage_type: int) -> float:
+	var resist_stat = Elements.DEFENSE[damage_type]
+	var resist = stats.get_modified_stat(resist_stat)
+	var modifier = 100 - min(resist, Elements.MAX_RESIST)
+	return float(modifier) / 100.0
 
 func append_bonus(skill: Bonus):
 	stats.bonuses.append(skill)
