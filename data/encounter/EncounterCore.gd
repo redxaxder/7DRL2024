@@ -27,6 +27,9 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			if !target.is_alive():
 				var killer = state.actors[event.actor_idx]
 				result.append(EncEvent.death_event(event.timestamp, killer, target))
+		EncounterEventKind.Kind.PrepareReaction:
+			# these do not affect encounter state directly; the driver uses them to queue up AbilityActivations
+			pass
 	for reactor in state.actors:
 		for reaction in reactor.event_reactions():
 			if reaction.on_cooldown(): continue
@@ -38,7 +41,7 @@ static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, 
 		return []
 	ability.use()
 	return [EncEvent.ability_event(timestamp, actor, ability, target, ability.effect.element)]
-	
+
 static func deal_damage(source: CombatEntity, target: CombatEntity, damage: int, timestamp: int, element: int) -> EncounterEvent:
 	assert(damage > 0)
 	return EncEvent.damage_event(timestamp, source, target, damage, element)
@@ -97,22 +100,22 @@ static func trigger_reaction(timestamp: int, state: EncounterState, event: Encou
 	if !actor_filter_match(state, reactor, event.target_location, reaction.activation.filter_event_target()):
 		return []
 	var target_loc
+	var target: CombatEntity = null
+	var target_location = event.target_location
 	match reaction.activation.trigger_aim:
 		SkillsCore.TriggerAim.EventSource: 
-			target_loc = source_location
-		SkillsCore.TriggerAim.EventTarget:
-			target_loc = event.target_location
-		SkillsCore.TriggerAim.Random: 
-			target_loc = get_ability_target(state, reactor, reaction)
-			if target_loc == Vector2.INF: return []
+			target = state.actors[event.actor_idx]
+			target_location = target.location
 		SkillsCore.TriggerAim.Self:
-			target_loc = reactor.location
-	var step = (target_loc - reactor.location).abs()
-	if max(step.x,step.y) > reaction.activation.ability_range:
-		return []
-	if !has_target(state, target_loc, reaction.activation.radius, reactor, reaction.effect.targets):
-		return []
-	return use_ability(reactor, target_loc, reaction, timestamp)
+			target = reactor
+			target_location = target.location
+		SkillsCore.TriggerAim.Random:
+			pass
+		SkillsCore.TriggerAim.EventTarget: if event.target_idx >= 0:
+			target = state.actors[event.target_idx]
+			target_location = target.location
+	var e = EncEvent.reaction_event(timestamp, reactor, reaction, target, target_location)
+	return [e]
 
 
 

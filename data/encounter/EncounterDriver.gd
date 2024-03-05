@@ -7,6 +7,7 @@ var current_time = 0
 var queue: PriorityQueue
 var cur_state: EncounterState
 
+const REACTION_DELAY = 1 # maybe parameterize this by ability later
 const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1)]
 const cardinal: Array = [Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1)]
 const diagonal: Array = [Vector2(1, 1), Vector2(-1, 1), Vector2(-1, -1), Vector2(1, -1)]
@@ -42,6 +43,9 @@ func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 
 
 func tick() -> bool:
+	if queue.size() == 0:
+		return false # nothing to simulate. encounter is over
+
 	# 0. is the player alive?
 	if !cur_state.get_player().is_alive():
 		return false
@@ -52,23 +56,31 @@ func tick() -> bool:
 			enemies_alive = true
 			break
 	if !enemies_alive: return false
-	
-	# 1. grab the first living thing in the priority queue
-	var actor = queue.pop_front()
-	while !actor.is_alive() and queue.size() > 0:
-		actor = queue.pop_front()
-	if !actor.is_alive():
-		return false
-	# 2. run its AI
-	#    AI produces an EncounterEvent
-	var events = tick_ai(actor)
-	assert(events.size() > 0)
+
+	# 1. grab the first thing in the priority queue
+	var next_up = queue.pop_front()
+	var events = []
+	var actor = null
+	if next_up is Reaction:
+		assert(next_up.trigger_time >= current_time, "time only flows in one direction")
+		current_time = next_up.trigger_time 
+		events = fire_reaction(next_up)
+	else:
+		actor = next_up
+		if !actor.is_alive():
+			return true
+		assert(actor.time_spent >= current_time, "time only flows in one direction")
+		current_time = actor.time_spent
+		events = tick_ai(actor)
 
 	# 3. record that event, run it, and run events it triggers
+	var reactions_to_prepare = []
 	while events.size() > 0:
 		var evt = events.pop_front()
 		assert(evt != null)
 		assert(typeof(evt) != TYPE_ARRAY)
+		if evt.kind == EncounterEventKind.Kind.PrepareReaction:
+			reactions_to_prepare.append(evt)
 		history.add_event(evt)
 		var triggered_events = EncounterCore.update(cur_state, evt)
 		for r in triggered_events:
@@ -77,12 +89,44 @@ func tick() -> bool:
 		history.add_state(DataUtil.deep_dup(cur_state))
 		triggered_events.shuffle()
 		events.append_array(triggered_events)
+	reactions_to_prepare.shuffle()
+	for _reaction in reactions_to_prepare:
+		var evt: EncounterEvent = _reaction
+		var reaction = Reaction.new()
+		reaction.ability = evt.ability
+		reaction.trigger_time = evt.timestamp + REACTION_DELAY
+		reaction.actor_idx = evt.actor_idx
+		reaction.target_idx = evt.target_idx
+		reaction.target_location = evt.target_location
+		queue.insert(reaction, reaction.trigger_time)
 
 	# 5. If actor is still alive, re-insert it into the priority queue
-	actor.pass_time(int(100.0 / float(actor.stats.speed())))
-	queue.insert(actor, actor.time_spent)
+	# if we got here after handling a reaction, the actor is null and we do not reinsert anything
+	if actor != null:
+		actor.pass_time(int(100.0 / float(actor.stats.speed())))
+		queue.insert(actor, actor.time_spent)
 	
 	return true
+
+class Reaction:
+	var trigger_time: int = -1
+	var ability: Ability = null
+	var actor_idx: int = -1
+	var target_idx: int = -1
+	var target_location: Vector2 = Vector2.INF
+
+func fire_reaction(reaction: Reaction) -> Array:
+	use_seeded_rng()
+	var target = reaction.target_location
+	var actor: CombatEntity = cur_state.actors[reaction.actor_idx]
+	var ability = reaction.ability
+	if ability.activation.trigger_aim == SkillsCore.TriggerAim.Random:
+		target = EncounterCore.get_ability_target(cur_state, actor, ability)
+	elif reaction.target_idx >= 0:
+		var target_actor: CombatEntity = cur_state.actors[reaction.target_idx]
+		target = target_actor.location
+	if target == Vector2.INF: return []
+	return EncounterCore.use_ability(actor, target, ability, current_time)
 
 func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent
 	#1. can I attack?
@@ -99,7 +143,6 @@ func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent
 		if ab_evt.size() > 0: 
 			return ab_evt
 		
-	current_time = actor.time_spent
 	cardinal.shuffle()
 	diagonal.shuffle()
 	dirs.append_array(cardinal)
@@ -197,4 +240,3 @@ func attack_roll(actor: CombatEntity, target: CombatEntity) -> EncounterEvent:
 		return EncEvent.attack_event(current_time, actor, target, damage, actor.element)
 	else:
 		return EncEvent.miss_event(current_time, actor, target)
-

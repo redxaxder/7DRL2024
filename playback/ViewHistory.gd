@@ -2,6 +2,7 @@ extends Control
 
 var playback_speed = 5
 
+var show_extra_history = false
 var cursor: int = 0
 var history: EncounterHistory
 var map: Map
@@ -57,7 +58,7 @@ func view(_history: EncounterHistory, _map: Map):
 	for i in _end():
 		var event = history.get_event(i)
 		var log_node = add_log_message(event_text(event), i)
-		log_node.visible = event.is_displayed()
+		log_node.visible = event.is_displayed() or show_extra_history
 	play()
 	_refresh()
 
@@ -76,6 +77,8 @@ func event_text(evt: EncounterEvent) -> String:
 			return "{time}: {an} activated ability {m}".format(evt.dict())
 		EncounterEventKind.Kind.Damage:
 			return "{time}: {tn} took {d} damage!".format(evt.dict())
+		EncounterEventKind.Kind.PrepareReaction:
+			return "{time}: {an} prepared reaction: {m}".format(evt.dict())
 	push_warning("Event not handled by logger! {0}".format([evt.kind]))
 	return ""
 

@@ -1,6 +1,13 @@
 extends Node2D
 
 
+export var show_extra_history = true setget set_show_extra_history
+func set_show_extra_history(x):
+	x = show_extra_history
+	var h = get_node_or_null("%history_view")
+	if h:
+		h.show_extra_history = show_extra_history
+
 const time_limit = 3000
 
 
@@ -45,7 +52,7 @@ func _ready():
 	#TODO: get rewards vs no rewards in teleport
 # warning-ignore:return_value_discarded
 	get_node("%ConsumablesContainer").connect("consume_invisibility", self, "no_go")
-	
+	get_node("%history_view").show_extra_history = show_extra_history
 	new_game()
 
 func consume_health_potion():
@@ -54,14 +61,14 @@ func consume_health_potion():
 
 func new_game():
 	gameover = false
-	randomize()
 
 	skill_tree = SkillTree.new()
 	skill_tree.hand_rolled_skill_tree()
 	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = Actor.get_stat_block(Actor.Type.Player)
 	player_hp = 20
-	make_encounter(1234)
+	randomize()
+	make_encounter()
 
 
 func history_scroll(s: EncounterState, what: EncounterEvent):

@@ -6,6 +6,7 @@ class_name EncounterEvent
 
 # TODO: maybe move these to EncounterEventKind
 # Is this event's log message visible by default?
+# this is overriden by show_extra_history=true
 func is_displayed() -> bool:
 	match kind:
 		EncounterEventKind.Kind.Move: return false

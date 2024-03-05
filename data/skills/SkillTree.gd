@@ -86,11 +86,12 @@ func hand_rolled_skill_tree():
 	skills = []
 	for i in numRows:
 		skills.append([])
+	seed(1234)
 	var abil: Skill = create_ability_skill(build_ability({
 		"label": SkillName.generate_name(),
 		"trigger": SkillsCore.Trigger.Automatic,
-		"filter": Activation.Filter.DamageRecieved,
-		"filter_actor": SkillsCore.Target.Enemies,
+		"filter": Activation.Filter.DamageDealt,
+		"filter_actor": SkillsCore.TargetAny,
 		"trigger_aim": SkillsCore.TriggerAim.Random,
 		"trigger_effect": SkillsCore.EffectType.Damage,
 		"effect_type": SkillsCore.EffectType.Damage,
