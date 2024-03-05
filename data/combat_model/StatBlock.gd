@@ -25,7 +25,10 @@ func get_modified_stat(stat: int) -> int:
 	for bonus in bonuses:
 		if bonus.stat == stat:
 			accumulated += bonus.power
-	return accumulated
+	#TODO (C?)
+	# right now accumulated penalties down below the mimumum will cancel later incoming buffs
+	# make it not worklike that, maybe
+	return int(max(1,accumulated)) 
 
 func brawn(): return get_modified_stat(Stat.Kind.Brawn)
 func brains(): return get_modified_stat(Stat.Kind.Brains)
