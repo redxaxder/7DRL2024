@@ -11,7 +11,7 @@ var effect: Effect
 # this will let us alias the abilities when duplicating encounter states
 var cooldown = 0
 
-func get_parameter_bonus(param: int, statblock: StatBlock) -> float:
+func _get_parameter_bonus(param: int, statblock: StatBlock) -> float:
 	var bonus = 0
 	for mod in modifiers:
 		var m: AbilityMod = mod
@@ -21,7 +21,7 @@ func get_parameter_bonus(param: int, statblock: StatBlock) -> float:
 	return bonus
 
 func cooldown_time(stats: StatBlock) -> int:
-	var bonus = get_parameter_bonus(ModParam.CooldownTime, stats)
+	var bonus = _get_parameter_bonus(ModParam.CooldownTime, stats)
 	# this scaling rule is one where every +100 bonus increases
 	# the frequency of the skill by 100% of the base frequency
 	# so at +100 bonus it can activate 2x as often, at +200, 3x as often, etc
@@ -35,14 +35,14 @@ func cooldown_time(stats: StatBlock) -> int:
 
 func power(stats: StatBlock) -> int:
 	# power gets percentage bonuses
-	var bonus = get_parameter_bonus(ModParam.Power, stats)
+	var bonus = _get_parameter_bonus(ModParam.Power, stats)
 	var base = float(effect.power)
 	var modified = base * (100.0 + bonus)/100.0
 	return int(modified)
 
 func ability_range(stats: StatBlock) -> int:
 	# range increases by 1 for every +100 bonus
-	var bonus = get_parameter_bonus(ModParam.AbilityRange, stats)
+	var bonus = _get_parameter_bonus(ModParam.AbilityRange, stats)
 	var base = float(activation.ability_range)
 	var modified = base + (bonus / 100.0)
 	return int(modified)
@@ -50,7 +50,7 @@ func ability_range(stats: StatBlock) -> int:
 func radius(stats: StatBlock) -> int:
 	# radius increases the -area- of the effect proportionally to the bonus
 	# so 100% bonus should correspond to double area.
-	var bonus = get_parameter_bonus(ModParam.Radius, stats)
+	var bonus = _get_parameter_bonus(ModParam.Radius, stats)
 	var base = float(activation.radius)
 	var modified = base * sqrt(bonus / 100.0)
 	return int(modified)
@@ -60,7 +60,7 @@ class AbilityMod extends Resource:
 	var modifier_stat: int = Stat.Kind.Brains
 	var coefficient: float = 0.1
 	var modified_param: int = ModParam.Power
-static func ability_mod(stat: int, param:int , coeff: float) -> AbilityMod:
+static func mod(stat: int, param:int , coeff: float) -> AbilityMod:
 	var mod = AbilityMod.new()
 	mod.modifier_stat = stat
 	mod.modified_param = param

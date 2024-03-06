@@ -43,9 +43,6 @@ func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 
 
 func tick() -> bool:
-	if queue.size() == 0:
-		return false # nothing to simulate. encounter is over
-
 	# 0. is the player alive?
 	if !cur_state.get_player().is_alive():
 		return false
@@ -126,6 +123,8 @@ func fire_reaction(reaction: Reaction) -> Array:
 		var target_actor: CombatEntity = cur_state.actors[reaction.target_idx]
 		target = target_actor.location
 	if target == Vector2.INF: return []
+	#TODO: this should fail if the target is invalid
+	# ie: wrong faction or missing or something
 	return EncounterCore.use_ability(actor, target, ability, current_time)
 
 func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent

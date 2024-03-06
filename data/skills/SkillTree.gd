@@ -76,7 +76,7 @@ static func build_ability(d: Dictionary) -> Ability:
 		allowed_keys.append(prop["name"])
 	for key in d.keys():
 		var found = allowed_keys.find(key) >= 0
-		assert(found, str("tried to assign missing key '", key,"'"))
+		assert(found, str("invalid key in build_ability: '", key,"'"))
 	return result
 
 
@@ -95,6 +95,7 @@ func hand_rolled_skill_tree():
 	for i in numRows:
 		skills.append([])
 	seed(1234)
+# warning-ignore:unused_variable
 	var abil: Skill = create_ability_skill(build_ability({
 		"label": SkillName.generate_name(),
 		"trigger": SkillsCore.Trigger.Automatic,
@@ -107,6 +108,30 @@ func hand_rolled_skill_tree():
 		"power": 10,
 		"targets": SkillsCore.Target.Self,
 		}))
+	var my_cool_skill: Skill = create_ability_skill(build_ability({
+		"label": SkillName.generate_name(),
+		"trigger": SkillsCore.Trigger.Automatic,
+		"filter": Activation.Filter.DamageRecieved,
+		"filter_actor": SkillsCore.Target.Self,
+		"trigger_aim": SkillsCore.TriggerAim.Self,
+		"effect_type": SkillsCore.EffectType.StatBuff,
+		"mod_stat": Stat.Kind.Damage,
+		"power": 1000,
+		"targets": SkillsCore.Target.Self
+	}))
+	var my_cool_death_skill: Skill = create_ability_skill(build_ability({
+		"label": SkillName.generate_name(),
+		"trigger": SkillsCore.Trigger.Automatic,
+		"filter": Activation.Filter.Death,
+		"filter_actor": SkillsCore.Target.Enemies,
+		"trigger_aim": SkillsCore.TriggerAim.Random,
+		"effect_type": SkillsCore.EffectType.StatBuff,
+		"mod_stat": Stat.Kind.Speed,
+		"ability_range": 3,
+		"power": -5,
+		"targets": SkillsCore.Target.Enemies,
+	}))
+		
 #	var abil2: Skill = create_ability_skill(build_ability({
 #		"label": SkillName.generate_name(),
 #		"target": SkillsCore.Target.Self,
@@ -115,7 +140,7 @@ func hand_rolled_skill_tree():
 #		"power": 20,
 #		}))
 #	append_skill(abil2, 0)
-	append_skill(abil, 1)
+	append_skill(my_cool_death_skill, 1)
 #	append_skill(create_ability_skill(build_ability({
 #		"label": SkillName.generate_name(),
 #

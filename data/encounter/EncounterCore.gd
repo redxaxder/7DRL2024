@@ -4,7 +4,10 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 	assert(event.target_location != Vector2(-99999,-99999))
 	assert(event.actor_idx >= 0)
 	var result = []
-
+	for reactor in state.actors:
+		for reaction in reactor.event_reactions():
+			if reaction.on_cooldown(): continue
+			result.append_array(trigger_reaction(event.timestamp, state, event, reactor, reaction))
 	match event.kind:
 		EncounterEventKind.Kind.Move:
 			if state.lookup_actor(event.target_location) == null:
@@ -30,10 +33,6 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 		EncounterEventKind.Kind.PrepareReaction:
 			# these do not affect encounter state directly; the driver uses them to queue up AbilityActivations
 			pass
-	for reactor in state.actors:
-		for reaction in reactor.event_reactions():
-			if reaction.on_cooldown(): continue
-			result.append_array(trigger_reaction(event.timestamp, state, event, reactor, reaction))
 	return result
 
 static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> Array: # [ EncounterEvent ]
@@ -90,6 +89,12 @@ class FireRandomAbilityPlaceHolder:
 
 static func trigger_reaction(timestamp: int, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
 	assert(reaction.activation.trigger == SkillsCore.Trigger.Automatic)
+	var a = state.actors[event.actor_idx]
+	var t
+	if event.target_idx >= 0:
+		t = state.actors[event.target_idx]
+	if event.kind == EncounterEventKind.Kind.Death:
+		pass
 	# does the event type match the event filter?
 	if reaction.activation.filter_event_type() != event.kind:
 		return []
@@ -161,8 +166,6 @@ static func actor_filter_match(state: EncounterState, observer: CombatEntity, lo
 	var occupant = state.lookup_actor(location)
 	if occupant == null:
 		return Constants.matches_mask(SkillsCore.Target.Empty, filter)
-	elif !occupant.is_alive():
-		return false
 	elif occupant == observer:
 		return Constants.matches_mask(SkillsCore.Target.Self, filter)
 	elif occupant.faction == observer.faction:
