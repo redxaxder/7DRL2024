@@ -13,6 +13,7 @@ func _refresh():
 		visible = false
 		return
 	visible = true
+	get_node("%actorname").text = actor.name
 	var methods = [
 		"max_hp", 
 		"damage", 
