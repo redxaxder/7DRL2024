@@ -2,11 +2,19 @@ extends Control
 
 export var skill_tree: Resource
 
+var num_skills_to_unlock: int = 0
 var player_stats: StatBlock
 var selected_skill : Skill
 var unlocked_skills: Dictionary
 var available_skills: Dictionary
 var containers: Array
+
+
+
+# approximately follows the curve level=unlocks^2.1073
+# the first point is unlocked at level 1. the second at level 5, and so on
+# 8 skills unlock total
+const unlock_thresholds = [1,5,11,19,30,44,61,80]
 
 func _ready():
 	unlocked_skills = {}
@@ -129,12 +137,14 @@ func selectSkill(skill: Skill, button: Button = null):
 	selected_skill = skill
 	$VBoxContainer/SkillName.text = skill.name
 	$VBoxContainer/ScrollContainer/SkillDescription.text = skill.generate_description(player_stats)
-		
-	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(skill.name)
-	
+	update_unlock_button()
 	if(button):
 		_draw()
 		drawButtonSelected(button)
+
+func update_unlock_button():
+	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(selected_skill.name) and num_skills_to_unlock > 0
+
 
 func get_skill(i: int, j: int) -> Skill:
 	if i < 0 or i >= skill_tree.skills.size(): return null
@@ -166,4 +176,15 @@ func recalculate_player_bonuses():
 	for skill in skill_tree.unlocks:
 		if skill.kind == Skill.Kind.Bonus:
 			player_stats.apply_bonus(skill.bonus)
+
+func update_num_skills_to_unlock(progress: int):
+	num_skills_to_unlock = total_skills_to_unlock(progress) - unlocked_skills.keys().size()
+	update_unlock_button()
+
+func total_skills_to_unlock(progress: int) -> int:
+	var i = 0
+	var n = unlock_thresholds.size()
+	while unlock_thresholds[i] <= progress and i < n:
+		i += 1
+	return i
 

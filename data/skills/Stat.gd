@@ -13,5 +13,5 @@ const NAME = [	"Brawn", "Brains", "Guts", "Eyesight", "Footwork", "Hustle",
 const MINIMUM = [	1, 1, 1, 1, 1, 1, # 6 primary (base) stats don't go below 1 [maybe they could?]
 				1, 1, 1, 1, 1, 1, # 6 don't go below 1
 				0, 0, 0, 0, # elemental attack stats don't go below 0. they are bonuses only, not penalties
-				-999,-999,-999,-999, # elemental defense at -100 means you take double damage from the element
+				-999,-999,-999,-999, # elemental resists can get low but not crazy low
 				]

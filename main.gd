@@ -13,6 +13,8 @@ const time_limit = 1000
 
 var player_stats: StatBlock
 var player_hp: int = 20
+var progress: int = 1
+
 var skill_tree: SkillTree
 
 var driver_seed: int
@@ -56,7 +58,9 @@ func _ready():
 	timer.start(0.5)
 # warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
-	
+
+
+
 func transfer_reward():
 	if gonogo && !gameover:
 		get_node("%ConsumablesContainer").transfer_reward()
@@ -77,6 +81,7 @@ func new_game():
 	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = Actor.get_stat_block(Actor.Type.Player)
 	player_hp = 20
+	progress = 0
 
 	get_node("%ViewSkillTree").player_stats = player_stats
 	randomize()
@@ -147,6 +152,7 @@ func restart():
 	new_game()
 
 func make_encounter(use_seed: int = 0):
+	progress += 1
 	var encounter_seed = use_seed
 	if encounter_seed == 0:
 		encounter_seed = randi()
