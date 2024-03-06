@@ -53,6 +53,15 @@ func count_passables() -> int:
 				num_passables = num_passables + 1
 	return num_passables
 
+func list_passable() -> Array:
+	var passable = []
+	for x in Constants.MAP_BOUNDARIES.size.x:
+		for y in Constants.MAP_BOUNDARIES.size.y:
+			var t = get_tile(x,y)
+			if t.passable:
+				passable.append(t)
+	return passable
+
 func is_map_connected(num_passbles: int) -> bool:
 	var island_size = get_connected_island(random_passable_tile(null)).size()
 	print("island_size: {0} passables: {1}".format([island_size, num_passbles]))

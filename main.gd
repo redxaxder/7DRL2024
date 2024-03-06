@@ -165,6 +165,9 @@ func make_encounter(use_seed: int = 0):
 	get_node("%history_view").clear()
 	map.generate()
 	
+	var passable = map.list_passable()
+	passable.shuffle()
+
 	get_node("%ConsumablesContainer").init_rewards()
 
 	var state = EncounterState.new()
@@ -173,15 +176,25 @@ func make_encounter(use_seed: int = 0):
 	player.actor_type = Actor.Type.Player
 	assert(player_hp > 0)
 	player.cur_hp = player_hp
-	state.add_actor(player, map.random_passable_tile(state).loc)
+	state.add_actor(player, passable.pop_back().loc)
 	
+	var spawns = min(randi() % 4, randi() % 5) + 1
+	for _i in spawns:
+		#TODO: maybe get harder spawns more often with high progress
+		var spawn_category = roll_weighted_table([0.5,0.3, 0.2])
+		var spawn_class
+		match spawn_category:
+			0: spawn_class = Actor.SPAWN_EASY
+			1: spawn_class = Actor.SPAWN_MEDIUM
+			2: spawn_class = Actor.SPAWN_HARD
+		var spawn = spawn_class[randi() % spawn_class.size() - 1]
+		state.add_actor(Actor.create_unit(spawn, Constants.ENEMY_FACTION), passable.pop_back().loc)
 
-	for _i in range(randi() % 3 + 1):
-		var nme = create_enemy()
-		state.add_actor(nme, map.random_passable_tile(state).loc)
-		
-	var shrine = Actor.create_shrine(Stat.Kind.Brains)
-	state.add_actor(shrine, map.random_passable_tile(state).loc)
+	var max_shrines = 1 + int(float(progress) / 10)
+	var num_shrines = min(randi() % (max_shrines + 1),randi() % (max_shrines + 1))
+	for _i in num_shrines:
+		var shrine_stat = randi() % Stat.Kind.MAX
+		state.add_actor(Actor.create_shrine(shrine_stat), passable.pop_back().loc)
 	
 	next_encounter_base_state = state
 	gonogo = true
@@ -190,15 +203,18 @@ func make_encounter(use_seed: int = 0):
 	update_preview()
 	update_outcome()
 
+func roll_weighted_table(table: Array) -> int:
+	var roll = randf()
+	var accum = 0
+	var i = 0
+	var n = table.size() - 1
+	while i < n:
+		accum += table[i]
+		if roll < accum:
+			return i
+		i += 1
+	return n
 
-func create_enemy() -> CombatEntity:
-	var nme = CombatEntity.new()
-	var a = Actor.new()
-	var reference_nme_type = randi() % (Actor.Type.size() - 1) + 1
-	nme.initialize_with_block(Actor.get_stat_block(reference_nme_type), Constants.ENEMY_FACTION, Actor.get_name(reference_nme_type))	
-	nme.actor_type = reference_nme_type
-	nme.element = a.get_element(reference_nme_type)
-	return nme
 
 func update_preview():
 	get_node("%state_view").update_view(apply_player_mods(next_encounter_base_state))

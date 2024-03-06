@@ -73,9 +73,10 @@ const STATS = {
 }
 
 # spawn table TODO, imp goblin gazer
-const EASY = [Type.Blorp, Type.Snake, Type.Squid]
-const MEDIUM = [Type.Wolf, Type.Crab]
-const HARD = []
+ #move stuff medium once we have scaling and harder stuff
+const SPAWN_EASY = [Type.Blorp, Type.Snake]
+const SPAWN_MEDIUM = [Type.Crab, Type.Squid]
+const SPAWN_HARD = [Type.Wolf]
 
 static func default_stats() -> Array:
 #	push_warning("using stub stats. should probably put in real ones")
@@ -112,7 +113,6 @@ static func make_sprite(t) -> Sprite:
 		sprite.texture = s
 	sprite.centered = false
 	return sprite
-	
 
 static func get_name(t: int) -> String:
 	return NAMES[t]
@@ -123,24 +123,27 @@ static func get_element(t: int) -> int:
 	if proto != null:
 		e = proto.get("attack", e)
 	return e
-	
-static func create_shrine_ability(stat: int) -> Ability:
-	return SkillTree.build_ability({
+
+static func create_unit(unit_type: int, faction: int) -> CombatEntity:
+	var unit = CombatEntity.new()
+	unit.initialize_with_block(get_stat_block(unit_type), faction, get_name(unit_type))	
+	unit.actor_type = unit_type
+	unit.element = get_element(unit_type)
+	return unit
+
+static func create_shrine(stat: int) -> CombatEntity:
+	var shrine = create_unit(Type.Shrine, Constants.ENEMY_FACTION)
+	var shrine_spell = SkillTree.build_ability({
 		"label": Stat.NAME[stat] + " Buff",
 		"ability_range": 20,
 		"trigger": SkillsCore.Trigger.Action,
 		"effect_type": SkillsCore.EffectType.StatBuff,
 		"mod_stat": stat,
 		"power": 1,
+		"radius": 2,
 		"targets": SkillsCore.Target.Allies,
 		"cooldown_time": 1,
 	})
-
-static func create_shrine(stat: int) -> CombatEntity:
-	var nme = CombatEntity.new()
-	var reference_nme_type = Type.Shrine
-	nme.initialize_with_block(get_stat_block(reference_nme_type), Constants.ENEMY_FACTION, get_name(reference_nme_type))
-	nme.actor_type = reference_nme_type
-	nme.element = get_element(reference_nme_type)
-	nme.append_ability(create_shrine_ability(stat))
-	return nme
+	shrine.name = Stat.NAME[stat] + " Shrine"
+	shrine.append_ability(shrine_spell)
+	return shrine
