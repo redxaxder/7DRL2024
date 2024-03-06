@@ -34,7 +34,7 @@ __meta__ = {
 [node name="GO" type="Button" parent="buttons"]
 unique_name_in_owner = true
 margin_right = 109.0
-margin_bottom = 61.0
+margin_bottom = 93.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -77,24 +77,9 @@ text = "RESTART"
 align = 1
 valign = 1
 
-[node name="NOGO" type="Button" parent="buttons"]
-unique_name_in_owner = true
-margin_top = 65.0
-margin_right = 109.0
-margin_bottom = 126.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Label" type="Label" parent="buttons/NOGO"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-text = "NO GO"
-align = 1
-valign = 1
-
 [node name="OpenSkillTree" type="Button" parent="buttons"]
 unique_name_in_owner = true
-margin_top = 130.0
+margin_top = 97.0
 margin_right = 109.0
 margin_bottom = 191.0
 size_flags_vertical = 3
@@ -172,18 +157,18 @@ margin_bottom = 21.0
 custom_fonts/font = SubResource( 2 )
 text = "Foo bar"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ConsumablesContainer"]
-margin_left = 514.0
-margin_top = -478.0
-margin_right = 567.0
-margin_bottom = -457.0
+[node name="RewardsContainer" type="VBoxContainer" parent="ConsumablesContainer"]
+margin_left = 662.0
+margin_top = -312.0
+margin_right = 715.0
+margin_bottom = -291.0
 
-[node name="Label" type="Label" parent="ConsumablesContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="ConsumablesContainer/RewardsContainer"]
 margin_right = 53.0
 margin_bottom = 14.0
 text = "Rewards"
 
-[node name="Rewards" type="HBoxContainer" parent="ConsumablesContainer/VBoxContainer"]
+[node name="Rewards" type="HBoxContainer" parent="ConsumablesContainer/RewardsContainer"]
 unique_name_in_owner = true
 margin_top = 18.0
 margin_right = 53.0

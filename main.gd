@@ -14,7 +14,6 @@ const time_limit = 1000
 var player_stats: StatBlock
 var player_hp: int = 20
 var skill_tree: SkillTree
-var skips = 50
 
 var driver_seed: int
 var current_encounter_seed: int
@@ -31,8 +30,6 @@ var map = Map.new()
 func _ready():
 # warning-ignore:return_value_discarded
 	get_node("%GO").connect("pressed",self,"go")
-# warning-ignore:return_value_discarded
-	get_node("%NOGO").connect("pressed",self,"no_go")
 # warning-ignore:return_value_discarded
 	get_node("%DONE").connect("pressed",self,"done")
 # warning-ignore:return_value_discarded
@@ -94,7 +91,6 @@ func history_scroll(s: EncounterState, what: EncounterEvent):
 func update_button_visibility():
 	get_node("%DONE").visible = !gonogo and !gameover
 	get_node("%GO").visible = gonogo and !gameover
-	get_node("%NOGO").visible = gonogo and !gameover and skips > 0
 	get_node("%RESTART").visible = gameover
 	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
 
@@ -123,7 +119,6 @@ func go():
 	update_button_visibility()
 
 func no_go():
-	skips -= 1
 	make_encounter()
 
 func calculate_new_hp() -> int:
