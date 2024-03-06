@@ -108,7 +108,7 @@ func tick() -> bool:
 	
 	return true
 
-class Reaction:
+class Reaction extends Resource:
 	var trigger_time: int = -1
 	var ability: Ability = null
 	var actor_idx: int = -1
