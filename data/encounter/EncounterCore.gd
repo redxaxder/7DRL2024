@@ -16,7 +16,7 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			var source = state.actors[event.actor_idx]
 			var target = state.actors[event.target_idx]
 			if event.damage > 0:
-				result.append(deal_damage(source, target, event.damage, event.timestamp, event.element))
+				EncEvent.damage_event(event.timestamp, source, target, event.damage, event.is_crit, event.element)
 		EncounterEventKind.Kind.Death:
 			state.remove_actor(event.target_idx)
 		EncounterEventKind.Kind.AbilityActivation:
@@ -41,10 +41,6 @@ static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, 
 	ability.use()
 	return [EncEvent.ability_event(timestamp, actor, ability, target, ability.effect.element)]
 
-static func deal_damage(source: CombatEntity, target: CombatEntity, damage: int, timestamp: int, element: int) -> EncounterEvent:
-	assert(damage > 0)
-	return EncEvent.damage_event(timestamp, source, target, damage, element)
-
 static func get_damage_with_element(state: EncounterState, event: EncounterEvent) -> float:
 	assert(event.kind == EncounterEventKind.Kind.Damage)
 	var damage: float = float(event.damage)
@@ -63,7 +59,8 @@ static func handle_ability_activation(state: EncounterState, event: EncounterEve
 	if target != null:
 		match ability.effect.effect_type:
 			SkillsCore.EffectType.Damage:
-				return [deal_damage(source, target, power, event.timestamp, event.element)]
+				var is_crit = false
+				return [EncEvent.damage_event(event.timestamp, source, target, power, is_crit, event.element)]
 			SkillsCore.EffectType.StatBuff:
 				state.resolve_stat_buff(target.entity_index, ability.effect.mod_stat, power)
 	return []
@@ -89,10 +86,6 @@ class FireRandomAbilityPlaceHolder:
 
 static func trigger_reaction(timestamp: int, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
 	assert(reaction.activation.trigger == SkillsCore.Trigger.Automatic)
-	var a = state.actors[event.actor_idx]
-	var t
-	if event.target_idx >= 0:
-		t = state.actors[event.target_idx]
 	if event.kind == EncounterEventKind.Kind.Death:
 		pass
 	# does the event type match the event filter?

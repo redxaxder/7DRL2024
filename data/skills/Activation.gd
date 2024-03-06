@@ -30,7 +30,9 @@ enum Filter{
 	# fixed threshold (25%) "bloodied"
 	# attack
 	# medium
-	# 
+	# on-crit
+	#medium
+	# overkill
 	}
 enum FilterFocus { Source, Target }
 const FILTER_FOCUS = [

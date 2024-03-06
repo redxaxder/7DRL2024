@@ -11,7 +11,7 @@ static func move_event(timestamp:int , actor: CombatEntity, move_to: Vector2) ->
 	evt.timestamp = timestamp
 	return evt
 
-static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEntity, damage: int, element: int) -> EncounterEvent:
+static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEntity, damage: int, is_crit: bool, element: int) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEventKind.Kind.Attack
@@ -20,6 +20,7 @@ static func attack_event(timestamp: int, actor: CombatEntity, target: CombatEnti
 # warning-ignore:return_value_discarded
 	set_target(evt, target)
 	evt.damage = max(1,damage)
+	evt.is_crit = is_crit
 	evt.timestamp = timestamp
 	evt.element = element
 	return evt
@@ -46,7 +47,7 @@ static func death_event(timestamp: int, killer: CombatEntity, victim: CombatEnti
 	evt.timestamp = timestamp
 	return evt
 	
-static func damage_event(timestamp: int, source: CombatEntity, target: CombatEntity, damage: int, element: int) -> EncounterEvent:
+static func damage_event(timestamp: int, source: CombatEntity, target: CombatEntity, damage: int, is_crit: bool, element: int) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
 	evt.kind = EncounterEventKind.Kind.Damage
@@ -55,6 +56,7 @@ static func damage_event(timestamp: int, source: CombatEntity, target: CombatEnt
 # warning-ignore:return_value_discarded
 	set_actor(evt, source)
 	evt.timestamp = timestamp
+	evt.is_crit = is_crit
 	evt.damage = max(1,damage)
 	evt.element = element
 	return evt

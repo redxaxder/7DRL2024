@@ -1,6 +1,7 @@
 class_name SkillsCore
 
 enum EffectType { Damage, StatBuff } #TBD: other kinds of buffs; summons
+# accelerate turn priority (via "bonus time")
 
 enum Trigger { 
 	Action, # the actor initiates the skill using their turn

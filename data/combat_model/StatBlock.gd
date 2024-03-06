@@ -45,6 +45,14 @@ func evasion() -> int: return get_modified_stat(Stat.Kind.Evasion)
 func damage() -> int: return get_modified_stat(Stat.Kind.Damage)
 func crit() -> int: return get_modified_stat(Stat.Kind.Crit)
 
+func crit_mult() -> float:
+	var c = float(crit())
+	return (200 + 2*c)/100
+
+func crit_chance() -> float:
+	var c = float(crit())
+	return c/(100 + 2*c)
+
 func initialize_array(array: Array):
 	stats  = array.duplicate()
 	bonuses = []

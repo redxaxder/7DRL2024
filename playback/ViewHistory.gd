@@ -81,7 +81,10 @@ func event_text(evt: EncounterEvent) -> String:
 		EncounterEventKind.Kind.AbilityActivation:
 			return "{time}: {an} activated ability {m}".format(evt.dict())
 		EncounterEventKind.Kind.Damage:
-			return "{time}: {tn} took {d} damage!".format(evt.dict())
+			if evt.is_crit:
+				return "{time}: Critical! {tn} took {d} damage!!!".format(evt.dict())
+			else:
+				return "{time}: {tn} took {d} damage!".format(evt.dict())
 		EncounterEventKind.Kind.PrepareReaction:
 			return "{time}: {an} prepared reaction: {m}".format(evt.dict())
 	push_warning("Event not handled by logger! {0}".format([evt.kind]))
