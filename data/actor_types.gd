@@ -1,6 +1,6 @@
 class_name Actor
 enum Type{ 
-	Player, 
+	Player,
 	Wolf,
 	Squid,
 	Blorp,
@@ -65,12 +65,21 @@ const STATS = {
 		Stat.Kind.PhysicalResist: 50,
 		Stat.Kind.Speed: -10,
 		},
+	Type.Shrine: {
+		"base": [1, 1, 1, 1, 1, 1],
+		Stat.Kind.Health: 48, # 50 total
+		Stat.Kind.Speed: 3, # 5 total
+	}
 }
+
+# spawn table TODO, imp goblin gazer
+const EASY = [Type.Blorp, Type.Snake, Type.Squid]
+const MEDIUM = [Type.Wolf, Type.Crab]
+const HARD = []
 
 static func default_stats() -> Array:
 #	push_warning("using stub stats. should probably put in real ones")
 	return [3,3,3,3,3,3]
-
 
 static func get_stat_block(t: int) -> StatBlock:
 	var sb = StatBlock.new()
@@ -108,9 +117,30 @@ static func make_sprite(t) -> Sprite:
 static func get_name(t: int) -> String:
 	return NAMES[t]
 
-func get_element(t: int) -> int:
+static func get_element(t: int) -> int:
 	var e = Elements.Kind.Physical
 	var proto = STATS.get(t)
 	if proto != null:
 		e = proto.get("attack", e)
 	return e
+	
+static func create_shrine_ability(stat: int) -> Ability:
+	return SkillTree.build_ability({
+		"label": Stat.NAME[stat] + " Buff",
+		"ability_range": 20,
+		"trigger": SkillsCore.Trigger.Action,
+		"effect_type": SkillsCore.EffectType.StatBuff,
+		"mod_stat": stat,
+		"power": 1,
+		"targets": SkillsCore.Target.Allies,
+		"cooldown_time": 1,
+	})
+
+static func create_shrine(stat: int) -> CombatEntity:
+	var nme = CombatEntity.new()
+	var reference_nme_type = Type.Shrine
+	nme.initialize_with_block(get_stat_block(reference_nme_type), Constants.ENEMY_FACTION, get_name(reference_nme_type))
+	nme.actor_type = reference_nme_type
+	nme.element = get_element(reference_nme_type)
+	nme.append_ability(create_shrine_ability(stat))
+	return nme

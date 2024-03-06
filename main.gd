@@ -139,6 +139,9 @@ func make_encounter(use_seed: int = 0):
 	for _i in range(randi() % 3 + 1):
 		var nme = create_enemy()
 		state.add_actor(nme, map.random_passable_tile(state).loc)
+		
+	var shrine = Actor.create_shrine(Stat.Kind.Brains)
+	state.add_actor(shrine, map.random_passable_tile(state).loc)
 	
 	next_encounter_base_state = state
 	gonogo = true
