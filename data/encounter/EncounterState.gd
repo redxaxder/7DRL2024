@@ -56,8 +56,14 @@ func resolve_attack(target_id: int, damage: int):
 	var target: CombatEntity = actors[target_id]
 	target.cur_hp -= damage
 
-
 func resolve_stat_buff(actor_id: int, stat: int, power: int):
 	var bonus: Bonus = SkillTree.create_bonus(stat, power)
+	var actor: CombatEntity = actors[actor_id]
+	var prev_max_hp = actor.stats.max_hp()
 	actors[actor_id].append_bonus(bonus)
+	var new_max_hp = actor.stats.max_hp()
+	if new_max_hp < actor.cur_hp:
+		actor.cur_hp = new_max_hp
+	var hp_increase = max(0,new_max_hp - prev_max_hp) # temporary, should remove after encounter
+	actor.cur_hp += hp_increase
 

@@ -54,20 +54,20 @@ static func display_scale(display_size: Vector2, grid_size: Vector2) -> float:
 	var scale_factor = floor(min(tile_bounds.x, tile_bounds.y)/ Constants.TILE_ENVELOPE)
 	return scale_factor
 
-func update_view(s: EncounterState, what: EncounterEvent = null):
+func update_view(st: EncounterState, what: EncounterEvent = null):
 	$reticle.visible = false
 	$reticle2.visible = false
-	state = s
-	get_node("%player_hp").text = "Hp: %d" % max(0,s.get_player().cur_hp)
+	state = st
+	get_node("%player_hp").text = "Hp: %d" % max(0,st.get_player().cur_hp)
 	var display_size: Vector2 = get_rect().size
 	var scale_factor = display_scale(display_size, Constants.MAP_BOUNDARIES.size)
 	var scaled_size = scale_factor * Constants.TILE_ENVELOPE
 
-	var n = s.actors.size()
+	var n = st.actors.size()
 	var actorsprites = get_node("%actors").get_children()
 	assert(n == actorsprites.size())
 	for i in n:
-		var actor: CombatEntity = s.actors[i]
+		var actor: CombatEntity = st.actors[i]
 		actorsprites[i].position = actor.location * scaled_size
 		actorsprites[i].scale = Vector2(scale_factor, scale_factor)
 		actorsprites[i].visible = actor.is_alive()
@@ -85,6 +85,19 @@ func update_view(s: EncounterState, what: EncounterEvent = null):
 		$reticle2.scale = Vector2(scale_factor, scale_factor)
 		$reticle2.position = what.target_location * scaled_size - $reticle2.scale
 		$reticle2.visible = true
+		if !what.get("ability"):
+			$reticle2.modulate = Color(0.5,0.5,0,5)
+		else:
+			$reticle2.modulate = RandomUtil.color_hash(what.ability.name)
+			
+
+#func set_input(input):
+#	seed(hash(input))
+#	icon_index = randi()
+#	var s = randf() / 2 + 0.5
+#	var v = randf() / 2 + 0.5
+#	var h = randf()
+#	color = Color.from_hsv(h,s,v)
 #		$location_highlight.rect_position = what.target_location * scaled_size
 #		$location_highlight.visible = true
 #		$location_highlight.rect_size = scaled_size * Vector2(1,1)

@@ -102,9 +102,17 @@ func no_go():
 	skips -= 1
 	make_encounter()
 
+func calculate_new_hp() -> int:
+	var final_player_state = next_encounter_outcome.final().get_player()
+	var remaining_hp = final_player_state.cur_hp
+	var temp_hp = final_player_state.stats.max_hp() - player_stats.max_hp()
+	temp_hp = min(temp_hp, remaining_hp - 1)
+	temp_hp = max(0, temp_hp)
+	return remaining_hp - temp_hp
+
 func done():
 	# apply encounter consequences
-	player_hp = next_encounter_outcome.final().get_player().cur_hp
+	player_hp = calculate_new_hp()
 	if player_hp > 0:
 		make_encounter()
 	else:
@@ -173,7 +181,7 @@ func toggle_skill_tree():
 func update_outcome():
 	var mod_state = apply_player_mods(next_encounter_base_state)
 	next_encounter_outcome = drive_encounter(mod_state, map, driver_seed)
-	var encounter_damage = player_hp - next_encounter_outcome.final().get_player().cur_hp
+	var encounter_damage = player_hp - calculate_new_hp()
 	get_node("%damage_preview").text = "[ - %d ]" % encounter_damage
 	
 static func drive_encounter(mod_state: EncounterState, m: Map, ds: int) -> EncounterHistory:

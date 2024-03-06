@@ -159,7 +159,7 @@ const mains = [
 	"Destiny",
 	"Fate",
 	"Exception",
-	"Starve",
+	"Starvation",
 	"Edge",
 	"Tooth",
 	"Flower",
@@ -253,6 +253,7 @@ const mains = [
 	"Pulsar",
 	"Quasar",
 	"Nebula",
+	"Pulchritude",
 ]
 
 static func generate_name() -> String:

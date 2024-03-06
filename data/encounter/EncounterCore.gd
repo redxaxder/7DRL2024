@@ -59,13 +59,14 @@ static func get_damage_with_element(state: EncounterState, event: EncounterEvent
 static func handle_ability_activation(state: EncounterState, event: EncounterEvent) -> Array: # [ EncounterEvent ]
 	var ability = event.ability #TODO: handle AOEs
 	var target = state.lookup_actor(event.target_location)
-	var source = state.actors[event.actor_idx]
+	var source: CombatEntity = state.actors[event.actor_idx]
+	var power = ability.power(source.stats)
 	if target != null:
 		match ability.effect.effect_type:
 			SkillsCore.EffectType.Damage:
-				return [deal_damage(source, target, ability.effect.power, event.timestamp, event.element)]
+				return [deal_damage(source, target, power, event.timestamp, event.element)]
 			SkillsCore.EffectType.StatBuff:
-				state.resolve_stat_buff(target.entity_index, ability.effect.mod_stat, ability.effect.power)
+				state.resolve_stat_buff(target.entity_index, ability.effect.mod_stat, power)
 	return []
 
 static func get_event_source(state: EncounterState, event: EncounterEvent) -> CombatEntity:

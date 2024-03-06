@@ -5,12 +5,8 @@ var color: Color = Color(1,1,1)
 var scale: int = 8
 
 func set_input(input):
-	seed(hash(input))
-	icon_index = randi()
-	var s = randf() / 2 + 0.5
-	var v = randf() / 2 + 0.5
-	var h = randf()
-	color = Color.from_hsv(h,s,v)
+	icon_index = hash(input)
+	color = RandomUtil.color_hash(input)
 	update_texture()
 
 func update_texture():
