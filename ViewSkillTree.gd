@@ -55,7 +55,7 @@ func set_skills(st: SkillTree):
 			button.connect("pressed", self, 'selectSkill', [skill, button])
 			button.set_input(skill.name)
 			containers[i].add_child(button)
-			button.rect_min_size = Vector2(100, 100)
+			button.rect_min_size = Vector2(80, 80)
 	
 	# make available first two columns
 	for i in skill_tree.skills.size():
@@ -72,24 +72,26 @@ func _draw():
 		for j in skill_tree.skills[i].size():
 			var skill : Skill = skill_tree.skills[i][j]
 			var button = containers[i].get_child(j)
-			button.text = skill.name[0]
 			
-			if(unlocked_skills.has(skill.name)):
-				drawButtonUnlocked(button)
-			elif(available_skills.has(skill.name)):
-				drawButtonAvailable(button)
-			else:
-				drawButtonDefault(button)
+			drawButtonDefault(button)
+#			if(unlocked_skills.has(skill.name)):
+#				drawButtonUnlocked(button)
+#			elif(available_skills.has(skill.name)):
+#				drawButtonAvailable(button)
+#			else:
+#				drawButtonDefault(button)
 				
 func drawButtonUnlocked(button: Button):
 	button.add_stylebox_override('normal', preload("res://style_unlocked.tres"))
 	button.add_stylebox_override('hover', preload("res://style_unlocked.tres"))
 	button.add_stylebox_override('pressed', preload("res://style_unlocked.tres"))
+	button.modulate = Color.red
 	
 func drawButtonAvailable(button: Button):
 	button.add_stylebox_override('normal', preload("res://style_available.tres"))
 	button.add_stylebox_override('hover', preload("res://style_available.tres"))
 	button.add_stylebox_override('pressed', preload("res://style_available.tres"))
+	button.modulate = Color.green
 
 func drawButtonSelected(button: Button):
 	button.add_stylebox_override('normal', preload("res://style_selected.tres"))
