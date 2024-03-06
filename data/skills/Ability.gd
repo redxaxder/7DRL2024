@@ -7,10 +7,6 @@ var modifiers: Array = [] #Abilitymod
 var activation: Activation
 var effect: Effect
 
-#TODO (part C?): move all instance state out of here and into the owning actor
-# this will let us alias the abilities when duplicating encounter states
-var cooldown = 0
-
 func _get_parameter_bonus(param: int, statblock: StatBlock) -> float:
 	var bonus = 0
 	for mod in modifiers:
@@ -52,7 +48,7 @@ func radius(stats: StatBlock) -> int:
 	# so 100% bonus should correspond to double area.
 	var bonus = _get_parameter_bonus(ModParam.Radius, stats)
 	var base = float(activation.radius)
-	var modified = base * sqrt(bonus / 100.0)
+	var modified = base * (1 + sqrt(bonus / 100.0))
 	return int(modified)
 
 enum ModParam { Power, AbilityRange, CooldownTime, Radius } # TODO duration. do we have durations?
@@ -66,16 +62,6 @@ static func mod(stat: int, param:int , coeff: float) -> AbilityMod:
 	mod.modified_param = param
 	mod.coefficient = coeff
 	return mod
-
-func on_cooldown() -> bool:
-	return cooldown > 0
-	
-func cool(t: int):
-	cooldown = max(0, cooldown - t)
-
-func use():
-	assert(cooldown == 0)
-	cooldown = activation.cooldown_time
 
 func describe_effect(stats: StatBlock) -> String:
 	match effect.effect_type:

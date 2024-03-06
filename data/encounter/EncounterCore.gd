@@ -6,7 +6,7 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 	var result = []
 	for reactor in state.actors:
 		for reaction in reactor.event_reactions():
-			if reaction.on_cooldown(): continue
+			if !reactor.can_use_ability(reaction, event.timestamp): continue
 			result.append_array(trigger_reaction(event.timestamp, state, event, reactor, reaction))
 	match event.kind:
 		EncounterEventKind.Kind.Move:
@@ -36,9 +36,10 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 	return result
 
 static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> Array: # [ EncounterEvent ]
-	if ability.on_cooldown():
-		return []
-	ability.use()
+	if !actor.can_use_ability(ability, timestamp): return []
+	#the ability is queued for use, but we don't mark it as cooling down
+	#because if the target is invalidated before the event is resolved,
+	#the ability will not be used
 	return [EncEvent.ability_event(timestamp, actor, ability, target, ability.effect.element)]
 
 static func get_damage_with_element(state: EncounterState, event: EncounterEvent) -> float:
@@ -52,37 +53,30 @@ static func get_damage_with_element(state: EncounterState, event: EncounterEvent
 	return damage
 	
 static func handle_ability_activation(state: EncounterState, event: EncounterEvent) -> Array: # [ EncounterEvent ]
-	var ability = event.ability #TODO: handle AOEs
-	var target = state.lookup_actor(event.target_location)
+	var ability = event.ability
 	var source: CombatEntity = state.actors[event.actor_idx]
 	var power = ability.power(source.stats)
-	if target != null:
+
+	var target_location = event.target_location
+	if event.target_idx >= 0: # if we're aiming at an actor, track them as they move
+		target_location = state.actors[event.target_idx].location
+
+	var targets = affected_targets(state, target_location, source, ability)
+	if targets.size() == 0: return []
+	
+	source.mark_ability_use(ability, event.timestamp)
+	var is_crit = false
+	var events = []
+	for location in targets:
+		var target = state.lookup_actor(location)
 		match ability.effect.effect_type:
 			SkillsCore.EffectType.Damage:
-				var is_crit = false
-				return [EncEvent.damage_event(event.timestamp, source, target, power, is_crit, event.element)]
+				events.append(EncEvent.damage_event(event.timestamp, source, target, power, is_crit, event.element))
 			SkillsCore.EffectType.StatBuff:
+				#TODO: stat buffs are also a chained event like damage?
+				# this would let us hook them up to triggers and log messages
 				state.resolve_stat_buff(target.entity_index, ability.effect.mod_stat, power)
-	return []
-
-static func get_event_source(state: EncounterState, event: EncounterEvent) -> CombatEntity:
-	return state.actors[event.actor_idx]
-
-static func get_event_target(state: EncounterState, event: EncounterEvent) -> CombatEntity:
-	return state.actors[event.target_idx]
-
-
-
-
-
-class FireRandomAbilityPlaceHolder:
-	var timestamp: int
-	var source: CombatEntity
-	var ability: Ability
-	func _init(_timestamp, _source, _ability):
-		timestamp = _timestamp
-		source = _source
-		ability = _ability
+	return events
 
 static func trigger_reaction(timestamp: int, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
 	assert(reaction.activation.trigger == SkillsCore.Trigger.Automatic)
@@ -117,8 +111,6 @@ static func trigger_reaction(timestamp: int, state: EncounterState, event: Encou
 	return [e]
 
 
-
-
 static func get_ability_target(state: EncounterState, actor:CombatEntity, ability: Ability) -> Vector2:
 	var targets = find_valid_targets(state, actor, ability)
 	if targets.size() > 0:
@@ -126,24 +118,42 @@ static func get_ability_target(state: EncounterState, actor:CombatEntity, abilit
 		return targets[0]
 	return Vector2.INF
 
-
-#TODO: pass Actor instead of actor id
+# answers the question:
+# for which spaces in range will firing the ability at that space affect anyone?
 static func find_valid_targets(state: EncounterState, actor:CombatEntity, ability: Ability) -> Array:
 	var locations = []
 	var position = actor.location
 	# locations should be all of the locations in ability.range such that
 	# there is at least one valid target within the ability radius
 	var r = ability.ability_range(actor.stats)
+	var radius = ability.radius(actor.stats)
 	var min_x = int(max(position.x-r, Constants.MAP_BOUNDARIES.position.x))
 	var max_x = int(min(position.x+r, Constants.MAP_BOUNDARIES.size.x + Constants.MAP_BOUNDARIES.position.x))
 	var min_y = int(max(position.y-r, Constants.MAP_BOUNDARIES.position.y))
 	var max_y = int(min(position.y+r, Constants.MAP_BOUNDARIES.size.y + Constants.MAP_BOUNDARIES.position.y))
 	for x in range(min_x, max_x + 1):
 		for y in range(min_y, max_y + 1):
-			if has_target(state, Vector2(x, y), ability.activation.radius, actor, ability.effect.targets):
+			if has_target(state, Vector2(x, y), radius, actor, ability.effect.targets):
 				locations.append(Vector2(x, y))
 	return locations
 
+# answers the question: given a target space, who gets affected by this?
+static func affected_targets(state: EncounterState, p: Vector2, source: CombatEntity, ability: Ability) -> Array:
+	var targets = []
+	var r = ability.ability_range(source.stats)
+	var radius = ability.radius(source.stats)
+	var filter = ability.effect.targets
+	var min_x = int(max(p.x-radius, Constants.MAP_BOUNDARIES.position.x))
+	var max_x = int(min(p.x+radius, Constants.MAP_BOUNDARIES.size.x + Constants.MAP_BOUNDARIES.position.x))
+	var min_y = int(max(p.y-radius, Constants.MAP_BOUNDARIES.position.y))
+	var max_y = int(min(p.y+radius, Constants.MAP_BOUNDARIES.size.y + Constants.MAP_BOUNDARIES.position.y))
+	for x in range(min_x, max_x + 1):
+		for y in range(min_y, max_y + 1):
+			if actor_filter_match(state, source, Vector2(x,y), filter):
+				targets.append(Vector2(x,y))
+	return targets
+	
+# answers the question: if i fire this ability at this space, will it affect anyone?
 static func has_target(state: EncounterState, p: Vector2, radius: int, source: CombatEntity, filter: int) -> bool:
 	var min_x = int(max(p.x-radius, Constants.MAP_BOUNDARIES.position.x))
 	var max_x = int(min(p.x+radius, Constants.MAP_BOUNDARIES.size.x + Constants.MAP_BOUNDARIES.position.x))
@@ -151,7 +161,7 @@ static func has_target(state: EncounterState, p: Vector2, radius: int, source: C
 	var max_y = int(min(p.y+radius, Constants.MAP_BOUNDARIES.size.y + Constants.MAP_BOUNDARIES.position.y))
 	for x in range(min_x, max_x + 1):
 		for y in range(min_y, max_y + 1):
-			if actor_filter_match(state, source, p, filter):
+			if actor_filter_match(state, source, Vector2(x,y), filter):
 				return true
 	return false
 

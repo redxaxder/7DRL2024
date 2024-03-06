@@ -13,6 +13,7 @@ var entity_index: int # duplicated from driver
 var actor_type: int
 var actions: Array
 var reactions: Array
+var last_used_time: Dictionary = {}
 var name: String
 var element: int = Elements.Kind.Physical
 
@@ -29,15 +30,20 @@ func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int
 	faction = _faction
 	name = moniker
 
+func can_use_ability(a: Ability, when: int) -> bool:
+	var last_used = last_used_time.get(a.name)
+	if last_used == null: return true
+	return (when - last_used) >= a.cooldown_time(stats)
+
+func mark_ability_use(a: Ability, when: int):
+	assert(when >= last_used_time.get(a.name, 0), "using ability before cooldown is up is not allowed")
+	last_used_time[a.name] = when
+
 func is_alive():
 	return (cur_hp > 0)
 
 func pass_time(t: int):
 	time_spent += t
-	for a in actions:
-		a.cool(t)
-	for a in reactions:
-		a.cool(t)
 
 func initialize_with_block(_stats: StatBlock, _faction: int, moniker: String):
 	stats = DataUtil.deep_dup(_stats)

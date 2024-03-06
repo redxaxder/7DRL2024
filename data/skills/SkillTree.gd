@@ -134,8 +134,21 @@ func hand_rolled_skill_tree():
 	my_cool_death_ability.modifiers = [
 		Ability.mod(Stat.Kind.Health, Ability.ModParam.AbilityRange, 100)
 	]
-		
-		
+	
+	var aoe_test_ability: Ability = build_ability({
+		"label": SkillName.generate_name(),
+		"trigger": SkillsCore.Trigger.Action,
+		"effect_type": SkillsCore.EffectType.Damage,
+		"ability_range": 0,
+		"power": 1,
+		"radius": 1,
+		"cooldown_time": 1,
+		"targets": SkillsCore.Target.Enemies,
+	})
+	aoe_test_ability.modifiers = [
+		Ability.mod(Stat.Kind.Health, Ability.ModParam.Radius, 100)
+	]
+
 #	var abil2: Skill = create_ability_skill(build_ability({
 #		"label": SkillName.generate_name(),
 #		"target": SkillsCore.Target.Self,
@@ -144,7 +157,7 @@ func hand_rolled_skill_tree():
 #		"power": 20,
 #		}))
 #	append_skill(abil2, 0)
-	append_skill(create_ability_skill(my_cool_death_ability), 1)
+	append_skill(create_ability_skill(aoe_test_ability), 1)
 #	append_skill(create_ability_skill(build_ability({
 #		"label": SkillName.generate_name(),
 #

@@ -123,8 +123,6 @@ func fire_reaction(reaction: Reaction) -> Array:
 		var target_actor: CombatEntity = cur_state.actors[reaction.target_idx]
 		target = target_actor.location
 	if target == Vector2.INF: return []
-	#TODO: this should fail if the target is invalid
-	# ie: wrong faction or missing or something
 	return EncounterCore.use_ability(actor, target, ability, current_time)
 
 func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent
