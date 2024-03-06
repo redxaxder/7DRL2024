@@ -13,10 +13,64 @@ func _refresh():
 		visible = false
 		return
 	visible = true
-	get_node("%actorname").text = Actor.get_name(actor.actor_type)
-	get_node("%hpval").text = "{0} / {1}".format([actor.cur_hp, actor.stats.max_hp()])
-	get_node("%speedval").text = "{0}".format([actor.stats.speed()])
-	get_node("%accuracyval").text = "{0}".format([actor.stats.accuracy()])
-	get_node("%evasionval").text = "{0}".format([actor.stats.evasion()])
-	get_node("%damageval").text = "{0}".format([actor.stats.damage()])
-	get_node("%critval").text = "{0}".format([actor.stats.crit()])
+	var methods = [
+		"max_hp", 
+		"accuracy", 
+		"damage", 
+		"crit_chance",
+		"speed",
+		"crit_mult",
+		"evasion",
+		"physical", "fire", "poison", "ice",
+		"physical_resist", "fire_resist", "poison_resist", "ice_resist"
+	]
+	var dict = {}
+	for k in methods: dict[k] = actor.stats.call(k)
+	
+	dict["cur_hp"] = max(0,actor.cur_hp)
+	dict["crit_chance"] = int(actor.stats.crit_chance() * 100)
+	dict["crit_mult"] = round(actor.stats.crit_mult() * 10) / 10
+	
+	var stats = get_node("%stats")
+	if !stats: return
+	for c in stats.get_children():
+		c.queue_free()
+		stats.remove_child(c)
+	
+	var shown = []
+	for key in methods:
+		var field
+		var value
+		if key == "max_hp":
+			field = "Hp:"
+			value = "{cur_hp} / {max_hp}".format(dict)
+		else:
+			dict["field_name"] = field_display.get(key, "MISSING")
+			field = str(field_display.get(key, "MISSING"),":")
+			value = str("{", key, "}").format(dict)
+		var is_shown = dict[key] != 0 or key == "max_hp"
+		if is_shown:
+			var label1 = Label.new()
+			stats.add_child(label1)
+			label1.text = field
+			var label2 = Label.new()
+			stats.add_child(label2)
+			label2.text = value
+			label2.align = HALIGN_RIGHT
+
+const field_display: Dictionary = {
+	"speed": "Speed",
+	"accuracy": "Accuracy",
+	"evasion": "Evasion",
+	"damage": "Power",
+	"crit_chance": "Crit Chance",
+	"crit_mult": "Crit Mult",
+	"physical": "Physical",
+	"poision": "Poison",
+	"fire": "Fire",
+	"ice": "Ice",
+	"physical_resist": "Physical Resist",
+	"poision_resist": "Poison Resist",
+	"fire_resist": "Fire Resist",
+	"ice_resist": "Ice Resist"
+}

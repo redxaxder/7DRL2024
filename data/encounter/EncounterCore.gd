@@ -16,7 +16,7 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			var source = state.actors[event.actor_idx]
 			var target = state.actors[event.target_idx]
 			if event.damage > 0:
-				EncEvent.damage_event(event.timestamp, source, target, event.damage, event.is_crit, event.element)
+				result.append(EncEvent.damage_event(event.timestamp, source, target, event.damage, event.is_crit, event.element))
 		EncounterEventKind.Kind.Death:
 			state.remove_actor(event.target_idx)
 		EncounterEventKind.Kind.AbilityActivation:

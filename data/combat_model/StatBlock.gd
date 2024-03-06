@@ -45,6 +45,16 @@ func evasion() -> int: return get_modified_stat(Stat.Kind.Evasion)
 func damage() -> int: return get_modified_stat(Stat.Kind.Damage)
 func crit() -> int: return get_modified_stat(Stat.Kind.Crit)
 
+#elemental stats
+func physical() -> int: return get_modified_stat(Stat.Kind.Physical)
+func poison() -> int: return get_modified_stat(Stat.Kind.Poison)
+func fire() -> int: return get_modified_stat(Stat.Kind.Fire)
+func ice() -> int: return get_modified_stat(Stat.Kind.Ice)
+func physical_resist() -> int: return get_modified_stat(Stat.Kind.PhysicalResist)
+func poison_resist() -> int: return get_modified_stat(Stat.Kind.PoisonResist)
+func fire_resist() -> int: return get_modified_stat(Stat.Kind.FireResist)
+func ice_resist() -> int: return get_modified_stat(Stat.Kind.IceResist)
+
 func crit_mult() -> float:
 	var c = float(crit())
 	return (200 + 2*c)/100

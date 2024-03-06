@@ -18,125 +18,25 @@ margin_right = 1024.0
 margin_bottom = 600.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-margin_left = 433.0
-margin_top = 262.0
-margin_right = 590.0
-margin_bottom = 338.0
+margin_left = 493.0
+margin_top = 287.0
+margin_right = 531.0
+margin_bottom = 313.0
 
 [node name="actorname" type="Label" parent="CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
-margin_right = 157.0
+margin_right = 38.0
 margin_bottom = 14.0
 text = "Name"
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
 margin_top = 18.0
-margin_right = 157.0
+margin_right = 38.0
 margin_bottom = 22.0
 
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer"]
+[node name="stats" type="GridContainer" parent="CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
 margin_top = 26.0
-margin_right = 157.0
-margin_bottom = 76.0
+margin_right = 38.0
+margin_bottom = 26.0
 columns = 4
-
-[node name="hp" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-margin_right = 57.0
-margin_bottom = 14.0
-text = "Health"
-valign = 1
-
-[node name="hpval" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-margin_left = 61.0
-margin_right = 69.0
-margin_bottom = 14.0
-text = "0"
-align = 2
-valign = 1
-
-[node name="speed" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-margin_left = 73.0
-margin_right = 145.0
-margin_bottom = 14.0
-text = "Speed"
-valign = 1
-
-[node name="speedval" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-margin_left = 149.0
-margin_right = 157.0
-margin_bottom = 14.0
-text = "0"
-align = 2
-valign = 1
-
-[node name="accuracy" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-margin_top = 18.0
-margin_right = 57.0
-margin_bottom = 32.0
-text = "Accuracy"
-valign = 1
-
-[node name="accuracyval" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-margin_left = 61.0
-margin_top = 18.0
-margin_right = 69.0
-margin_bottom = 32.0
-text = "0"
-align = 2
-valign = 1
-
-[node name="evasion" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-margin_left = 73.0
-margin_top = 18.0
-margin_right = 145.0
-margin_bottom = 32.0
-text = "Evasion"
-valign = 1
-
-[node name="evasionval" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-margin_left = 149.0
-margin_top = 18.0
-margin_right = 157.0
-margin_bottom = 32.0
-text = "0"
-align = 2
-valign = 1
-
-[node name="damage" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-margin_top = 36.0
-margin_right = 57.0
-margin_bottom = 50.0
-text = "Power"
-valign = 1
-
-[node name="damageval" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-margin_left = 61.0
-margin_top = 36.0
-margin_right = 69.0
-margin_bottom = 50.0
-text = "0"
-align = 2
-valign = 1
-
-[node name="crit" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-margin_left = 73.0
-margin_top = 36.0
-margin_right = 145.0
-margin_bottom = 50.0
-text = "Crit Chance"
-valign = 1
-
-[node name="critval" type="Label" parent="CenterContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-margin_left = 149.0
-margin_top = 36.0
-margin_right = 157.0
-margin_bottom = 50.0
-text = "0"
-align = 2
-valign = 1
