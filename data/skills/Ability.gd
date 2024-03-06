@@ -87,7 +87,6 @@ func describe_target(target_filter:int) -> String:
 	assert(false, "unhandled target")
 	return ""
 
-#TODO: fix descriptions
 func generate_description(stats: StatBlock) -> String:
 	var dict = {}
 	dict["trigger"] = ["Action","Reaction"][activation.trigger]

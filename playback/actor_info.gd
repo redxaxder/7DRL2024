@@ -15,12 +15,13 @@ func _refresh():
 	visible = true
 	var methods = [
 		"max_hp", 
-		"accuracy", 
 		"damage", 
-		"crit_chance",
 		"speed",
-		"crit_mult",
+		"accuracy", 
 		"evasion",
+		"crit",
+		"crit_chance",
+		"crit_mult",
 		"physical", "fire", "poison", "ice",
 		"physical_resist", "fire_resist", "poison_resist", "ice_resist"
 	]
@@ -62,10 +63,11 @@ const field_display: Dictionary = {
 	"accuracy": "Accuracy",
 	"evasion": "Evasion",
 	"damage": "Power",
-	"crit_chance": "Crit Chance",
-	"crit_mult": "Crit Mult",
 	"physical": "Physical",
 	"poision": "Poison",
+	"crit": "Base Crit",
+	"crit_chance": "Crit Chance",
+	"crit_mult": "Crit Mult",
 	"fire": "Fire",
 	"ice": "Ice",
 	"physical_resist": "Physical Resist",

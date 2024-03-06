@@ -13,15 +13,18 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			if state.lookup_actor(event.target_location) == null:
 				state.set_location(event.actor_idx, event.target_location)
 		EncounterEventKind.Kind.Attack:
+			assert(event.target_idx >= 0)
 			var source = state.actors[event.actor_idx]
 			var target = state.actors[event.target_idx]
 			if event.damage > 0:
 				result.append(EncEvent.damage_event(event.timestamp, source, target, event.damage, event.is_crit, event.element))
 		EncounterEventKind.Kind.Death:
+			assert(event.target_idx >= 0)
 			state.remove_actor(event.target_idx)
 		EncounterEventKind.Kind.AbilityActivation:
 			result.append_array(handle_ability_activation(state, event))
-		EncounterEventKind.Kind.Damage:
+		EncounterEventKind.Kind.Damage: 
+			assert(event.target_idx >= 0)
 			var target = state.actors[event.target_idx]
 # warning-ignore:narrowing_conversion
 			var modified_damage = get_damage_with_element(state, event)
@@ -33,6 +36,13 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 		EncounterEventKind.Kind.PrepareReaction:
 			# these do not affect encounter state directly; the driver uses them to queue up AbilityActivations
 			pass
+		EncounterEventKind.Kind.StatChange:
+			assert(event.target_idx >= 0)
+			var target = state.actors[event.target_idx]
+			state.resolve_stat_buff(event.target_idx, event.stat, event.damage)
+			if !target.is_alive():
+				var killer = state.actors[event.actor_idx]
+				result.append(EncEvent.death_event(event.timestamp, killer, target))
 	return result
 
 static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> Array: # [ EncounterEvent ]
@@ -73,9 +83,7 @@ static func handle_ability_activation(state: EncounterState, event: EncounterEve
 			SkillsCore.EffectType.Damage:
 				events.append(EncEvent.damage_event(event.timestamp, source, target, power, is_crit, event.element))
 			SkillsCore.EffectType.StatBuff:
-				#TODO: stat buffs are also a chained event like damage?
-				# this would let us hook them up to triggers and log messages
-				state.resolve_stat_buff(target.entity_index, ability.effect.mod_stat, power)
+				events.append(EncEvent.stat_change_event(event.timestamp, source, target, ability.effect.mod_stat, power))
 	return events
 
 static func trigger_reaction(timestamp: int, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:

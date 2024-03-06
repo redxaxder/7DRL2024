@@ -86,9 +86,14 @@ func event_text(evt: EncounterEvent) -> String:
 			return "{time}: {an} activated ability {m}".format(evt.dict())
 		EncounterEventKind.Kind.Damage:
 			if evt.is_crit:
-				return "{time}: Critical! {tn} took {d} damage!!!".format(evt.dict())
+				return "{time}: Critical hit! {tn} took {d} damage!!!".format(evt.dict())
 			else:
 				return "{time}: {tn} took {d} damage!".format(evt.dict())
+		EncounterEventKind.Kind.StatChange:
+			var gained = "gained"
+			if evt.damage < 0:
+				gained = "lost"
+			return str("{time}: {tn} ", gained, " {d} ",Stat.NAME[evt.stat]).format(evt.dict())
 		EncounterEventKind.Kind.PrepareReaction:
 			return "{time}: {an} prepared reaction: {m}".format(evt.dict())
 	push_warning("Event not handled by logger! {0}".format([evt.kind]))
@@ -160,7 +165,7 @@ func next():
 func step():
 	var n = _end()
 	var next = min(cursor+1,n)
-	while next < n-1 and !history.get_event(next).is_animated():
+	while next < n-1 and !EncounterEventKind.is_animated(history.get_event(next).kind):
 		next += 1
 	if next > cursor:
 		cursor = next
@@ -214,7 +219,8 @@ func _refresh():
 	var loglines = combat_log.get_children()
 	var highlighted_line = 0
 	for i in loglines.size():
-		var should_show = i == 0 or show_extra_history or history.get_event(i-1).is_displayed()
+		var displayed_default = EncounterEventKind.is_displayed(history.get_event(i-1).kind)
+		var should_show = i == 0 or show_extra_history or displayed_default
 		loglines[i].visible = should_show and i <= max_cursor
 		if i <= index and loglines[i].visible:
 			loglines[highlighted_line].highlighted = false

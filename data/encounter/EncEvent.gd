@@ -46,7 +46,19 @@ static func death_event(timestamp: int, killer: CombatEntity, victim: CombatEnti
 	set_actor(evt, killer)
 	evt.timestamp = timestamp
 	return evt
-	
+# EncEvent.stat_change_event
+static func stat_change_event(timestamp: int, source: CombatEntity, target: CombatEntity, stat: int, damage: int) -> EncounterEvent:
+	var evt = EncounterEvent.new()
+	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))
+	evt.kind = EncounterEventKind.Kind.StatChange
+# warning-ignore:return_value_discarded
+	set_target(evt, target)
+# warning-ignore:return_value_discarded
+	set_actor(evt, source)
+	evt.timestamp = timestamp
+	evt.damage = damage
+	evt.stat = stat
+	return evt
 static func damage_event(timestamp: int, source: CombatEntity, target: CombatEntity, damage: int, is_crit: bool, element: int) -> EncounterEvent:
 	var evt = EncounterEvent.new()
 	evt.set_script(preload("res://data/encounter/EncounterEvent.gd"))

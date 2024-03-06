@@ -4,24 +4,6 @@ class_name EncounterEvent
 
 
 
-# TODO: maybe move these to EncounterEventKind
-# Is this event's log message visible by default?
-# this is overriden by show_extra_history=true
-func is_displayed() -> bool:
-	match kind:
-		EncounterEventKind.Kind.Move: return false
-		EncounterEventKind.Kind.PrepareReaction: return false
-		_: return true
-
-# When the sim is in playback mode, does it play this event 
-# normally or does it skip past it?
-func is_animated() -> bool:
-	match kind:
-		EncounterEventKind.Kind.Move: return true
-		EncounterEventKind.Kind.Attack: return true
-		EncounterEventKind.Kind.AbilityActivation: return true
-		_: return false
-
 
 var kind
 
@@ -32,6 +14,8 @@ var target_name: String = "Erroneous String: DO NOT READ"
 var damage: int = -99999
 var is_crit: bool = false
 var element: int = Elements.Kind.Physical
+
+var stat: int = -9999
 
 var target_location: Vector2 = Vector2(-99999,-99999)
 
