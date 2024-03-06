@@ -51,12 +51,24 @@ func _ready():
 	get_node("%ConsumablesContainer").connect("consume_health", self, "consume_health_potion")
 	#TODO: get rewards vs no rewards in teleport
 # warning-ignore:return_value_discarded
-	get_node("%ConsumablesContainer").connect("consume_invisibility", self, "no_go")
+	get_node("%ConsumablesContainer").connect("consume_invisibility", self, "sneak")
 	get_node("%history_view").show_extra_history = show_extra_history
 	new_game()
+	
+	var timer : Timer = get_node("%ConsumablesCounter")
+	timer.start(0.5)
+	timer.connect("timeout", self, "transfer_reward")
+	
+func transfer_reward():
+	if gonogo && !gameover:
+		get_node("%ConsumablesContainer").transfer_reward()
 
 func consume_health_potion():
-	player_hp += get_node("%ConsumablesContainer").health_potion_amount
+	var max_hp = player_stats.max_hp()
+	player_hp = min(
+		max_hp,
+		player_hp + get_node("%ConsumablesContainer").health_potion_amount
+	)
 	make_encounter(current_encounter_seed)
 
 func new_game():
@@ -96,6 +108,10 @@ func apply_player_mods(s: EncounterState) -> EncounterState:
 
 
 func go():
+	var final_player_state = next_encounter_outcome.final().get_player()
+	var remaining_hp = final_player_state.cur_hp
+	# todo: pass in extra log messages if player is alive
+	
 	get_node("%history_view").view(next_encounter_outcome, map)
 	gonogo = false
 	update_button_visibility()
@@ -116,10 +132,15 @@ func done():
 	# apply encounter consequences
 	player_hp = calculate_new_hp()
 	if player_hp > 0:
+		get_node("%ConsumablesContainer").win_rewards()
 		make_encounter()
 	else:
 		gameover = true
 		update_button_visibility()
+		
+func sneak():
+	get_node("%ConsumablesContainer").win_rewards()
+	no_go()
 
 func restart():
 	new_game()
@@ -136,6 +157,8 @@ func make_encounter(use_seed: int = 0):
 
 	get_node("%history_view").clear()
 	map.generate()
+	
+	get_node("%ConsumablesContainer").init_rewards()
 
 	var state = EncounterState.new()
 	var player = CombatEntity.new()

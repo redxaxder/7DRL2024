@@ -34,7 +34,7 @@ __meta__ = {
 [node name="GO" type="Button" parent="buttons"]
 unique_name_in_owner = true
 margin_right = 109.0
-margin_bottom = 61.0
+margin_bottom = 44.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -79,9 +79,9 @@ valign = 1
 
 [node name="NOGO" type="Button" parent="buttons"]
 unique_name_in_owner = true
-margin_top = 65.0
+margin_top = 48.0
 margin_right = 109.0
-margin_bottom = 126.0
+margin_bottom = 93.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -94,11 +94,21 @@ valign = 1
 
 [node name="OpenSkillTree" type="Button" parent="buttons"]
 unique_name_in_owner = true
-margin_top = 130.0
+margin_top = 97.0
+margin_right = 109.0
+margin_bottom = 142.0
+size_flags_vertical = 3
+text = "Skill Tree"
+
+[node name="Control" type="Control" parent="buttons"]
+margin_top = 146.0
 margin_right = 109.0
 margin_bottom = 191.0
 size_flags_vertical = 3
-text = "Skill Tree"
+
+[node name="Button" type="Button" parent="buttons/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 
 [node name="state_view" parent="." instance=ExtResource( 3 )]
 unique_name_in_owner = true
@@ -139,10 +149,10 @@ margin_bottom = 160.0
 
 [node name="damage_preview" type="Label" parent="."]
 unique_name_in_owner = true
-margin_left = 165.0
-margin_top = 12.0
-margin_right = 276.0
-margin_bottom = 39.0
+margin_left = 212.0
+margin_top = 10.0
+margin_right = 323.0
+margin_bottom = 37.0
 custom_fonts/font = SubResource( 1 )
 text = "PREVIEW"
 
@@ -156,8 +166,9 @@ script = ExtResource( 5 )
 
 [node name="Inventory" type="HBoxContainer" parent="ConsumablesContainer"]
 unique_name_in_owner = true
-margin_right = 47.0
-margin_bottom = 14.0
+margin_left = 1.0
+margin_right = 82.0
+margin_bottom = 21.0
 
 [node name="InventoryInner" type="HBoxContainer" parent="ConsumablesContainer/Inventory"]
 unique_name_in_owner = true
@@ -171,6 +182,22 @@ margin_bottom = 21.0
 custom_fonts/font = SubResource( 2 )
 text = "Foo bar"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ConsumablesContainer"]
-margin_right = 47.0
+[node name="VBoxContainer" type="VBoxContainer" parent="ConsumablesContainer"]
+margin_left = 514.0
+margin_top = -478.0
+margin_right = 567.0
+margin_bottom = -457.0
+
+[node name="Label" type="Label" parent="ConsumablesContainer/VBoxContainer"]
+margin_right = 53.0
 margin_bottom = 14.0
+text = "Rewards"
+
+[node name="Rewards" type="HBoxContainer" parent="ConsumablesContainer/VBoxContainer"]
+unique_name_in_owner = true
+margin_top = 18.0
+margin_right = 53.0
+margin_bottom = 18.0
+
+[node name="ConsumablesCounter" type="Timer" parent="."]
+unique_name_in_owner = true

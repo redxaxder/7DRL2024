@@ -58,7 +58,10 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 	$reticle.visible = false
 	$reticle2.visible = false
 	state = st
-	get_node("%player_hp").text = "Hp: %d" % max(0,st.get_player().cur_hp)
+	get_node("%player_hp").text = "Hp: {0} / {1}".format([
+		max(0,st.get_player().cur_hp),
+		st.get_player().stats.max_hp()
+	])
 	var display_size: Vector2 = get_rect().size
 	var scale_factor = display_scale(display_size, Constants.MAP_BOUNDARIES.size)
 	var scaled_size = scale_factor * Constants.TILE_ENVELOPE

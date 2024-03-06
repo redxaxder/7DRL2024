@@ -64,6 +64,9 @@ func view(_history: EncounterHistory, _map: Map):
 	for i in _end():
 		var event = history.get_event(i)
 		var log_node = add_log_message(event_text(event), i)
+	# add event 
+	# pass in alive
+	# _end()
 	play()
 	_refresh()
 
@@ -222,6 +225,8 @@ func _refresh():
 			call_deferred("update_scroll", i)
 	var current_state = history.get_state(index)
 	emit_signal("updated", current_state, current_event)
+	
+# EncounterHistory.get_state lines 24 change out of bounds code to clamp
 
 var scroll_min_bound = 0
 var scroll_max_bound = 0

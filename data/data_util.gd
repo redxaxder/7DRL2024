@@ -69,3 +69,6 @@ static func dup_dict(d: Dictionary) -> Dictionary:
 
 static func new_array() -> Array:
 	return []
+
+static func pick(arr):
+	return arr[rand_range(0,arr.size())]

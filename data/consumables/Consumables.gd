@@ -6,6 +6,9 @@ signal consume_invisibility
 
 export var health_potion_amount = 25
 
+var rewards = []
+var won_rewards = [];
+
 var CONSUMABLE_TYPES = {
 	"teleport": {
 		"name": "Teleport Potion",
@@ -33,51 +36,160 @@ var CONSUMABLE_TYPES = {
 var consumable_inventory = {}
 
 func _ready():
+	
 	var bb = preload("res://misc/BetterButton.tscn")
 	for c in CONSUMABLE_TYPES:
 		var config = CONSUMABLE_TYPES[c]
+		
+		config.shake = 0
+		
 		var better_button = bb.instance()
 		
 		config.button = better_button
 		
-		better_button.text = "4"
+		better_button.text = ""
 		better_button.image = config.sprite
 		better_button.align = 2
 		better_button.valign = 2
 		better_button.font_size = 24
 		
-		get_node("%InventoryInner").add_child(better_button)
 		var size = 64
+		
+		var control = Control.new()
+		get_node("%InventoryInner").add_child(control)
+		control.rect_min_size = Vector2(size,size)
+		control.rect_size = Vector2(size,size)
+		control.add_child(better_button)
+		# button size must be set after control size
 		better_button.rect_min_size = Vector2(size,size)
 		better_button.rect_size = Vector2(size,size)
+		
 		better_button.connect("pressed",self,"use_consumable", [c])
-		better_button.connect("mouse_entered",self,"hover_button", [config])
-		better_button.connect("mouse_move",self,"hover_button", [config])
-		better_button.connect("mouse_exited",self,"unhover_button", [config])
-		unhover_button(config)
+		better_button.connect("mouse_entered",self,"hover_button", [config, better_button])
+		better_button.connect("mouse_move",self,"hover_button", [config, better_button])
+		better_button.connect("mouse_exited",self,"unhover_button", [config, better_button])
+		unhover_button(config, better_button)
+
+func win_rewards():
+	won_rewards = DataUtil.dup_array(rewards)
+		
+func transfer_reward():
+	var r = won_rewards.pop_back()
+	if(r):
+		print("transfer: "+(r))
+		consumable_inventory[r] += 1
+		CONSUMABLE_TYPES[r].shake = 30
+		
+func init_rewards():
+	var children = get_node("%Rewards").get_children()
+	for c in children:
+		c.queue_free()
+	
+	# create random 
+	var r = randf()
+	var num_rewards
+	if(r < 0.05): 			#  5% => 4
+		num_rewards = 4
+	elif(r < .15): 			# 10% => 3
+		num_rewards = 3
+	elif(r < .4): 			# 25% => 2
+		num_rewards = 2
+	elif(r < .9): 			# 50% => 1
+		num_rewards = 1
+	else:			 		# 10% => 0
+		num_rewards = 0
+		
+	rewards = []
+	
+	var reward_counts = {}
+		
+	for i in num_rewards:
+		var type = DataUtil.pick(CONSUMABLE_TYPES.keys())
+		if(!rewards.has(type)):
+			reward_counts[type] = 1
+		else:
+			reward_counts[type] += 1
+	
+	var bb = preload("res://misc/BetterButton.tscn")
+	for c in reward_counts:
+		rewards.append(c)
+		var config = CONSUMABLE_TYPES[c]
+		var count = reward_counts[c]
+		var better_button = bb.instance()
+		
+		better_button.text = "" if count == 1 else str(count)
+		better_button.image = config.sprite
+		better_button.align = 2
+		better_button.valign = 2
+		better_button.font_size = 24
+		
+		var size = 64
+		
+		
+		
+		better_button.self_modulate = config.color
+		
+		
+		var control = Control.new()
+		get_node("%Rewards").add_child(control)
+		control.rect_min_size = Vector2(size,size)
+		control.rect_size = Vector2(size,size)
+		control.add_child(better_button)
+		# button size must be set after control size
+		better_button.rect_min_size = Vector2(size,size)
+		better_button.rect_size = Vector2(size,size)
+		
+
+
+		
+		
+		
+		
+		better_button.set_anchors_preset(Control.PRESET_WIDE)
+		
+		
+		better_button.connect("mouse_entered",self,"hover_button", [config, better_button])
+		better_button.connect("mouse_move",self,"hover_button", [config, better_button])
+		better_button.connect("mouse_exited",self,"unhover_button", [config, better_button])
+		
+		unhover_button(config, better_button)
+		
+	
 		
 func init_starting_consumables():
 	for c in CONSUMABLE_TYPES:
 		consumable_inventory[c] = CONSUMABLE_TYPES[c].start_count
+		
+	rewards = []
+	won_rewards = []
 
 # TODO: make this work
-func hover_button(config):
-	config.button.self_modulate = Color(1,1,1)
+func hover_button(config, button):
+	button.self_modulate = Color(1,1,1)
 	get_node("%ConsumableTooltip").text = config.name + ": " +config.description
 	
-func unhover_button(config):
-	config.button.self_modulate = config.color
+func unhover_button(config, button):
+	button.self_modulate = config.color
 	get_node("%ConsumableTooltip").text = ""
 	
 func use_consumable(type: String):
 	if consumable_inventory[type] > 0:	
+		var config = CONSUMABLE_TYPES[type]
 		consumable_inventory[type] = consumable_inventory[type]-1
 		emit_signal("consume_"+type)
-		unhover_button(CONSUMABLE_TYPES[type])
+		unhover_button(CONSUMABLE_TYPES[type], config.button)
 	
 func _process(delta):
 	for c in CONSUMABLE_TYPES:
 		var config = CONSUMABLE_TYPES[c]
 		config.button.text = "{0}".format([consumable_inventory[c]])
 		config.button.visible = consumable_inventory[c] > 0
-
+		config.shake *= 0.9
+		
+		if(config.shake < 1):
+			config.shake = 0
+		config.button.rect_position =Vector2(
+			(randf()-0.5)*config.shake,
+			(randf()-0.5)*config.shake
+		)
+#		config.button.rect_position = Vector2.ZERO
