@@ -102,6 +102,7 @@ func generate_description(stats: StatBlock) -> String:
 	text += "{trigger}\n".format(dict)
 	text += "range: {range}\n".format(dict)
 	text += "radius: {radius}\n".format(dict)
+	text += "cooldown: {cooldown}\n".format(dict)
 	text += "affects: {target}\n".format(dict)
 	if activation.trigger == SkillsCore.Trigger.Automatic:
 		text += "{activation_text}\n".format(dict)
