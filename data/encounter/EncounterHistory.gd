@@ -23,9 +23,7 @@ func add_event(evt: EncounterEvent):
 
 # TODO: clamp
 func get_state(i: int) -> EncounterState:
-	if i < 0 or i >= _states.size(): return null
-	return _states[i]
+	return _states[clamp(i, 0, _states.size() - 1)]
 
 func get_event(i: int) -> EncounterEvent:
-	if i < 0 or i >= _events.size(): return null
-	return _events[i]
+	return _events[clamp(i, 0 , _events.size() - 1)]

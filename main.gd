@@ -112,7 +112,12 @@ func go():
 	var remaining_hp = final_player_state.cur_hp
 	# todo: pass in extra log messages if player is alive
 	
-	get_node("%history_view").view(next_encounter_outcome, map)
+	var example_messages = [
+		"lorem",
+		"ipsum",
+		"dolore",
+	]
+	get_node("%history_view").view(next_encounter_outcome, map, example_messages)
 	gonogo = false
 	update_button_visibility()
 

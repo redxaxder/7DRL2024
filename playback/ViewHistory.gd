@@ -38,7 +38,7 @@ func _ready():
 
 func _end():
 	if !history: return 0
-	return history.size() - 1
+	return get_node("%combat_log").get_child_count()-1
 
 func clear():
 	pause()
@@ -50,24 +50,25 @@ func clear():
 	for c in get_children():
 		c.visible = false
 
-func view(_history: EncounterHistory, _map: Map):
+func view(_history: EncounterHistory, _map: Map, extra_messages: Array = []):
 	for c in get_children():
 		c.visible = true
 	history = _history
 	max_cursor = 0
 	map = _map
-	var progressbar = get_node("%progress_bar")
-	progressbar.max_value = _end()
 
-# warning-ignore:return_value_discarded
 	add_log_message("0: Start!", 0)
-	for i in _end():
+	var history_amount = history.size() - 1
+	for i in history_amount:
 		var event = history.get_event(i)
-		var log_node = add_log_message(event_text(event), i)
-	# add event 
-	# pass in alive
+		add_log_message(event_text(event), i)
+	for i in extra_messages.size():
+		add_log_message(extra_messages[i], i + history_amount)
 	# _end()
 	play()
+
+	var progressbar = get_node("%progress_bar")
+	progressbar.max_value = _end()
 	_refresh()
 
 func event_text(evt: EncounterEvent) -> String:
@@ -94,7 +95,7 @@ func event_text(evt: EncounterEvent) -> String:
 	return ""
 
 
-func add_log_message(text: String, index: int) -> Node:
+func add_log_message(text: String, index: int):
 	var log_node = preload("res://playback/log_line.tscn").instance()
 	log_node.set_label(text)
 	log_node.connect("pressed", self, "log_line_click", [index])
