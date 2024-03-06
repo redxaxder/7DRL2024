@@ -22,6 +22,15 @@ enum Filter{
 	DamageDealt, 
 	DamageRecieved,
 	Death,
+	#cheap to add
+	# movement
+	# uses ability
+	# misses
+	# encounter start
+	# fixed threshold (25%) "bloodied"
+	# attack
+	# medium
+	# 
 	}
 enum FilterFocus { Source, Target }
 const FILTER_FOCUS = [
@@ -37,8 +46,11 @@ const FILTER_EVENT = [
 var filter: int = 0
 var filter_actor = SkillsCore.TargetAny # me, ally, enemy, any
 
-
-
+# desired statuses
+#  stat increase/decrease, but temporaty
+#  shield
+#  DOT
+#  
 
 func filter_event_type():
 	return FILTER_EVENT[filter]
