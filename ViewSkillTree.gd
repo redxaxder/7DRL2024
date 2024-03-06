@@ -11,24 +11,23 @@ var containers: Array
 func _ready():
 	unlocked_skills = {}
 	
-	# TODO: generated skill names
-	var skill_names = [
-		"Aphotic Reach",
-		"Draconic Assailment",
-		"Modest Beheading",
-		"Inscrutable Strike",
-		"Disgrace of the World",
-		"Dementia against Greed",
-		"Slaughter against Strength",
-		"Miraculous Luck",
-		"Hangman's Starve",
-		"Monster's Edge",
-		"Serpent's Stone",
-		"Devil's Tomorrow",
-		"Burly Assault",
-		"Poisonous Shout",
-		"Mastadon's Burly Glory",
-	]
+#	var skill_names = [
+#		"Aphotic Reach",
+#		"Draconic Assailment",
+#		"Modest Beheading",
+#		"Inscrutable Strike",
+#		"Disgrace of the World",
+#		"Dementia against Greed",
+#		"Slaughter against Strength",
+#		"Miraculous Luck",
+#		"Hangman's Starve",
+#		"Monster's Edge",
+#		"Serpent's Stone",
+#		"Devil's Tomorrow",
+#		"Burly Assault",
+#		"Poisonous Shout",
+#		"Mastadon's Burly Glory",
+#	]
 	
 #	for i in skill_tree.skillsPerRow:
 #		skill_tree.skills.append([])

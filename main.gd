@@ -8,7 +8,7 @@ func set_show_extra_history(x):
 	if h:
 		h.show_extra_history = show_extra_history
 
-const time_limit = 3000
+const time_limit = 1000
 
 
 var player_stats: StatBlock
@@ -57,6 +57,7 @@ func _ready():
 	
 	var timer : Timer = get_node("%ConsumablesCounter")
 	timer.start(0.5)
+# warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
 	
 func transfer_reward():
@@ -65,10 +66,10 @@ func transfer_reward():
 
 func consume_health_potion():
 	var max_hp = player_stats.max_hp()
-	player_hp = min(
+	player_hp = int(min(
 		max_hp,
 		player_hp + get_node("%ConsumablesContainer").health_potion_amount
-	)
+	))
 	make_encounter(current_encounter_seed)
 
 func new_game():

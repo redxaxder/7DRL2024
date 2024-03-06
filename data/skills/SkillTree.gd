@@ -108,6 +108,7 @@ func hand_rolled_skill_tree():
 		"power": 10,
 		"targets": SkillsCore.Target.Self,
 		}))
+# warning-ignore:unused_variable
 	var my_cool_skill: Skill = create_ability_skill(build_ability({
 		"label": SkillName.generate_name(),
 		"trigger": SkillsCore.Trigger.Automatic,

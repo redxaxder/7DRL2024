@@ -81,6 +81,7 @@ static func reaction_event(timestamp: int, actor: CombatEntity, ability: Ability
 # warning-ignore:return_value_discarded
 	set_actor(evt, actor)
 	if target != null:
+# warning-ignore:return_value_discarded
 		set_target(evt, target)
 	else:
 		evt.target_location = target_location

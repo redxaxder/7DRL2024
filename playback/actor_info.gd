@@ -37,7 +37,6 @@ func _refresh():
 		c.queue_free()
 		stats.remove_child(c)
 	
-	var shown = []
 	for key in methods:
 		var field
 		var value

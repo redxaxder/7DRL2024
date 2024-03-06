@@ -127,6 +127,8 @@ func random_passable_tile(state: EncounterState) -> Tile:
 	return null
 		
 func get_random_tile() -> Tile:
+# warning-ignore:narrowing_conversion
+# warning-ignore:narrowing_conversion
 	return get_tile(
 		rand_range(1,Constants.MAP_BOUNDARIES.size.x-2),
 		rand_range(1,Constants.MAP_BOUNDARIES.size.y-2)

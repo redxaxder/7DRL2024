@@ -92,7 +92,6 @@ static func trigger_reaction(timestamp: int, state: EncounterState, event: Encou
 	# does the event target match the target filter?
 	if !actor_filter_match(state, reactor, event.target_location, reaction.activation.filter_event_target()):
 		return []
-	var target_loc
 	var target: CombatEntity = null
 	var target_location = event.target_location
 	match reaction.activation.trigger_aim:
@@ -140,7 +139,6 @@ static func find_valid_targets(state: EncounterState, actor:CombatEntity, abilit
 # answers the question: given a target space, who gets affected by this?
 static func affected_targets(state: EncounterState, p: Vector2, source: CombatEntity, ability: Ability) -> Array:
 	var targets = []
-	var r = ability.ability_range(source.stats)
 	var radius = ability.radius(source.stats)
 	var filter = ability.effect.targets
 	var min_x = int(max(p.x-radius, Constants.MAP_BOUNDARIES.position.x))

@@ -1,13 +1,13 @@
 +dont display negative hp on actor info
-make aoe abilities actually aoe
++make aoe abilities actually aoe
 + toggle on main scene to enable full log
 + single element per effect
 + reaction delay
-scale skills
++scale skills
 +roll for crits
 actor info:
   - attack element
-  - elemental bonus, if any
-  - elemental resist, if any
+  + elemental bonus, if any
+  + elemental resist, if any
 
 dont hang ui for long encounters

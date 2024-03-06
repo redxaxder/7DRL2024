@@ -2,9 +2,11 @@ extends Control
 
 export var highlighted: bool = false setget set_highlighted
 
+# warning-ignore:unused_signal
 signal pressed
 
 func _ready():
+# warning-ignore:return_value_discarded
 	$button.connect("pressed", self, "emit_signal", ["pressed"])
 func set_highlighted(x):
 	highlighted = x

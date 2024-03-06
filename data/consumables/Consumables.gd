@@ -177,7 +177,7 @@ func use_consumable(type: String):
 		emit_signal("consume_"+type)
 		unhover_button(CONSUMABLE_TYPES[type], config.button)
 	
-func _process(delta):
+func _process(_delta):
 	for c in CONSUMABLE_TYPES:
 		var config = CONSUMABLE_TYPES[c]
 		config.button.text = "{0}".format([consumable_inventory[c]])

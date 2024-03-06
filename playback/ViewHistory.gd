@@ -200,10 +200,10 @@ func _refresh():
 	if !history: return
 	var index = cursor
 	var next_max = max(max_cursor, cursor)
-	var max_cursor_increased = next_max > max_cursor 
 	max_cursor = next_max
 	if log_is_hovered and last_log_hover >= 0:
 		index = last_log_hover+1
+# warning-ignore:narrowing_conversion
 	var current_event = history.get_event(max(index - 1, 0))
 	var time = 0
 	if current_event: time = current_event.timestamp

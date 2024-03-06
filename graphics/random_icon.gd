@@ -16,6 +16,8 @@ func update_texture():
 	image.fill(Color(0,0,0,0))
 	image.lock()
 	for x in dim.x: for y in dim.y:
+# warning-ignore:integer_division
+# warning-ignore:integer_division
 		var i = 8*(int(x)/scale) + int(y)/scale
 		var x2 = dim.x - x - 1
 		if icon_index & (1 << i) > 0:

@@ -49,7 +49,7 @@ static func dup_object(o: Object) -> Object:
 	var props = o.get_property_list()
 	for prop_info in props:
 		var prop_name = prop_info["name"]
-		var prop_type = prop_info["type"]
+#		var prop_type = prop_info["type"]
 		var what = o.get(prop_name)
 		new.set(prop_name, deep_dup(what))
 	return new

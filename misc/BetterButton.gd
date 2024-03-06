@@ -1,6 +1,7 @@
 tool
 extends Panel
 
+# warning-ignore:unused_signal
 signal pressed
 
 export var image: Texture setget set_image
@@ -29,6 +30,7 @@ func set_font_size(x):
 	_refresh()
 
 func _ready():
+# warning-ignore:return_value_discarded
 	$Button.connect("pressed",self,"emit_signal", ["pressed"])
 
 func _refresh():
