@@ -224,7 +224,7 @@ var scroll_min_bound = 0
 var scroll_max_bound = 0
 func update_scroll(i: int):
 	var rect = get_node("%combat_log").get_child(i).get_rect()
-	scroll_min_bound = rect.position.y + 2*rect.size.y - $ScrollContainer.rect_size.y
+	scroll_min_bound = rect.position.y + rect.size.y - $ScrollContainer.rect_size.y
 	scroll_max_bound = rect.position.y
 	call_deferred("chain_scroll",2)
 

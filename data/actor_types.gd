@@ -63,7 +63,7 @@ const STATS = {
 	Type.Crab: {
 		"base": [12, 2, 15, 5, 15, 1],
 		Stat.Kind.PhysicalResist: 50,
-		Stat.Kind.Speed: -20,
+		Stat.Kind.Speed: -10,
 		},
 }
 
@@ -92,15 +92,6 @@ static func bonus(stat: int, power: int) -> Bonus:
 	b.stat =stat
 	b.power = power
 	return b
-
-static func make_elements(atk_mods: Array, def_mods: Dictionary) -> Elements:
-	var e = Elements.new()
-	var am: Dictionary = {}
-	for a in atk_mods:
-		am[a] = true
-	e.attack_modifiers = am
-	e.defense_modifiers = def_mods
-	return e
 
 static func make_sprite(t) -> Sprite:
 	var s = SPRITES[t]
