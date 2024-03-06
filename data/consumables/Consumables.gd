@@ -66,7 +66,6 @@ func _ready():
 		
 		better_button.connect("pressed",self,"use_consumable", [c])
 		better_button.connect("mouse_entered",self,"hover_button", [config, better_button])
-		better_button.connect("mouse_move",self,"hover_button", [config, better_button])
 		better_button.connect("mouse_exited",self,"unhover_button", [config, better_button])
 		unhover_button(config, better_button)
 

@@ -34,7 +34,7 @@ __meta__ = {
 [node name="GO" type="Button" parent="buttons"]
 unique_name_in_owner = true
 margin_right = 109.0
-margin_bottom = 44.0
+margin_bottom = 61.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -79,9 +79,9 @@ valign = 1
 
 [node name="NOGO" type="Button" parent="buttons"]
 unique_name_in_owner = true
-margin_top = 48.0
+margin_top = 65.0
 margin_right = 109.0
-margin_bottom = 93.0
+margin_bottom = 126.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -94,21 +94,11 @@ valign = 1
 
 [node name="OpenSkillTree" type="Button" parent="buttons"]
 unique_name_in_owner = true
-margin_top = 97.0
-margin_right = 109.0
-margin_bottom = 142.0
-size_flags_vertical = 3
-text = "Skill Tree"
-
-[node name="Control" type="Control" parent="buttons"]
-margin_top = 146.0
+margin_top = 130.0
 margin_right = 109.0
 margin_bottom = 191.0
 size_flags_vertical = 3
-
-[node name="Button" type="Button" parent="buttons/Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+text = "Skill Tree"
 
 [node name="state_view" parent="." instance=ExtResource( 3 )]
 unique_name_in_owner = true
