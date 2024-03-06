@@ -41,7 +41,6 @@ func _ready():
 		config.button = better_button
 		
 		better_button.text = "4"
-		consumable_inventory[c] = config.start_count
 		better_button.image = config.sprite
 		better_button.align = 2
 		better_button.valign = 2
@@ -53,8 +52,13 @@ func _ready():
 		better_button.rect_size = Vector2(size,size)
 		better_button.connect("pressed",self,"use_consumable", [c])
 		better_button.connect("mouse_entered",self,"hover_button", [config])
+		better_button.connect("mouse_move",self,"hover_button", [config])
 		better_button.connect("mouse_exited",self,"unhover_button", [config])
 		unhover_button(config)
+		
+func init_starting_consumables():
+	for c in CONSUMABLE_TYPES:
+		consumable_inventory[c] = CONSUMABLE_TYPES[c].start_count
 
 # TODO: make this work
 func hover_button(config):
@@ -66,10 +70,10 @@ func unhover_button(config):
 	get_node("%ConsumableTooltip").text = ""
 	
 func use_consumable(type: String):
-	print("pressed")
 	if consumable_inventory[type] > 0:	
 		consumable_inventory[type] = consumable_inventory[type]-1
 		emit_signal("consume_"+type)
+		unhover_button(CONSUMABLE_TYPES[type])
 	
 func _process(delta):
 	for c in CONSUMABLE_TYPES:

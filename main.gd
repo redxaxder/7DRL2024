@@ -71,6 +71,7 @@ func new_game():
 	get_node("%ViewSkillTree").player_stats = player_stats
 	randomize()
 	make_encounter()
+	get_node("%ConsumablesContainer").init_starting_consumables()
 
 
 func history_scroll(s: EncounterState, what: EncounterEvent):
