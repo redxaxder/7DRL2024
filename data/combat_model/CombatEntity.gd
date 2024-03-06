@@ -81,9 +81,11 @@ func basic_attack_damage_to_other(other: CombatEntity) -> Array:
 	
 func element_resist_multiplier(damage_type: int) -> float:
 	var resist_stat = Elements.DEFENSE[damage_type]
-	var resist = stats.get_modified_stat(resist_stat)
-	var modifier = 100 - min(resist, Elements.MAX_RESIST)
-	return float(modifier) / 100.0
+	var resist = float(stats.get_modified_stat(resist_stat))
+	if resist >= 0:
+		return 100.0 / (100.0 + resist)
+	else:
+		return 2.0 - (100 / (100 - resist))
 
 func append_bonus(bonus: Bonus):
 	stats.apply_bonus(bonus)
