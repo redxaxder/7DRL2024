@@ -10,35 +10,46 @@ margin_left = 50.0
 margin_top = 50.0
 margin_right = 40.0
 margin_bottom = 40.0
-custom_constants/separation = 30
+custom_constants/separation = 15
 
 [node name="SkillRow1" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 56.0
+margin_right = 200.0
 
 [node name="SkillRow2" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 30.0
-margin_right = 56.0
-margin_bottom = 30.0
+margin_top = 15.0
+margin_right = 200.0
+margin_bottom = 15.0
 
 [node name="SkillRow3" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 60.0
-margin_right = 56.0
-margin_bottom = 60.0
+margin_top = 30.0
+margin_right = 200.0
+margin_bottom = 30.0
 
 [node name="SkillName" type="RichTextLabel" parent="VBoxContainer"]
-margin_top = 90.0
-margin_right = 56.0
-margin_bottom = 105.0
+margin_top = 45.0
+margin_right = 200.0
+margin_bottom = 60.0
 fit_content_height = true
 
-[node name="SkillDescription" type="RichTextLabel" parent="VBoxContainer"]
-margin_top = 135.0
-margin_right = 56.0
-margin_bottom = 150.0
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+margin_top = 75.0
+margin_right = 200.0
+margin_bottom = 175.0
+rect_min_size = Vector2( 200, 100 )
+size_flags_vertical = 3
+follow_focus = true
+scroll_horizontal_enabled = false
+
+[node name="SkillDescription" type="RichTextLabel" parent="VBoxContainer/ScrollContainer"]
+margin_right = 200.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 100, 60 )
+size_flags_horizontal = 3
 fit_content_height = true
+scroll_following = true
 
 [node name="UnlockButton" type="Button" parent="VBoxContainer"]
-margin_top = 180.0
-margin_right = 56.0
-margin_bottom = 200.0
+margin_top = 190.0
+margin_right = 200.0
+margin_bottom = 210.0
 text = "Unlock"
