@@ -119,7 +119,7 @@ func hand_rolled_skill_tree():
 		"power": 1000,
 		"targets": SkillsCore.Target.Self
 	}))
-	var my_cool_death_skill: Skill = create_ability_skill(build_ability({
+	var my_cool_death_ability: Ability = build_ability({
 		"label": SkillName.generate_name(),
 		"trigger": SkillsCore.Trigger.Automatic,
 		"filter": Activation.Filter.Death,
@@ -127,10 +127,14 @@ func hand_rolled_skill_tree():
 		"trigger_aim": SkillsCore.TriggerAim.Random,
 		"effect_type": SkillsCore.EffectType.StatBuff,
 		"mod_stat": Stat.Kind.Speed,
-		"ability_range": 3,
+		"ability_range": 0,
 		"power": -5,
 		"targets": SkillsCore.Target.Enemies,
-	}))
+	})
+	my_cool_death_ability.modifiers = [
+		Ability.mod(Stat.Kind.Health, Ability.ModParam.AbilityRange, 100)
+	]
+		
 		
 #	var abil2: Skill = create_ability_skill(build_ability({
 #		"label": SkillName.generate_name(),
@@ -140,7 +144,7 @@ func hand_rolled_skill_tree():
 #		"power": 20,
 #		}))
 #	append_skill(abil2, 0)
-	append_skill(my_cool_death_skill, 1)
+	append_skill(create_ability_skill(my_cool_death_ability), 1)
 #	append_skill(create_ability_skill(build_ability({
 #		"label": SkillName.generate_name(),
 #
@@ -151,3 +155,5 @@ func hand_rolled_skill_tree():
 	append_skill(create_bonus_skill(Stat.Kind.Eyesight, 5, SkillName.generate_name()), 0)
 	append_skill(create_bonus_skill(Stat.Kind.Footwork, 5, SkillName.generate_name()), 1)
 	append_skill(create_bonus_skill(Stat.Kind.Hustle, 5, SkillName.generate_name()), 2)
+
+

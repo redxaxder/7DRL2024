@@ -93,7 +93,7 @@ static func get_stat_block(t: int) -> StatBlock:
 	if proto: for key in proto.keys():
 		if typeof(key) == TYPE_INT:
 			var bonus = bonus(key, proto.get(key))
-			sb.bonuses.append(bonus)
+			sb.apply_bonus(bonus)
 	return sb
 
 static func bonus(stat: int, power: int) -> Bonus:

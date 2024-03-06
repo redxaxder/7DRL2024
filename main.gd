@@ -67,6 +67,8 @@ func new_game():
 	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = Actor.get_stat_block(Actor.Type.Player)
 	player_hp = 20
+
+	get_node("%ViewSkillTree").player_stats = player_stats
 	randomize()
 	make_encounter()
 
@@ -84,12 +86,11 @@ func update_button_visibility():
 
 func apply_player_mods(s: EncounterState) -> EncounterState:
 	var st = DataUtil.deep_dup(s)
-	var player = st.get_player()
+	var player: CombatEntity = st.get_player()
+	player.stats = DataUtil.deep_dup(player_stats)
 	for skill in skill_tree.unlocks:
 		if skill.kind == Skill.Kind.Ability:
 			player.append_ability(skill.ability)
-		elif skill.kind == Skill.Kind.Bonus:
-			player.append_bonus(skill.bonus)
 	return st
 
 

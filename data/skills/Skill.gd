@@ -10,10 +10,10 @@ export var name: String
 var ability: Ability = null
 var bonus: Bonus = null
 
-func generate_description() -> String:
+func generate_description(stats: StatBlock) -> String:
 	match kind:
 		Kind.Ability:
-			return ability.generate_description()
+			return ability.generate_description(stats)
 		Kind.Bonus:
 			return bonus.generate_description()
 	assert(false)

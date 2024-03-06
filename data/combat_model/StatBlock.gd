@@ -5,7 +5,13 @@ class_name StatBlock
 var stats: Array = [0,0,0,0,0,0]
 
 # bonuses
-var bonuses: Array
+var _bonuses: Array
+
+func clear_bonuses():
+	_bonuses = []
+
+func apply_bonus(bonus: Bonus):
+	_bonuses.append(bonus)
 
 func get_base_stat(stat: int) -> int:
 	if stat < 6:
@@ -22,7 +28,7 @@ func get_base_stat(stat: int) -> int:
 
 func get_modified_stat(stat: int) -> int:
 	var accumulated: int = get_base_stat(stat)
-	for bonus in bonuses:
+	for bonus in _bonuses:
 		if bonus.stat == stat:
 			accumulated += bonus.power
 	#TODO (C?)
@@ -65,8 +71,8 @@ func crit_chance() -> float:
 
 func initialize_array(array: Array):
 	stats  = array.duplicate()
-	bonuses = []
+	_bonuses = []
 
 func initialize(_brawn: int, _brains: int, _guts: int, _eyesight: int, _footwork: int, _hustle: int):
 	stats = [_brawn, _brains, _guts, _eyesight, _footwork, _hustle]
-	bonuses = []
+	_bonuses = []

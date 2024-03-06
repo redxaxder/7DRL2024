@@ -77,17 +77,17 @@ func use():
 	assert(cooldown == 0)
 	cooldown = activation.cooldown_time
 
-func describe_effect() -> String:
+func describe_effect(stats: StatBlock) -> String:
 	match effect.effect_type:
 		SkillsCore.EffectType.Damage:
-			return "deal {0} damage".format([effect.power])
+			return "deal {0} damage".format([power(stats)])
 		SkillsCore.EffectType.StatBuff:
 			var increase = "increase"
 			if effect.power < 0: increase = "decrease"
 			return "{increase} {stat} by {power}".format({
 				"increase": increase,
 				"stat": Stat.NAME[effect.mod_stat],
-				"power": effect.power
+				"power": power(stats)
 			})
 	assert(false, "missing effect description")
 	return ""
@@ -102,19 +102,21 @@ func describe_target(target_filter:int) -> String:
 	return ""
 
 #TODO: fix descriptions
-func generate_description() -> String:
+func generate_description(stats: StatBlock) -> String:
 	var dict = {}
 	dict["trigger"] = ["Action","Reaction"][activation.trigger]
-	dict["range"] = activation.ability_range
-	dict["radius"] = activation.radius
+	dict["range"] = ability_range(stats)
+	dict["radius"] = radius(stats)
 	dict["target"] = describe_target(effect.targets)
 	dict["activation_text"] = describe_activation_condition()
-	dict["effect_text"] = describe_effect()
+	dict["effect_text"] = describe_effect(stats)
+	dict["cooldown"] = cooldown_time(stats)
+#	prints("hp", stats.max_hp())
 	var text = ""
 	text += "{trigger}\n".format(dict)
 	text += "range: {range}\n".format(dict)
 	text += "radius: {radius}\n".format(dict)
-	text += "target: {target}\n".format(dict)
+	text += "affects: {target}\n".format(dict)
 	if activation.trigger == SkillsCore.Trigger.Automatic:
 		text += "{activation_text}\n".format(dict)
 	text += "effect: {effect_text}\n".format(dict)
@@ -122,5 +124,5 @@ func generate_description() -> String:
 
 
 func describe_activation_condition() -> String:
-	return ""
+	return "" #TODO
 	

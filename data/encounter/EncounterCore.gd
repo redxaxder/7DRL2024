@@ -133,7 +133,7 @@ static func find_valid_targets(state: EncounterState, actor:CombatEntity, abilit
 	var position = actor.location
 	# locations should be all of the locations in ability.range such that
 	# there is at least one valid target within the ability radius
-	var r = ability.activation.ability_range
+	var r = ability.ability_range(actor.stats)
 	var min_x = int(max(position.x-r, Constants.MAP_BOUNDARIES.position.x))
 	var max_x = int(min(position.x+r, Constants.MAP_BOUNDARIES.size.x + Constants.MAP_BOUNDARIES.position.x))
 	var min_y = int(max(position.y-r, Constants.MAP_BOUNDARIES.position.y))

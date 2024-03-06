@@ -79,15 +79,15 @@ func element_resist_multiplier(damage_type: int) -> float:
 	var modifier = 100 - min(resist, Elements.MAX_RESIST)
 	return float(modifier) / 100.0
 
-func append_bonus(skill: Bonus):
-	stats.bonuses.append(skill)
+func append_bonus(bonus: Bonus):
+	stats.apply_bonus(bonus)
 	
-func append_ability(skill: Ability):
-	match skill.activation.trigger:
+func append_ability(ability: Ability):
+	match ability.activation.trigger:
 		SkillsCore.Trigger.Action:
-			actions.append(skill)
+			actions.append(ability)
 		SkillsCore.Trigger.Automatic:
-			reactions.append(skill)
+			reactions.append(ability)
 
 func event_reactions() -> Array:
 	return reactions

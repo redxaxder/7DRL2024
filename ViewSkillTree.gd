@@ -2,6 +2,7 @@ extends Control
 
 export var skill_tree: Resource
 
+var player_stats: StatBlock
 var selected_skill : Skill
 var unlocked_skills: Dictionary
 var available_skills: Dictionary
@@ -126,14 +127,13 @@ func drawButtonDefault(button: Button):
 func selectSkill(skill: Skill, button: Button = null):
 	selected_skill = skill
 	$VBoxContainer/SkillName.text = skill.name
-	$VBoxContainer/ScrollContainer/SkillDescription.text = skill.generate_description()
+	$VBoxContainer/ScrollContainer/SkillDescription.text = skill.generate_description(player_stats)
 		
 	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(skill.name)
 	
 	if(button):
 		_draw()
 		drawButtonSelected(button)
-	
 
 func get_skill(i: int, j: int) -> Skill:
 	if i < 0 or i >= skill_tree.skills.size(): return null
@@ -157,5 +157,12 @@ func unlockSkill():
 	unlocked_skills[selected_skill.name] = true
 	selectSkill(selected_skill)
 	skill_tree.unlock(selected_skill)
+	recalculate_player_bonuses()
 	_draw()
 	
+func recalculate_player_bonuses():
+	player_stats.clear_bonuses()
+	for skill in skill_tree.unlocks:
+		if skill.kind == Skill.Kind.Bonus:
+			player_stats.apply_bonus(skill.bonus)
+
