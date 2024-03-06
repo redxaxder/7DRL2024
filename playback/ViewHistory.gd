@@ -215,14 +215,24 @@ func _refresh():
 			loglines[i].highlighted = true
 		else:
 			loglines[i].highlighted = false
-		if i == max_cursor and max_cursor_increased:
-			 # TODO (C?): scroll active log message into view generally, not just when max increases
-			call_deferred("chain_scroll", 2)
-	
+		if i == index:
+			call_deferred("update_scroll", i)
 	var current_state = history.get_state(index)
 	emit_signal("updated", current_state, current_event)
 
+var scroll_min_bound = 0
+var scroll_max_bound = 0
+func update_scroll(i: int):
+	var rect = get_node("%combat_log").get_child(i).get_rect()
+	scroll_min_bound = rect.position.y + 2*rect.size.y - $ScrollContainer.rect_size.y
+	scroll_max_bound = rect.position.y
+	prints(rect, scroll_min_bound, "<", $ScrollContainer.scroll_vertical, "<", scroll_max_bound)
+	call_deferred("chain_scroll",2)
+
 func chain_scroll(chain: int):
-	$ScrollContainer.scroll_vertical = get_node("%combat_log").rect_size.y
+	var vs = $ScrollContainer.scroll_vertical
+	vs = max(scroll_min_bound,vs)
+	vs = min(scroll_max_bound,vs)
+	$ScrollContainer.scroll_vertical = vs
 	if chain > 0:
 		call_deferred("chain_scroll", chain -1)
