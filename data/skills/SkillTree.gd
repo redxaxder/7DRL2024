@@ -69,6 +69,14 @@ static func build_ability(d: Dictionary) -> Ability:
 	result.activation = Activation.new()
 	result.activation.set_script(preload("res://data/skills/Activation.gd"))
 	DataUtil.assign_from_dict(result.activation, d)
+	var allowed_keys = ["label"]
+	for prop in result.effect.get_property_list():
+		allowed_keys.append(prop["name"])
+	for prop in result.activation.get_property_list():
+		allowed_keys.append(prop["name"])
+	for key in d.keys():
+		var found = allowed_keys.find(key) >= 0
+		assert(found, str("tried to assign missing key '", key,"'"))
 	return result
 
 
