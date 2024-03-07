@@ -48,6 +48,7 @@ anchor_bottom = 1.0
 [node name="location_highlight" type="Panel" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
+mouse_filter = 2
 custom_styles/panel = SubResource( 1 )
 
 [node name="reticle" type="Sprite" parent="."]
@@ -62,6 +63,7 @@ centered = false
 [node name="aoe_indicator" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 script = ExtResource( 5 )
 texture = ExtResource( 6 )
 
@@ -69,4 +71,5 @@ texture = ExtResource( 6 )
 visible = false
 margin_right = 40.0
 margin_bottom = 40.0
+mouse_filter = 2
 script = ExtResource( 7 )
