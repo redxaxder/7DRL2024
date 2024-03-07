@@ -122,8 +122,8 @@ func log_line_hover(index: int):
 
 func log_line_click(i):
 	pause()
-	if cursor != i + 1:
-		cursor = i + 1
+	if cursor != i:
+		cursor = i
 		_refresh()
 
 var log_is_hovered:bool = false
@@ -215,9 +215,9 @@ func _refresh():
 	if cursor == _end():
 		emit_signal("seen_end")
 	if log_is_hovered and last_log_hover >= 0:
-		index = last_log_hover+1
+		index = last_log_hover
 # warning-ignore:narrowing_conversion
-	var current_event = history.get_event(max(index - 1, 0))
+	var current_event = history.get_event(index)
 	var time = 0
 	if current_event: time = current_event.timestamp
 	get_node("%timestamp").text = "%d" % time
@@ -227,8 +227,8 @@ func _refresh():
 	var loglines = combat_log.get_children()
 	var highlighted_line = 0
 	for i in loglines.size():
-		var displayed_default = EncounterEventKind.is_displayed(history.get_event(i-1).kind)
-		var should_show = i == 0 or show_extra_history or displayed_default
+		var displayed_default = EncounterEventKind.is_displayed(history.get_event(i).kind)
+		var should_show = show_extra_history or displayed_default
 		loglines[i].visible = should_show and i <= max_cursor
 		if i <= index and loglines[i].visible:
 			loglines[highlighted_line].highlighted = false
@@ -238,7 +238,7 @@ func _refresh():
 			loglines[i].highlighted = false
 		if i == index:
 			call_deferred("update_scroll", i)
-	var current_state = history.get_state(index)
+	var current_state = history.get_state(index+1)
 	emit_signal("updated", current_state, current_event)
 	
 # EncounterHistory.get_state lines 24 change out of bounds code to clamp
