@@ -58,7 +58,6 @@ func view(_history: EncounterHistory, _map: Map, extra_messages: Array = []):
 	max_cursor = 0
 	map = _map
 
-	add_log_message("0: Start!", 0)
 	var history_amount = history.size() - 1
 	for i in history_amount:
 		var event = history.get_event(i)
