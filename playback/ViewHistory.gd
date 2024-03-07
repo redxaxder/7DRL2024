@@ -11,6 +11,7 @@ var cursor: int = 0
 var max_cursor: int = 0
 var history: EncounterHistory
 var map: Map
+var marked_end = false
 
 signal seen_end(state)
 signal updated(encounter_state, encounter_event)
@@ -51,19 +52,20 @@ func clear():
 	for c in get_children():
 		c.visible = false
 
-func view(_history: EncounterHistory, _map: Map, extra_messages: Array = []):
+var _victory_messages = []
+func view(_history: EncounterHistory, _map: Map, victory_messages):
 	for c in get_children():
 		c.visible = true
 	history = _history
 	max_cursor = 0
 	map = _map
+	marked_end = false
 
 	var history_amount = history.size() - 1
 	for i in history_amount:
 		var event = history.get_event(i)
 		add_log_message(event_text(event), i, event)
-	for i in extra_messages.size():
-		add_log_message(extra_messages[i], i + history_amount, null)
+	_victory_messages = victory_messages
 	# _end()
 	play()
 
@@ -223,8 +225,12 @@ func _refresh():
 	var index = cursor
 	var next_max = max(max_cursor, cursor)
 	max_cursor = next_max
-	if cursor == _end() and history.is_done:
+	if cursor == _end() and history.is_done and !marked_end:
+		marked_end = true
 		emit_signal("seen_end", history.final())
+		if history.final().get_player().cur_hp > 0:
+			for i in _victory_messages.size():
+				add_log_message(_victory_messages[i], i + history.size() - 1, null)
 	if log_is_hovered and last_log_hover >= 0:
 		index = last_log_hover
 # warning-ignore:narrowing_conversion
