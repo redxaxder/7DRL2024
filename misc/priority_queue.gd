@@ -5,7 +5,7 @@ class_name PriorityQueue
 var _values: Array
 var _priorities: Array
 
-func insert(value, priority: int):
+func insert(value, priority: float):
 	var ix = _priorities.bsearch(priority, false)
 	_values.insert(ix, value)
 	_priorities.insert(ix, priority)

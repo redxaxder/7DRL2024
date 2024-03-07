@@ -24,6 +24,10 @@ enum Filter{
 	Death,
 	Movement,
 	Start,
+	Bloodied,
+	Miss,
+	Dodge,
+	Attack,
 	#cheap to add
 	# uses ability
 	# misses
@@ -37,11 +41,15 @@ enum Filter{
 	}
 enum FilterFocus { Source, Target }
 const FILTER_FOCUS = [
-	FilterFocus.Source, # DamageDealt
-	FilterFocus.Target, # DamageRecieved
-	FilterFocus.Target, # Death
-	FilterFocus.Source, # Movement
-	FilterFocus.Source, # Start
+	FilterFocus.Source, # DamageDealt "who dealt the damage"
+	FilterFocus.Target, # DamageRecieved "who got hurt"
+	FilterFocus.Target, # Death "who died" 
+	FilterFocus.Source, # Movement "who moved"
+	FilterFocus.Source, # Start " always player "
+	FilterFocus.Target, # Bloodied " who gets bloodied"
+	FilterFocus.Source, # Miss   " who misses"
+	FilterFocus.Target, # Dodge   " who is missed"
+	FilterFocus.Source, # Attack " who attacks"
 	]
 const FILTER_EVENT = [
 	EncounterEventKind.Kind.Damage, # DamageDealt
@@ -49,6 +57,10 @@ const FILTER_EVENT = [
 	EncounterEventKind.Kind.Death, # Death
 	EncounterEventKind.Kind.Move,  # Movement
 	EncounterEventKind.Kind.EncounterStart,  # Start
+	EncounterEventKind.Kind.Bloodied,  # Bloodied
+	EncounterEventKind.Kind.Miss,     # Miss
+	EncounterEventKind.Kind.Miss,     # Dodge
+	EncounterEventKind.Kind.Attack,  # Attack
 	]
 var filter: int = 0
 var filter_actor = SkillsCore.TargetAny # me, ally, enemy, any

@@ -5,9 +5,6 @@ func set_actor(x):
 	actor = x
 	_refresh()
 
-func _ready():
-	self_modulate = Constants.CLEAR_COLOR
-
 func _refresh():
 	if !actor:
 		visible = false

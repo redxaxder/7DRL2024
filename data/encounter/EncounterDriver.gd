@@ -81,7 +81,7 @@ func tick() -> bool:
 		current_time = actor.time_spent
 		events = tick_ai(actor)
 		handle_events(events)
-		actor.pass_time(int(100.0 / float(actor.stats.speed())))
+		actor.pass_time(100.0 / float(actor.stats.speed()))
 		queue.insert(actor, actor.time_spent)
 		return true
 

@@ -220,8 +220,8 @@ func _refresh():
 	var current_event = history.get_event(index)
 	var time = 0
 	if current_event:
-		time = int(current_event.timestamp)
-	get_node("%timestamp").text = "%d" % time
+		time = current_event.timestamp
+	get_node("%timestamp").text = "%d" % (round(time*10) / 10.0)
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = index
 	var combat_log = get_node("%combat_log")

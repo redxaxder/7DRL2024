@@ -42,7 +42,7 @@ func mark_ability_use(a: Ability, when: int):
 func is_alive():
 	return (cur_hp > 0)
 
-func pass_time(t: int):
+func pass_time(t: float):
 	time_spent += t
 
 func initialize_with_block(_stats: StatBlock, _faction: int, moniker: String):

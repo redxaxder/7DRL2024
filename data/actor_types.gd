@@ -53,7 +53,7 @@ const STATS = {
 	Type.Blorp: {
 		"base": [5, 2, 12, 2, 2, 8],
 		"attack": Elements.Kind.Poison,
-		Stat.Kind.PoisonResist: 90,
+		Stat.Kind.PoisonResist: 150,
 		Stat.Kind.IceResist: -50,
 		},
 	Type.Snake: {
