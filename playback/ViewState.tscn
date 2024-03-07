@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://playback/ViewState.gd" type="Script" id=1]
 [ext_resource path="res://fonts/CommitMono-400-Regular.otf" type="DynamicFontData" id=2]
 [ext_resource path="res://graphics/reticles/reticle.png" type="Texture" id=3]
 [ext_resource path="res://graphics/reticles/reticle2.png" type="Texture" id=4]
+[ext_resource path="res://playback/aoe_indicator.gd" type="Script" id=5]
+[ext_resource path="res://graphics/reticles/reticle3.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=2]
 size = 24
@@ -55,3 +57,9 @@ centered = false
 modulate = Color( 0.572549, 1, 0.376471, 1 )
 texture = ExtResource( 4 )
 centered = false
+
+[node name="aoe_indicator" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 5 )
+texture = ExtResource( 6 )

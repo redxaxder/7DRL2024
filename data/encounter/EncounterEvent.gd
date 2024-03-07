@@ -22,6 +22,7 @@ var target_location: Vector2 = Vector2(-99999,-99999)
 var timestamp: int = -99999
 
 var ability: Ability
+var displayed_radius: int = -9999 # 
 var ab_name: String = "Erroneous String: DO NOT READ"
 
 func dict() -> Dictionary:

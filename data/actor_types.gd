@@ -33,7 +33,7 @@ const SPRITES = [ \
 	preload("res://graphics/snake.tscn"),
 	preload("res://graphics/crab.tscn"),
 	preload("res://graphics/imp/imp.png"),
-	preload("res://graphics/shrine/shrine.png"),
+	preload("res://graphics/shrine/shrine0.png"),
 	preload("res://graphics/goblin/goblin.png"),
 	preload("res://graphics/gazer/gazer.tscn"),
   ]
@@ -68,7 +68,7 @@ const STATS = {
 	Type.Shrine: {
 		"base": [1, 1, 1, 1, 1, 1],
 		Stat.Kind.Health: 48, # 50 total
-		Stat.Kind.Speed: 3, # 5 total
+		Stat.Kind.Speed: 8, # 10 total
 	}
 }
 
@@ -140,10 +140,10 @@ static func create_shrine(stat: int) -> CombatEntity:
 		"effect_type": SkillsCore.EffectType.StatBuff,
 		"mod_stat": stat,
 		"power": 1,
-		"radius": 2,
 		"targets": SkillsCore.Target.Allies,
 		"cooldown_time": 1,
 	})
 	shrine.name = Stat.NAME[stat] + " Shrine"
 	shrine.append_ability(shrine_spell)
 	return shrine
+

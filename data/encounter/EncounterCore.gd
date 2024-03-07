@@ -47,9 +47,6 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 
 static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> Array: # [ EncounterEvent ]
 	if !actor.can_use_ability(ability, timestamp): return []
-	#the ability is queued for use, but we don't mark it as cooling down
-	#because if the target is invalidated before the event is resolved,
-	#the ability will not be used
 	return [EncEvent.ability_event(timestamp, actor, ability, target, ability.effect.element)]
 
 static func get_damage_with_element(state: EncounterState, event: EncounterEvent) -> float:
@@ -71,10 +68,10 @@ static func handle_ability_activation(state: EncounterState, event: EncounterEve
 	if event.target_idx >= 0: # if we're aiming at an actor, track them as they move
 		target_location = state.actors[event.target_idx].location
 
-	var targets = affected_targets(state, target_location, source, ability)
-	if targets.size() == 0: return []
-	
 	source.mark_ability_use(ability, event.timestamp)
+	var targets = affected_targets(state, target_location, source, ability)
+	if targets.size() == 0: return [] # oops, missed. i dont think this can actually happen.
+	
 	var is_crit = false
 	var events = []
 	for location in targets:

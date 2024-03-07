@@ -69,6 +69,7 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 	var n = st.actors.size()
 	var actorsprites = get_node("%actors").get_children()
 	assert(n == actorsprites.size())
+	$aoe_indicator.visible = false
 	for i in n:
 		var actor: CombatEntity = st.actors[i]
 		actorsprites[i].position = actor.location * scaled_size
@@ -91,8 +92,15 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 		if !what.get("ability"):
 			$reticle2.modulate = Color(0.5,0.5,0,5)
 		else:
-			$reticle2.modulate = RandomUtil.color_hash(what.ability.name)
-			
+			var color = RandomUtil.color_hash(what.ability.name)
+			$reticle2.modulate = color
+			if what.displayed_radius > 0:
+				$aoe_indicator.radius = what.displayed_radius
+				$aoe_indicator.location = what.target_location
+				$aoe_indicator.color = color
+				$aoe_indicator.scale_factor = scale_factor
+				$aoe_indicator.visible = true
+
 
 #func set_input(input):
 #	seed(hash(input))
@@ -110,3 +118,7 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 	map.updateSprites(scaled_size, scale_factor)
 	emit_hover()
 
+func layout_rect(rect: Rect2):
+	for x in rect.size.x: for y in rect.size.y:
+		var p = rect.position + Vector2(x,y)
+		pass

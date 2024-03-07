@@ -84,6 +84,7 @@ static func ability_event(timestamp: int, actor: CombatEntity, ability: Ability,
 	evt.ab_name = ability.name
 	evt.timestamp = timestamp
 	evt.element = element
+	evt.displayed_radius = ability.radius(actor.stats)
 	return evt
 
 static func reaction_event(timestamp: int, actor: CombatEntity, ability: Ability, target: CombatEntity, target_location: Vector2) -> EncounterEvent:
