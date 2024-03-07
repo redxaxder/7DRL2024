@@ -38,7 +38,8 @@ func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 	map = p_map
 	
 	for actor in cur_state.actors:
-		queue.insert(actor, actor.time_spent)
+		if !actor.get("inert"):
+			queue.insert(actor, actor.time_spent)
 	
 	history.add_state(DataUtil.deep_dup(cur_state))
 

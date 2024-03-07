@@ -68,7 +68,7 @@ func _ready():
 
 func _process(delta):
 	if driver != null and driver.started and !driver.done:
-		for _i in 50:
+		for _i in 20:
 			if !driver.tick(): break
 
 func update_skill_points():
@@ -201,23 +201,26 @@ func make_encounter(use_seed: int = 0):
 	player.cur_hp = player_hp
 	state.add_actor(player, passable.pop_back().loc)
 	
-	var spawns = min(randi() % 2, randi() % 5) + 1
+	var weights = []
+	weights.resize(encounters.size())
+	for i in encounters.size():
+		var w = max(0, encounters[i].weight + encounters[i].weight_scaling * progress)
+		weights[i] = w
+	var e = encounters[roll_weighted_table(weights)]
+	var spawns = e.min + (randi() % (1 + e.max - e.min))
 	for _i in spawns:
-		#TODO: maybe get harder spawns more often with high progress
-		var spawn_category = roll_weighted_table([0.5,0.3, 0.2])
-		var spawn_class
-		match spawn_category:
-			0: spawn_class = Actor.SPAWN_EASY
-			1: spawn_class = Actor.SPAWN_MEDIUM
-			2: spawn_class = Actor.SPAWN_HARD
-		var spawn = spawn_class[randi() % spawn_class.size() - 1]
+		if passable.size() == 0: break
+		var spawn = e.units[randi() % e.units.size()]
 		state.add_actor(Actor.create_unit(spawn, Constants.ENEMY_FACTION), passable.pop_back().loc)
 
 	var max_shrines = 1 + int(progress / 5)
 	var num_shrines = min(randi() % (max_shrines + 1),randi() % (max_shrines + 1))
 	for _i in num_shrines:
+		if passable.size() == 0: break
 		var shrine_stat = Actor.SHRINE_TYPES[randi() % Actor.SHRINE_TYPES.size()]
-		state.add_actor(Actor.create_shrine(shrine_stat), passable.pop_back().loc)
+		var shrine = Actor.create_shrine(shrine_stat) if (randf() < 0.8) else \
+					Actor.create_big_shrine(shrine_stat)
+		state.add_actor(shrine, passable.pop_back().loc)
 	
 	next_encounter_base_state = state
 	gonogo = true
@@ -226,8 +229,58 @@ func make_encounter(use_seed: int = 0):
 	update_preview()
 	update_outcome()
 
+
+var encounters = [
+	{	"weight": 100, # how frequent it is in early game
+		"weight_scaling": 0, # how frequent it is in late game
+		"min": 1,
+		"max": 6,
+		"units": [Actor.Type.Blorp]
+	},
+	{	"weight": 100,
+		"weight_scaling": -1,
+		"min": 1,
+		"max": 2,
+		"units": [Actor.Type.Wolf]
+	},
+	{	"weight": 0,
+		"weight_scaling": 1,
+		"min": 1,
+		"max": 2,
+		"units": [Actor.Type.Wolf]
+	},
+	{	"weight": 0,
+		"weight_scaling": 2,
+		"min": 3,
+		"max": 7,
+		"units": [Actor.Type.Wolf]
+	},
+	{	"weight": 50,
+		"weight_scaling": 0,
+		"min": 1,
+		"max": 6,
+		"units": [Actor.Type.Goblin]
+	},
+	{	"weight": 0,
+		"weight_scaling": 3,
+		"min": 6,
+		"max": 15,
+		"units": [Actor.Type.Goblin]
+	},
+	{	"weight": 100,
+		"weight_scaling": 0,
+		"min": 1,
+		"max": 6,
+		"units": [Actor.Type.Blorp, Actor.Type.Snake, Actor.Type.Goblin, Actor.Type.Squid],
+	},
+]
+
+
 func roll_weighted_table(table: Array) -> int:
-	var roll = randf()
+	var total_weight = 0
+	for t in table:
+		total_weight += t
+	var roll = randf() * total_weight
 	var accum = 0
 	var i = 0
 	var n = table.size() - 1

@@ -46,6 +46,10 @@ const STATS = {
 		"base": [10, 10, 10, 10, 10, 10],
 		Stat.Kind.Health: 30,
 		 }, 
+	Type.Gazer: {
+		"base": [30,30,30,30,30,30],
+		"attack": Elements.Kind.Ice,
+		},
 	Type.Wolf: {
 		"base": [15, 12, 8, 5, 12, 10],
 		Stat.Kind.FireResist: -50,
@@ -62,7 +66,9 @@ const STATS = {
 	Type.Snake: {
 		"base": [2, 8, 16, 8, 20, 15], # ironically snakes have incredible footwork
 		"attack": Elements.Kind.Poison,
-		Stat.Kind.PhysicalResist: -20,
+		Stat.Kind.PhysicalResist: -80,
+		Stat.Kind.Crit: 200,
+		Stat.Kind.Damage: -5,
 		},
 	Type.Crab: {
 		"base": [12, 2, 15, 5, 15, 1],
@@ -72,15 +78,16 @@ const STATS = {
 	Type.Shrine: {
 		"base": [1, 1, 1, 1, 1, 1],
 		Stat.Kind.Health: 48, # 50 total
-		Stat.Kind.Speed: 8, # 10 total
-	}
+	},
+	Type.BigShrine: {
+		"base": [1, 1, 1, 1, 1, 1],
+		Stat.Kind.Health: 98, # 100 total
+	},
+	Type.Goblin: {
+		"base": [1,1,1,1,1,1],
+		Stat.Kind.Speed: 100
+	},
 }
-
-# spawn table TODO, imp goblin gazer
- #move stuff medium once we have scaling and harder stuff
-const SPAWN_EASY = [Type.Blorp, Type.Snake]
-const SPAWN_MEDIUM = [Type.Crab, Type.Squid]
-const SPAWN_HARD = [Type.Wolf]
 
 static func default_stats() -> Array:
 #	push_warning("using stub stats. should probably put in real ones")
@@ -156,9 +163,29 @@ static func create_shrine(stat: int) -> CombatEntity:
 		"radius": 100,
 		"power": 10,
 		"targets": SkillsCore.Target.Allies,
-		"cooldown_time": 1000,
+		"cooldown_time": 100000,
 	})
 	shrine.name = Stat.NAME[stat] + " Shrine"
 	shrine.append_ability(shrine_spell)
+	shrine.inert = true
+	return shrine
+
+static func create_big_shrine(stat: int) -> CombatEntity:
+	var shrine = create_unit(Type.BigShrine, Constants.ENEMY_FACTION)
+	var big_shrine_spell = SkillTree.build_ability({
+		"label": Stat.NAME[stat] + " Buff",
+		"ability_range": 0,
+		"trigger": SkillsCore.Trigger.Automatic,
+		"filter": Activation.Filter.Death,
+		"effect_type": SkillsCore.EffectType.StatBuff,
+		"mod_stat": stat,
+		"radius": 100,
+		"power": 5,
+		"targets": SkillsCore.Target.Allies,
+		"cooldown_time": 1,
+	})
+	shrine.name = "Greater " + Stat.NAME[stat] + " Shrine"
+	shrine.append_ability(big_shrine_spell)
+	shrine.inert = true
 	return shrine
 

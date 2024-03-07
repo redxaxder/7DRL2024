@@ -16,6 +16,7 @@ var reactions: Array
 var last_used_time: Dictionary = {}
 var name: String
 var element: int = Elements.Kind.Physical
+var inert: bool = false
 
 # stats that do
 var cur_hp: int
