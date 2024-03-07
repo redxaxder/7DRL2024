@@ -178,7 +178,7 @@ func make_encounter(use_seed: int = 0):
 	player.cur_hp = player_hp
 	state.add_actor(player, passable.pop_back().loc)
 	
-	var spawns = min(randi() % 4, randi() % 5) + 1
+	var spawns = min(randi() % 2, randi() % 5) + 1
 	for _i in spawns:
 		#TODO: maybe get harder spawns more often with high progress
 		var spawn_category = roll_weighted_table([0.5,0.3, 0.2])
