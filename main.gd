@@ -27,6 +27,7 @@ var next_encounter_outcome: EncounterHistory
 # are we in the history view (false)?
 var gonogo: bool = false
 var gameover: bool = false
+var has_seen_end: bool = false
 var map = Map.new()
 
 func _ready():
@@ -38,6 +39,8 @@ func _ready():
 	get_node("%RESTART").connect("pressed",self,"restart")
 # warning-ignore:return_value_discarded
 	get_node("%history_view").connect("updated", self, "history_scroll")
+# warning-ignore:return_value_discarded
+	get_node("%history_view").connect("seen_end", self, "seen_end")
 # warning-ignore:return_value_discarded
 	get_node("%CloseButton").connect("pressed", self, "toggle_skill_tree")
 # warning-ignore:return_value_discarded
@@ -93,8 +96,12 @@ func history_scroll(s: EncounterState, what: EncounterEvent):
 	get_node("%state_view").update_view(s, what)
 
 
+func seen_end():
+	has_seen_end = true
+	update_button_visibility()
+	
 func update_button_visibility():
-	get_node("%DONE").visible = !gonogo and !gameover
+	get_node("%DONE").visible = !gonogo and !gameover and has_seen_end
 	get_node("%GO").visible = gonogo and !gameover
 	get_node("%RESTART").visible = gameover
 	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
@@ -153,6 +160,7 @@ func restart():
 
 func make_encounter(use_seed: int = 0):
 	progress += 1
+	has_seen_end = false
 	var encounter_seed = use_seed
 	if encounter_seed == 0:
 		encounter_seed = randi()
@@ -190,7 +198,7 @@ func make_encounter(use_seed: int = 0):
 		var spawn = spawn_class[randi() % spawn_class.size() - 1]
 		state.add_actor(Actor.create_unit(spawn, Constants.ENEMY_FACTION), passable.pop_back().loc)
 
-	var max_shrines = 1 + int(float(progress) / 10)
+	var max_shrines = 1 + int(progress / 5)
 	var num_shrines = min(randi() % (max_shrines + 1),randi() % (max_shrines + 1))
 	for _i in num_shrines:
 		var shrine_stat = randi() % Stat.Kind.MAX
