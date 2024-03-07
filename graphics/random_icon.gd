@@ -4,6 +4,7 @@ var icon_index: int = 1234
 var color: Color = Color(1,1,1)
 var scale: int = 8
 var full_size: int = 10
+var rng = RandomNumberGenerator.new()
 
 func set_input(input):
 	icon_index = hash(input)
@@ -12,7 +13,7 @@ func set_input(input):
 	update_texture()
 
 func update_texture():
-	seed(icon_index)
+	rng.seed = icon_index
 	var image = Image.new()
 	var dim = Vector2(full_size, full_size)*scale
 	image.create(dim.x,dim.y,false,Image.FORMAT_RGBA8)
@@ -20,14 +21,14 @@ func update_texture():
 	image.lock()
 
 	for x in full_size: for y in full_size	:
-		var off = (randf()>.4 ||
+		var off = (rng.randf()>.4 ||
 			x == 0 || x == full_size -1 ||
 			y == 0 || y == full_size - 1)
 		for xx in scale: for yy in scale:
 			var xxx = scale * x + xx
 			var yyy = scale * y + yy
 			var xxxx = dim.x - xxx - 1
-			if !off && ((yy + 0.0) / scale) < randf():
+			if !off && ((yy + 0.0) / scale) < rng.randf():
 				image.set_pixel(xxx,yyy, color)
 				image.set_pixel(xxxx,yyy, color)
 #	for x in dim.x: for y in dim.y:
