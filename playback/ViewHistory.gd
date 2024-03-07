@@ -237,7 +237,7 @@ func _refresh():
 			loglines[i].highlighted = true
 		else:
 			loglines[i].highlighted = false
-		if i == index:
+		if i == index and loglines[i].visible:
 			call_deferred("update_scroll", i)
 	var current_state = history.get_state(index+1)
 	emit_signal("updated", current_state, current_event)
@@ -254,8 +254,6 @@ func update_scroll(i: int):
 
 func chain_scroll(chain: int):
 	var vs = $ScrollContainer.scroll_vertical
-	vs = max(scroll_min_bound,vs)
-	vs = min(scroll_max_bound,vs)
-	$ScrollContainer.scroll_vertical = vs
+	$ScrollContainer.scroll_vertical = clamp(vs, scroll_min_bound, scroll_max_bound)
 	if chain > 0:
 		call_deferred("chain_scroll", chain -1)
