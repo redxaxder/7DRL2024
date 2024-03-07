@@ -173,7 +173,7 @@ func next():
 func step():
 	var n = _end()
 	var next = min(cursor+1,n)
-	while next < n-1 and !EncounterEventKind.is_animated(history.get_event(next-1).kind):
+	while next < n-1 and !EncounterEventKind.is_animated(history.get_event(next).kind):
 		next += 1
 	if next > cursor:
 		cursor = next
