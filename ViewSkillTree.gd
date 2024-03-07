@@ -118,7 +118,7 @@ func selectSkill(skill: Skill, button: Button = null):
 	selected_skill = skill
 	$VBoxContainer/SkillName.text = skill.name
 	$VBoxContainer/ScrollContainer/SkillDescription.text = skill.generate_description(player_stats)
-	update_unlock_button()
+	update_unlock_button(skill)
 	
 	if(button):
 		_draw()
@@ -151,8 +151,9 @@ func is_available(skill: Skill):
 	return false
 	
 
-func update_unlock_button():
-	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(skill.name) && is_available(skill) && num_skills_to_unlock > 0
+func update_unlock_button(skill: Skill):
+	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(skill.name) && is_available(skill)
+	#&& num_skills_to_unlock > 0
 
 
 func get_skill(i: int, j: int) -> Skill:
@@ -178,7 +179,7 @@ func recalculate_player_bonuses():
 
 func update_num_skills_to_unlock(progress: int):
 	num_skills_to_unlock = total_skills_to_unlock(progress) - unlocked_skills.keys().size()
-	update_unlock_button()
+	#update_unlock_button()
 
 func total_skills_to_unlock(progress: int) -> int:
 	var i = 0
