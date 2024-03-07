@@ -29,9 +29,14 @@ func set_font_size(x):
 	font_size = x
 	_refresh()
 
+export var hover_mod: Color = Color(1,1,1,1)
+export var use_hover_mod: bool = false
+
+var base_color: Color
 func _ready():
 # warning-ignore:return_value_discarded
 	$Button.connect("pressed",self,"emit_signal", ["pressed"])
+	base_color = modulate
 
 func _refresh():
 	var stylebox = StyleBoxTexture.new()
@@ -46,4 +51,11 @@ func _refresh():
 		font.font_data = preload("res://fonts/CommitMono-400-Regular.otf")
 		font.size = font_size
 		label.add_font_override("font", font)
-	
+
+func _notification(what):
+	if what == NOTIFICATION_MOUSE_ENTER:
+		modulate = hover_mod
+	elif what == NOTIFICATION_MOUSE_EXIT:
+		modulate = base_color
+	elif what == NOTIFICATION_VISIBILITY_CHANGED:
+		modulate = base_color

@@ -17,17 +17,17 @@ signal updated(encounter_state, encounter_event)
 
 func _ready():
 # warning-ignore:return_value_discarded
-	get_node("%to_start").connect("button_down", self, "to_start")
+	get_node("%to_start").connect("pressed", self, "to_start")
 # warning-ignore:return_value_discarded
-	get_node("%to_end").connect("button_down", self, "to_end")
+	get_node("%to_end").connect("pressed", self, "to_end")
 # warning-ignore:return_value_discarded
-	get_node("%step_forward").connect("button_down", self, "next")
+	get_node("%step_forward").connect("pressed", self, "next")
 # warning-ignore:return_value_discarded
-	get_node("%step_backward").connect("button_down", self, "prev")
+	get_node("%step_backward").connect("pressed", self, "prev")
 # warning-ignore:return_value_discarded
-	get_node("%play").connect("button_down", self, "play")
+	get_node("%play").connect("pressed", self, "play")
 # warning-ignore:return_value_discarded
-	get_node("%pause").connect("button_down", self, "pause")
+	get_node("%pause").connect("pressed", self, "pause")
 	var combat_log = get_node("%combat_log")
 	combat_log.connect("mouse_entered",self, "log_hover", [true])
 	combat_log.connect("mouse_exited",self, "log_hover", [false])

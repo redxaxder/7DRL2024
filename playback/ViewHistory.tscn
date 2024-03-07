@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://playback/ViewHistory.gd" type="Script" id=1]
 [ext_resource path="res://graphics/gui/fast-forward-button.svg" type="Texture" id=2]
@@ -7,10 +7,35 @@
 [ext_resource path="res://graphics/gui/previous-button.svg" type="Texture" id=5]
 [ext_resource path="res://graphics/gui/next-button.svg" type="Texture" id=6]
 [ext_resource path="res://graphics/gui/fast-backward-button.svg" type="Texture" id=7]
+[ext_resource path="res://misc/BetterButton.tscn" type="PackedScene" id=8]
 
 [sub_resource type="StyleBoxFlat" id=1]
 border_width_left = 20
 border_width_right = 20
+
+[sub_resource type="StyleBoxTexture" id=2]
+texture = ExtResource( 7 )
+region_rect = Rect2( 0, 0, 512, 512 )
+
+[sub_resource type="StyleBoxTexture" id=3]
+texture = ExtResource( 5 )
+region_rect = Rect2( 0, 0, 512, 512 )
+
+[sub_resource type="StyleBoxTexture" id=4]
+texture = ExtResource( 3 )
+region_rect = Rect2( 0, 0, 512, 512 )
+
+[sub_resource type="StyleBoxTexture" id=5]
+texture = ExtResource( 4 )
+region_rect = Rect2( 0, 0, 512, 512 )
+
+[sub_resource type="StyleBoxTexture" id=6]
+texture = ExtResource( 6 )
+region_rect = Rect2( 0, 0, 512, 512 )
+
+[sub_resource type="StyleBoxTexture" id=7]
+texture = ExtResource( 2 )
+region_rect = Rect2( 0, 0, 512, 512 )
 
 [node name="history_view" type="Control"]
 anchor_right = 1.0
@@ -48,47 +73,91 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="to_start" type="Button" parent="HBoxContainer"]
+[node name="to_start" parent="HBoxContainer" instance=ExtResource( 8 )]
 unique_name_in_owner = true
+modulate = Color( 0.611765, 0.611765, 0.611765, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_right = 524.0
 margin_bottom = 518.0
-icon = ExtResource( 7 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 2 )
+image = ExtResource( 7 )
+text = ""
+use_hover_mod = true
 
-[node name="step_backward" type="Button" parent="HBoxContainer"]
+[node name="step_backward" parent="HBoxContainer" instance=ExtResource( 8 )]
 unique_name_in_owner = true
+modulate = Color( 0.611765, 0.611765, 0.611765, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 544.0
 margin_right = 1068.0
 margin_bottom = 518.0
-icon = ExtResource( 5 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 3 )
+image = ExtResource( 5 )
+text = ""
+use_hover_mod = true
 
-[node name="pause" type="Button" parent="HBoxContainer"]
+[node name="pause" parent="HBoxContainer" instance=ExtResource( 8 )]
 unique_name_in_owner = true
+visible = false
+modulate = Color( 0.611765, 0.611765, 0.611765, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 906.0
+margin_right = 1340.0
+margin_bottom = 518.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 4 )
+image = ExtResource( 3 )
+text = ""
+use_hover_mod = true
+
+[node name="play" parent="HBoxContainer" instance=ExtResource( 8 )]
+unique_name_in_owner = true
+modulate = Color( 0.611765, 0.611765, 0.611765, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 1088.0
 margin_right = 1612.0
 margin_bottom = 518.0
-icon = ExtResource( 3 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 5 )
+image = ExtResource( 4 )
+text = ""
+use_hover_mod = true
 
-[node name="play" type="Button" parent="HBoxContainer"]
+[node name="step_forward" parent="HBoxContainer" instance=ExtResource( 8 )]
 unique_name_in_owner = true
-visible = false
+modulate = Color( 0.611765, 0.611765, 0.611765, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 1632.0
 margin_right = 2156.0
 margin_bottom = 518.0
-icon = ExtResource( 4 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 6 )
+image = ExtResource( 6 )
+text = ""
+use_hover_mod = true
 
-[node name="step_forward" type="Button" parent="HBoxContainer"]
+[node name="to_end" parent="HBoxContainer" instance=ExtResource( 8 )]
 unique_name_in_owner = true
-margin_left = 1632.0
-margin_right = 2156.0
-margin_bottom = 518.0
-icon = ExtResource( 6 )
-
-[node name="to_end" type="Button" parent="HBoxContainer"]
-unique_name_in_owner = true
+modulate = Color( 0.611765, 0.611765, 0.611765, 1 )
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 2176.0
 margin_right = 2700.0
 margin_bottom = 518.0
-icon = ExtResource( 2 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 7 )
+image = ExtResource( 2 )
+text = ""
+use_hover_mod = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 margin_left = 755.0

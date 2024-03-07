@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://playback/ViewHistory.tscn" type="PackedScene" id=2]
@@ -11,9 +11,13 @@
 [ext_resource path="res://graphics/gui/play-button.svg" type="Texture" id=9]
 [ext_resource path="res://misc/BetterButton.tscn" type="PackedScene" id=10]
 
-[sub_resource type="StyleBoxTexture" id=4]
+[sub_resource type="StyleBoxTexture" id=6]
 texture = ExtResource( 9 )
 region_rect = Rect2( 0, 0, 512, 512 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 40
+font_data = ExtResource( 6 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 24
@@ -29,19 +33,32 @@ font_data = ExtResource( 6 )
 
 [node name="main" type="Node2D"]
 script = ExtResource( 1 )
+show_extra_history = false
 
 [node name="history_view" parent="." instance=ExtResource( 2 )]
 unique_name_in_owner = true
+margin_right = 1024.0
+margin_bottom = 600.0
 
 [node name="GO" parent="." instance=ExtResource( 10 )]
 unique_name_in_owner = true
+modulate = Color( 0.611765, 0.611765, 0.611765, 1 )
 margin_left = 764.0
 margin_top = 538.0
 margin_right = 816.0
 margin_bottom = 590.0
-custom_styles/panel = SubResource( 4 )
+custom_styles/panel = SubResource( 6 )
 image = ExtResource( 9 )
 text = ""
+use_hover_mod = true
+
+[node name="SAYS_GO" type="Label" parent="GO"]
+margin_left = -5.0
+margin_top = -35.0
+margin_right = 67.0
+margin_bottom = 9.0
+custom_fonts/font = SubResource( 5 )
+text = "GO!"
 
 [node name="DONE" type="Button" parent="."]
 unique_name_in_owner = true
@@ -64,11 +81,10 @@ valign = 1
 
 [node name="RESTART" type="Button" parent="."]
 unique_name_in_owner = true
-visible = false
-margin_left = 558.0
-margin_top = 307.0
-margin_right = 667.0
-margin_bottom = 352.0
+margin_left = 928.0
+margin_top = 539.0
+margin_right = 1015.0
+margin_bottom = 589.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
