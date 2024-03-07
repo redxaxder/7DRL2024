@@ -22,8 +22,9 @@ enum Filter{
 	DamageDealt, 
 	DamageRecieved,
 	Death,
+	Movement,
+	Start,
 	#cheap to add
-	# movement
 	# uses ability
 	# misses
 	# encounter start
@@ -39,11 +40,15 @@ const FILTER_FOCUS = [
 	FilterFocus.Source, # DamageDealt
 	FilterFocus.Target, # DamageRecieved
 	FilterFocus.Target, # Death
+	FilterFocus.Source, # Movement
+	FilterFocus.Source, # Start
 	]
 const FILTER_EVENT = [
 	EncounterEventKind.Kind.Damage, # DamageDealt
 	EncounterEventKind.Kind.Damage, # DamageRecieved
 	EncounterEventKind.Kind.Death, # Death
+	EncounterEventKind.Kind.Move,  # Movement
+	EncounterEventKind.Kind.EncounterStart,  # Start
 	]
 var filter: int = 0
 var filter_actor = SkillsCore.TargetAny # me, ally, enemy, any

@@ -150,6 +150,18 @@ func hand_rolled_skill_tree():
 		Ability.mod(Stat.Kind.Health, Ability.ModParam.Radius, 100)
 	]
 
+#	-When you move, buff footwork by 1 (min cooldown)
+#	-Deal 10 damage to an enemy in a 5 radius (4 cooldown)
+#	-Deal 5 damage to enemies in a 3 radius aoe around the player
+#	-Deal 10 damage to enemies in a 2 tile radius, 4 range (10 ccooldown)
+#	-Buff brawn by 1 (5 cooldown)
+#	-Whenever an enemy dies, buff guts by 2
+#	-Whenever you miss an enemy, buff eyesight by 2
+#	-Whenever you take  damage, summon a blorb (3 cooldown)
+#	-Whenever you take damage reducing you to less than 25% hp
+#		deal 20 damage to enemies in range 1
+
+
 #	var abil2: Skill = create_ability_skill(build_ability({
 #		"label": SkillName.generate_name(),
 #		"target": SkillsCore.Target.Self,

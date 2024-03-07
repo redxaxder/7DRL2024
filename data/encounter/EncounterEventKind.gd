@@ -1,12 +1,13 @@
 class_name EncounterEventKind
 
-enum Kind { Attack, Move, Death, AbilityActivation, Damage, PrepareReaction, StatChange }
+enum Kind { Attack, Move, Death, AbilityActivation, Damage, PrepareReaction, StatChange, Miss, Bloodied, EncounterStart }
 
 # Is this event's log message visible by default?
 # this is overriden by show_extra_history=true
 static func is_displayed(kind: int) -> bool:
 	match kind:
 		Kind.Move: return false
+		Kind.Bloodied: return false
 		Kind.PrepareReaction: return false
 		_: return true
 

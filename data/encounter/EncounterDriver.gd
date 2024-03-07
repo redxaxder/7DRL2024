@@ -6,6 +6,7 @@ class_name EncounterDriver
 var current_time = 0
 var queue: PriorityQueue
 var cur_state: EncounterState
+var started = false
 
 const REACTION_DELAY = 1 # maybe parameterize this by ability later
 const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1)]
@@ -54,23 +55,37 @@ func tick() -> bool:
 			break
 	if !enemies_alive: return false
 
+	if !started:
+		started = true
+		var player = cur_state.get_player()
+		var start = EncEvent.event_stub(0, EncounterEventKind.Kind.EncounterStart )
+		start.actor_idx = player.entity_index
+		start.target_idx = player.entity_index
+		start.target_location = player.location
+		handle_events([start])
+		return true
 	# 1. grab the first thing in the priority queue
 	var next_up = queue.pop_front()
 	var events = []
-	var actor = null
 	if next_up is Reaction:
 		assert(next_up.trigger_time >= current_time, "time only flows in one direction")
 		current_time = next_up.trigger_time 
 		events = fire_reaction(next_up)
+		handle_events(events)
+		return true
 	else:
-		actor = next_up
+		var actor = next_up
 		if !actor.is_alive():
 			return true
 		assert(actor.time_spent >= current_time, "time only flows in one direction")
 		current_time = actor.time_spent
 		events = tick_ai(actor)
+		handle_events(events)
+		actor.pass_time(int(100.0 / float(actor.stats.speed())))
+		queue.insert(actor, actor.time_spent)
+		return true
 
-	# 3. record that event, run it, and run events it triggers
+func handle_events(events: Array):
 	var reactions_to_prepare = []
 	while events.size() > 0:
 		var evt = events.pop_front()
@@ -96,14 +111,6 @@ func tick() -> bool:
 		reaction.target_idx = evt.target_idx
 		reaction.target_location = evt.target_location
 		queue.insert(reaction, reaction.trigger_time)
-
-	# 5. If actor is still alive, re-insert it into the priority queue
-	# if we got here after handling a reaction, the actor is null and we do not reinsert anything
-	if actor != null:
-		actor.pass_time(int(100.0 / float(actor.stats.speed())))
-		queue.insert(actor, actor.time_spent)
-	
-	return true
 
 class Reaction extends Resource:
 	var trigger_time: int = -1

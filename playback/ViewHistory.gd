@@ -74,15 +74,21 @@ func view(_history: EncounterHistory, _map: Map, extra_messages: Array = []):
 
 func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
+		EncounterEventKind.Kind.EncounterStart:
+			return "{time}: Start!".format(evt.dict())
 		EncounterEventKind.Kind.Attack:
 			if evt.damage > 0:
 				return "{time}: {an} attacked {tn}!".format(evt.dict())
 			else:
 				return "{time}: {an} missed {tn}!".format(evt.dict())
+		EncounterEventKind.Kind.Miss:
+			return "{time}: {an} missed {tn}!".format(evt.dict())
+		EncounterEventKind.Kind.Bloodied:
+			return "{time}: {an} fell to low hp".format(evt.dict())
 		EncounterEventKind.Kind.Death:
 			return "{time}: {tn} died!".format(evt.dict())
 		EncounterEventKind.Kind.Move:
-			return "{time}: {an} moved! -> {loc}".format(evt.dict())
+			return "{time}: {an} moved -> {loc}".format(evt.dict())
 		EncounterEventKind.Kind.AbilityActivation:
 			return "{time}: {an} activated ability {m}".format(evt.dict())
 		EncounterEventKind.Kind.Damage:

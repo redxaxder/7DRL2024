@@ -1,8 +1,6 @@
 class_name EncounterCore
 
 static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ EncounterEvent ]
-	assert(event.target_location != Vector2(-99999,-99999))
-	assert(event.actor_idx >= 0)
 	var result = []
 	for reactor in state.actors:
 		for reaction in reactor.event_reactions():
@@ -25,17 +23,21 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			result.append_array(handle_ability_activation(state, event))
 		EncounterEventKind.Kind.Damage: 
 			assert(event.target_idx >= 0)
-			var target = state.actors[event.target_idx]
-# warning-ignore:narrowing_conversion
-			var modified_damage = get_damage_with_element(state, event)
-			modified_damage = max(modified_damage,1)
-			state.resolve_attack(event.target_idx, modified_damage)
-			if !target.is_alive():
-				var killer = state.actors[event.actor_idx]
-				result.append(EncEvent.death_event(event.timestamp, killer, target))
-		EncounterEventKind.Kind.PrepareReaction:
-			# these do not affect encounter state directly; the driver uses them to queue up AbilityActivations
-			pass
+			var source = state.actors[event.actor_idx]
+			if event.damage >= 0:
+				var target = state.actors[event.target_idx]
+	# warning-ignore:narrowing_conversion
+				var modified_damage = get_damage_with_element(state, event)
+				modified_damage = max(modified_damage,1)
+				var target_was_bloodied = float(target.cur_hp) / float(target.stats.max_hp())
+				state.resolve_attack(event.target_idx, modified_damage)
+				var target_is_bloodied = float(target.cur_hp) / float(target.stats.max_hp())
+				if !target.is_alive():
+					result.append(EncEvent.death_event(event.timestamp, source, target))
+				elif target_is_bloodied and !target_was_bloodied:
+					result.append(EncEvent.bloodied_event(event.timestamp,source, target))
+			else:
+				pass #TODO: healing
 		EncounterEventKind.Kind.StatChange:
 			assert(event.target_idx >= 0)
 			var target = state.actors[event.target_idx]
@@ -43,6 +45,9 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			if !target.is_alive():
 				var killer = state.actors[event.actor_idx]
 				result.append(EncEvent.death_event(event.timestamp, killer, target))
+# other events do not affect encounter state directly. other things can listen for them
+		_: pass
+
 	return result
 
 static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> Array: # [ EncounterEvent ]
