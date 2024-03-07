@@ -12,6 +12,7 @@ var actor_name: String = "Erroneous String: DO NOT READ"
 var target_idx: int = -99999
 var target_name: String = "Erroneous String: DO NOT READ"
 var damage: int = -99999
+var unit_type: int = -99999
 var is_crit: bool = false
 var element: int = Elements.Kind.Physical
 

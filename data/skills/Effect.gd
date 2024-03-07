@@ -5,9 +5,9 @@ class_name Effect
 
 # debuffs are just buffs with negative power
 
-var effect_type: int # damage or statbuff
-var targets: int = SkillsCore.Target.Enemies
-var mod_stat: int = -1 # if this is a buff/debuff, which stat is affected?
-var power: int # damage amount or buff amount or summon unit id
-var duration: int = 0
-var element: int = Elements.Kind.Physical
+export var effect_type: int # damage or statbuff
+export var targets: int = SkillsCore.Target.Enemies
+export var mod_stat: int = -1 # if this is a buff/debuff, which stat is affected?
+export var power: int # damage amount or buff amount or summon unit id
+export var duration: int = 0
+export var element: int = Elements.Kind.Physical

@@ -7,6 +7,7 @@ var current_time = 0
 var queue: PriorityQueue
 var cur_state: EncounterState
 var started = false
+var done = false
 
 const REACTION_DELAY = 1 # maybe parameterize this by ability later
 const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1)]
@@ -95,6 +96,13 @@ func handle_events(events: Array):
 			reactions_to_prepare.append(evt)
 		history.add_event(evt)
 		var triggered_events = EncounterCore.update(cur_state, evt)
+		if evt.kind == EncounterEventKind.Kind.Spawn:
+			#create the unit
+			# insert it in state
+			# assign it time_spent
+			# make it wait for it's own delay
+			# something else?
+			pass
 		for r in triggered_events:
 			assert(r != null)
 			assert(typeof(r) != TYPE_ARRAY)

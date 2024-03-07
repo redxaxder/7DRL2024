@@ -132,17 +132,28 @@ static func create_unit(unit_type: int, faction: int) -> CombatEntity:
 	unit.element = get_element(unit_type)
 	return unit
 
+const SHRINE_TYPES = [
+	Stat.Kind.Accuracy,
+	Stat.Kind.Damage,
+	Stat.Kind.Crit,
+	Stat.Kind.Evasion,
+	Stat.Kind.Speed,
+	Stat.Kind.Health,
+]
+
 static func create_shrine(stat: int) -> CombatEntity:
 	var shrine = create_unit(Type.Shrine, Constants.ENEMY_FACTION)
 	var shrine_spell = SkillTree.build_ability({
 		"label": Stat.NAME[stat] + " Buff",
-		"ability_range": 20,
-		"trigger": SkillsCore.Trigger.Action,
+		"ability_range": 0,
+		"trigger": SkillsCore.Trigger.Automatic,
+		"filter": Activation.Filter.Start,
 		"effect_type": SkillsCore.EffectType.StatBuff,
 		"mod_stat": stat,
-		"power": 1,
+		"radius": 100,
+		"power": 10,
 		"targets": SkillsCore.Target.Allies,
-		"cooldown_time": 1,
+		"cooldown_time": 1000,
 	})
 	shrine.name = Stat.NAME[stat] + " Shrine"
 	shrine.append_ability(shrine_spell)

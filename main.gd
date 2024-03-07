@@ -55,6 +55,7 @@ func _ready():
 # warning-ignore:return_value_discarded
 	get_node("%ConsumablesContainer").connect("consume_invisibility", self, "sneak")
 	get_node("%history_view").show_extra_history = show_extra_history
+# warning-ignore:return_value_discarded
 	get_node("%ViewSkillTree").connect("skill_unlocked",self,"update_skill_points")
 	
 	new_game()
@@ -128,14 +129,16 @@ func go():
 	var final_player_state = final_state.get_player()
 	var remaining_hp = final_player_state.cur_hp
 	# todo: pass in extra log messages if player is alive
-	
-	var example_messages = [
-		"lorem",
-		"ipsum",
-		"dolore",
-	]
+	var victory_text = []
+	var Consumables =  get_node("ConsumablesContainer")
+	if remaining_hp > 0:
+		victory_text.append("You won!")
+		for reward_key in Consumables.rewards:
+			var reward_name = Consumables.CONSUMABLE_TYPES[reward_key].name
+			victory_text.append(str("You got a ", reward_name,"."))
+
 	get_node("%state_view").init_view(final_state, map)
-	get_node("%history_view").view(next_encounter_outcome, map, example_messages)
+	get_node("%history_view").view(next_encounter_outcome, map, victory_text)
 	gonogo = false
 	update_button_visibility()
 
@@ -212,7 +215,7 @@ func make_encounter(use_seed: int = 0):
 	var max_shrines = 1 + int(progress / 5)
 	var num_shrines = min(randi() % (max_shrines + 1),randi() % (max_shrines + 1))
 	for _i in num_shrines:
-		var shrine_stat = randi() % Stat.Kind.MAX
+		var shrine_stat = Actor.SHRINE_TYPES[randi() % Actor.SHRINE_TYPES.size()]
 		state.add_actor(Actor.create_shrine(shrine_stat), passable.pop_back().loc)
 	
 	next_encounter_base_state = state

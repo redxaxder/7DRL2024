@@ -2,8 +2,8 @@ extends Resource
 
 class_name Bonus
 
-var stat: int = 0
-var power: int = 0
+export var stat: int = 0
+export var power: int = 0
 
 func initialize_bonus(_stat: int, bpower: int):
 	stat = _stat

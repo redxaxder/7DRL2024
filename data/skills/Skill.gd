@@ -3,12 +3,10 @@ extends Resource
 class_name Skill
 
 enum Kind {Ability, Bonus}
-var kind
-
+export var kind: int
 export var name: String
-
-var ability: Ability = null
-var bonus: Bonus = null
+export var ability: Resource = null # Ability
+export var bonus: Resource = null # Bonus
 
 func generate_description(stats: StatBlock) -> String:
 	match kind:

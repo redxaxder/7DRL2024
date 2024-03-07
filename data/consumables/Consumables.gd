@@ -90,9 +90,9 @@ func init_rewards():
 	var num_rewards
 	if(r < .02): 			#  2% => 3
 		num_rewards = 3
-	elif(r < .4): 			# 38% => 2
+	elif(r < .2): 			# 19% => 2
 		num_rewards = 2
-	else:			 		# 60% => 1
+	else:			 		# 80% => 1
 		num_rewards = 1
 		
 	rewards = []

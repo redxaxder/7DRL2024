@@ -68,7 +68,9 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 
 	var n = st.actors.size()
 	var actorsprites = get_node("%actors").get_children()
-	assert(n == actorsprites.size())
+	assert(n <= actorsprites.size())
+	for a in actorsprites:
+		a.visible = false
 	$hp_bar.visible = false
 	$aoe_indicator.visible = false
 	for i in n:
