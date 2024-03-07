@@ -8,6 +8,6 @@ class_name Effect
 var effect_type: int # damage or statbuff
 var targets: int = SkillsCore.Target.Enemies
 var mod_stat: int = -1 # if this is a buff/debuff, which stat is affected?
-var power: int # damage amount or buff amount
+var power: int # damage amount or buff amount or summon unit id
 var duration: int = 0
 var element: int = Elements.Kind.Physical

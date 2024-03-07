@@ -1,6 +1,6 @@
 class_name EncounterEventKind
 
-enum Kind { Attack, Move, Death, AbilityActivation, Damage, PrepareReaction, StatChange, Miss, Bloodied, EncounterStart }
+enum Kind { Attack, Move, Death, AbilityActivation, Damage, PrepareReaction, StatChange, Miss, Bloodied, EncounterStart, Spawn }
 
 # Is this event's log message visible by default?
 # this is overriden by show_extra_history=true

@@ -27,13 +27,17 @@ func _init(p_x, p_y, p_passable):
 	loc = Vector2(x,y)
 	xy = "{0}-{1}".format([x,y])
 	
-	if(passable):
-		sprite = floor_sprite.instance()
-		sprite.modulate = Color("#523c42")
-	else:
-		sprite = wall_sprite.instance()
-		sprite.modulate = Color("#67968a")
+#	if(passable):
+#		sprite = floor_sprite.instance()
+#		sprite.modulate = Color("#523c42")
+#	else:
+#		sprite = wall_sprite.instance()
+#		sprite.modulate = Color("#67968a")
 
+func get_sprite() -> PackedScene:
+	if passable: return  floor_sprite
+	else: return wall_sprite
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass

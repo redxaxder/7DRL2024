@@ -124,7 +124,8 @@ func apply_player_mods(s: EncounterState) -> EncounterState:
 
 
 func go():
-	var final_player_state = next_encounter_outcome.final().get_player()
+	var final_state = next_encounter_outcome.final()
+	var final_player_state = final_state.get_player()
 	var remaining_hp = final_player_state.cur_hp
 	# todo: pass in extra log messages if player is alive
 	
@@ -133,6 +134,7 @@ func go():
 		"ipsum",
 		"dolore",
 	]
+	get_node("%state_view").init_view(final_state, map)
 	get_node("%history_view").view(next_encounter_outcome, map, example_messages)
 	gonogo = false
 	update_button_visibility()

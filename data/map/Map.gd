@@ -97,16 +97,21 @@ func createSprites(display: Control):
 	for x in Constants.MAP_BOUNDARIES.size.x:
 		for y in Constants.MAP_BOUNDARIES.size.y:
 			var tile = tiles[x][y]
-			var spr = tile.sprite
+			var spr = tile.get_sprite().instance()
 			display.add_child(spr)
 			spr.position = Vector2(100 * x, 100 *y)
 			spr.centered = false
 
-func updateSprites(scaled_size, scale_factor):
+func updateSprites(display: Control, scaled_size, scale_factor):
 	for x in Constants.MAP_BOUNDARIES.size.x:
 		for y in Constants.MAP_BOUNDARIES.size.y:
+			var i = y + (x * Constants.MAP_BOUNDARIES.size.y)
 			var tile = tiles[x][y]
-			var spr = tile.sprite
+			var spr = display.get_child(i)
+			if tile.passable:
+				spr.modulate = Color("#523c42")
+			else:
+				spr.modulate = Color("#67968a")
 			spr.position = Vector2(x * scaled_size, y * scaled_size)
 			spr.scale = Vector2(scale_factor, scale_factor)
 			# TODO: 

@@ -73,6 +73,8 @@ func view(_history: EncounterHistory, _map: Map, extra_messages: Array = []):
 
 func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
+		EncounterEventKind.Kind.Spawn:
+			return "{time}: {tn} appeared.".format(evt.dict())
 		EncounterEventKind.Kind.EncounterStart:
 			return "{time}: Start!".format(evt.dict())
 		EncounterEventKind.Kind.Attack:

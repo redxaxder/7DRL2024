@@ -110,5 +110,5 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 	else:
 		$location_highlight.visible = false
 		
-	map.updateSprites(scaled_size, scale_factor)
+	map.updateSprites(get_node("%terrain"), scaled_size, scale_factor)
 	emit_hover()

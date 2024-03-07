@@ -1,6 +1,6 @@
 class_name SkillsCore
 
-enum EffectType { Damage, StatBuff } #TBD: other kinds of buffs; summons
+enum EffectType { Damage, StatBuff, Summon } #TBD: other kinds of buffs; summons
 # accelerate turn priority (via "bonus time")
 
 enum Trigger { 
