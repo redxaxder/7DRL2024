@@ -10,6 +10,7 @@ enum Type{
 	Shrine,
 	Goblin,
 	Gazer,
+	BigShrine,
 	}
 
 const NAMES = [ \
@@ -23,6 +24,7 @@ const NAMES = [ \
 	"Shrine",
 	"Goblin",
 	"Gazer",
+	"Shrine",
 ]
 
 const SPRITES = [ \
@@ -36,6 +38,7 @@ const SPRITES = [ \
 	preload("res://graphics/shrine/shrine0.png"),
 	preload("res://graphics/goblin/goblin.png"),
 	preload("res://graphics/gazer/gazer.tscn"),
+	preload("res://graphics/shrine/shrine.png"),
   ]
 
 const STATS = {
@@ -63,7 +66,7 @@ const STATS = {
 		},
 	Type.Crab: {
 		"base": [12, 2, 15, 5, 15, 1],
-		Stat.Kind.PhysicalResist: 50,
+		Stat.Kind.PhysicalResist: 150,
 		Stat.Kind.Speed: -10,
 		},
 	Type.Shrine: {

@@ -33,8 +33,6 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 					result.append(EncEvent.death_event(event.timestamp, source, target))
 				elif target_is_bloodied and !target_was_bloodied:
 					result.append(EncEvent.bloodied_event(event.timestamp,source, target))
-			else:
-				pass #TODO: healing
 		EncounterEventKind.Kind.StatChange:
 			assert(event.target_idx >= 0)
 			var target = state.actors[event.target_idx]

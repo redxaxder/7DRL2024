@@ -233,5 +233,5 @@ margin_bottom = 18.0
 unique_name_in_owner = true
 
 [connection signal="mouse_entered" from="GO/SAYS_GO/Button" to="GO" method="mouse_entered"]
-[connection signal="mouse_exited" from="GO/SAYS_GO/Button" to="." method="mouse_exited"]
+[connection signal="mouse_exited" from="GO/SAYS_GO/Button" to="GO" method="mouse_exited"]
 [connection signal="pressed" from="GO/SAYS_GO/Button" to="GO" method="emit_signal" binds= [ "pressed" ]]
