@@ -3,6 +3,7 @@ extends Resource
 class_name EncounterHistory
 export var _states: Array = DataUtil.new_array()
 export var _events: Array = DataUtil.new_array()
+var is_done = false
 # events[i] is the event that causes a transition from
 # state[i] to state[i+1]
 

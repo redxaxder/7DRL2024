@@ -52,10 +52,12 @@ func _refresh():
 		font.size = font_size
 		label.add_font_override("font", font)
 
+func mouse_entered():
+	modulate = hover_mod
+func mouse_exited():
+	modulate = base_color
+
 func _notification(what):
-	if what == NOTIFICATION_MOUSE_ENTER:
-		modulate = hover_mod
-	elif what == NOTIFICATION_MOUSE_EXIT:
-		modulate = base_color
-	elif what == NOTIFICATION_VISIBILITY_CHANGED:
-		modulate = base_color
+	if what == NOTIFICATION_MOUSE_ENTER: mouse_entered()
+	elif what == NOTIFICATION_MOUSE_EXIT: mouse_exited()
+	elif what == NOTIFICATION_VISIBILITY_CHANGED: mouse_exited()

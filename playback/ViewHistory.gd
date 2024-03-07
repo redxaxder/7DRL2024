@@ -12,7 +12,7 @@ var max_cursor: int = 0
 var history: EncounterHistory
 var map: Map
 
-signal seen_end()
+signal seen_end(state)
 signal updated(encounter_state, encounter_event)
 
 func _ready():
@@ -223,8 +223,8 @@ func _refresh():
 	var index = cursor
 	var next_max = max(max_cursor, cursor)
 	max_cursor = next_max
-	if cursor == _end():
-		emit_signal("seen_end")
+	if cursor == _end() and history.is_done:
+		emit_signal("seen_end", history.final())
 	if log_is_hovered and last_log_hover >= 0:
 		index = last_log_hover
 # warning-ignore:narrowing_conversion

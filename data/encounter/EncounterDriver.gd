@@ -9,7 +9,6 @@ var cur_state: EncounterState
 var started = false
 var done = false
 
-const REACTION_DELAY = 1 # maybe parameterize this by ability later
 const dirs: Array = [Vector2(1, 0), Vector2(1, 1), Vector2(0, 1), Vector2(-1, 1), Vector2(-1, 0), Vector2(-1, -1), Vector2(0, -1), Vector2(1, -1)]
 const cardinal: Array = [Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0), Vector2(0, -1)]
 const diagonal: Array = [Vector2(1, 1), Vector2(-1, 1), Vector2(-1, -1), Vector2(1, -1)]
@@ -46,7 +45,10 @@ func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 
 func tick() -> bool:
 	# 0. is the player alive?
+	if done: return false
 	if !cur_state.get_player().is_alive():
+		done = true
+		history.is_done = true
 		return false
 	# 0.1. are there any enemies alive?
 	var enemies_alive = false
@@ -54,8 +56,10 @@ func tick() -> bool:
 		if actor.is_alive() and actor.faction != Constants.PLAYER_FACTION:
 			enemies_alive = true
 			break
-	if !enemies_alive: return false
-
+	if !enemies_alive:
+		done = true
+		history.is_done = true
+		return false
 	if !started:
 		started = true
 		var player = cur_state.get_player()
@@ -114,11 +118,11 @@ func handle_events(events: Array):
 		var evt: EncounterEvent = _reaction
 		var reaction = Reaction.new()
 		reaction.ability = evt.ability
-		reaction.trigger_time = evt.timestamp + REACTION_DELAY
+		reaction.trigger_time = evt.timestamp
 		reaction.actor_idx = evt.actor_idx
 		reaction.target_idx = evt.target_idx
 		reaction.target_location = evt.target_location
-		queue.insert(reaction, reaction.trigger_time)
+		queue.force_front(reaction, reaction.trigger_time)
 
 class Reaction extends Resource:
 	var trigger_time: int = -1

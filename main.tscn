@@ -51,6 +51,9 @@ margin_top = 538.0
 margin_right = 816.0
 margin_bottom = 590.0
 custom_styles/panel = SubResource( 8 )
+__meta__ = {
+"_edit_lock_": true
+}
 image = ExtResource( 9 )
 text = ""
 
@@ -59,8 +62,17 @@ margin_left = -5.0
 margin_top = -35.0
 margin_right = 67.0
 margin_bottom = 9.0
+mouse_filter = 1
 custom_fonts/font = SubResource( 5 )
 text = "GO!"
+
+[node name="Button" type="Button" parent="GO/SAYS_GO"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -6.0
+margin_bottom = 50.0
+mouse_filter = 1
 
 [node name="DONE" type="Button" parent="."]
 unique_name_in_owner = true
@@ -219,3 +231,7 @@ margin_bottom = 18.0
 
 [node name="ConsumablesCounter" type="Timer" parent="."]
 unique_name_in_owner = true
+
+[connection signal="mouse_entered" from="GO/SAYS_GO/Button" to="GO" method="mouse_entered"]
+[connection signal="mouse_exited" from="GO/SAYS_GO/Button" to="." method="mouse_exited"]
+[connection signal="pressed" from="GO/SAYS_GO/Button" to="GO" method="emit_signal" binds= [ "pressed" ]]

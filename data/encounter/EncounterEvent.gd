@@ -30,7 +30,7 @@ func dict() -> Dictionary:
 	return 	{
 		"a": actor_idx,
 		"t": target_idx,
-		"time": round(float(timestamp) * 10.0) / 10.0,
+		"time": round(timestamp),
 		"d": damage,
 		"loc": target_location,
 		"m": ab_name,

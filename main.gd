@@ -18,10 +18,11 @@ var progress: int = 1
 var skill_tree: SkillTree
 
 var driver_seed: int
+var driver: EncounterDriver = null
 var current_encounter_seed: int
 var next_encounter_base_state: EncounterState # without player buffs applied
 var next_encounter_map: Map
-var next_encounter_outcome: EncounterHistory
+var encounter_result: EncounterState
 
 # are we waiting for the player to decide to do an encounter, (true) or
 # are we in the history view (false)?
@@ -65,6 +66,11 @@ func _ready():
 # warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
 
+func _process(delta):
+	if driver != null and driver.started and !driver.done:
+		for _i in 50:
+			if !driver.tick(): break
+
 func update_skill_points():
 	get_node("%ViewSkillTree").update_num_skills_to_unlock(progress)
 	get_node("%SkillPoints").text = "Skill Points: "+str(get_node("%ViewSkillTree").num_skills_to_unlock)
@@ -101,8 +107,9 @@ func history_scroll(s: EncounterState, what: EncounterEvent):
 	get_node("%state_view").update_view(s, what)
 
 
-func seen_end():
+func seen_end(result):
 	has_seen_end = true
+	encounter_result = result
 	update_button_visibility()
 	
 func update_button_visibility():
@@ -125,37 +132,31 @@ func apply_player_mods(s: EncounterState) -> EncounterState:
 
 
 func go():
-	var final_state = next_encounter_outcome.final()
-	var final_player_state = final_state.get_player()
-	var remaining_hp = final_player_state.cur_hp
-	# todo: pass in extra log messages if player is alive
 	var victory_text = []
 	var Consumables =  get_node("ConsumablesContainer")
-	if remaining_hp > 0:
-		victory_text.append("You won!")
-		for reward_key in Consumables.rewards:
-			var reward_name = Consumables.CONSUMABLE_TYPES[reward_key].name
-			victory_text.append(str("You got a ", reward_name,"."))
-
-	get_node("%state_view").init_view(final_state, map)
-	get_node("%history_view").view(next_encounter_outcome, map, victory_text)
+	victory_text.append("You won!")
+	for reward_key in Consumables.rewards:
+		var reward_name = Consumables.CONSUMABLE_TYPES[reward_key].name
+		victory_text.append(str("You got a ", reward_name,"."))
+	driver.tick()
+	get_node("%state_view").init_view(driver.history.get_state(0), map)
+	get_node("%history_view").view(driver.history, map, victory_text)
 	gonogo = false
 	update_button_visibility()
 
 func no_go():
 	make_encounter()
 
-func calculate_new_hp() -> int:
-	var final_player_state = next_encounter_outcome.final().get_player()
+
+
+func done():
+	var final_player_state = encounter_result.get_player()
 	var remaining_hp = final_player_state.cur_hp
 	var temp_hp = final_player_state.stats.max_hp() - player_stats.max_hp()
 	temp_hp = min(temp_hp, remaining_hp - 1)
-	temp_hp = max(0, temp_hp)
-	return remaining_hp - temp_hp
+	temp_hp = clamp(temp_hp, 0,  remaining_hp - 1)
+	player_hp = remaining_hp - temp_hp
 
-func done():
-	# apply encounter consequences
-	player_hp = calculate_new_hp()
 	if player_hp > 0:
 		get_node("%ConsumablesContainer").win_rewards()
 		make_encounter()
@@ -250,13 +251,7 @@ func toggle_skill_tree():
 
 func update_outcome():
 	var mod_state = apply_player_mods(next_encounter_base_state)
-	next_encounter_outcome = drive_encounter(mod_state, map, driver_seed)
-	var encounter_damage = player_hp - calculate_new_hp()
-	get_node("%damage_preview").text = "[ - %d ]" % encounter_damage
+	driver = EncounterDriver.new()
+	driver.initialize(mod_state, map, driver_seed)
+	driver.tick()
 	
-static func drive_encounter(mod_state: EncounterState, m: Map, ds: int) -> EncounterHistory:
-	var driver = EncounterDriver.new()
-	driver.initialize(mod_state, m, ds)
-	while driver.tick() and driver.current_time < time_limit:
-		pass
-	return driver.history
