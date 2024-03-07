@@ -112,7 +112,7 @@ func hand_rolled_skill_tree():
 	var my_cool_skill: Skill = create_ability_skill(build_ability({
 		"label": SkillName.generate_name(),
 		"trigger": SkillsCore.Trigger.Automatic,
-		"filter": Activation.Filter.DamageRecieved,
+		"filter": Activation.Filter.DamageReceived,
 		"filter_actor": SkillsCore.Target.Self,
 		"trigger_aim": SkillsCore.TriggerAim.Self,
 		"effect_type": SkillsCore.EffectType.StatBuff,
@@ -174,6 +174,7 @@ func hand_rolled_skill_tree():
 
 	# Deal 10 damage to an enemy in a 5 radius (4 cooldown)
 	append_and_create_ability({
+		"label": "Icy Clutch",
 		"trigger": SkillsCore.Trigger.Action,
 		"effect_type": SkillsCore.EffectType.Damage,
 		"ability_range": 0,
@@ -199,24 +200,36 @@ func hand_rolled_skill_tree():
 	
 	
 	var comment = """
-	enum EffectType { Damage, StatBuff }
-		StatBuff effectively includes buff, debuff, "healing"
-	enum Trigger { 
-		Action, # the actor initiates the skill using their turn
-		Automatic, # automatic listens for event}
-	enum TriggerAim { 
-		Self, # trigger aims at the owner of the ability
-		EventSource, # trigger aims at the originator of the event that tripped it
-		EventTarget, # trigger aims at the target of the event that tripped it
-		Random, # trigger aims at some appropriate target #Doesn't work!
+	
+append_and_create_ability(opt : Dictionary)
+	
+	effect_type: { Damage, StatBuff }  
+							StatBuff effectively includes buff, debuff, "healing"
+	
+	mod_stat: 		Stat.Kind.Health,
+	trigger: 		{ Action, Automatic }
+	filter_actor : 	SkillsCore.TargetAny or
+					SkillsCore.Target {Self, Enemies, Allies, Empty }
+	trigger_aim : 	SkillsCore.TriggerAim { Self, EventSource, EventTarget, Random }
 	}
-	# where can the effect take place?
-	# this is used in two kinds of checks:
-	# 1) to determine if an effect affects a space
-	# 2) to filter what events triggers listen to
-	enum Target {Self = 1, Enemies = 2, Allies = 4, Empty = 8}
-	const TargetAny = Target.Self | Target.Enemies | Target.Allies | Target.Empty
 
+
+	var abil: Skill = create_ability_skill(build_ability({
+		"label": SkillName.generate_name(),
+		"trigger": SkillsCore.Trigger.Automatic,
+		"filter": Activation.Filter.DamageDealt,
+		"filter_actor": SkillsCore.TargetAny,
+		"trigger_aim": SkillsCore.TriggerAim.Self,
+		"effect_type": SkillsCore.EffectType.StatBuff,
+		"ability_range": 4,
+		"mod_stat": Stat.Kind.Health,
+		"power": 10,
+		"targets": SkillsCore.Target.Self,
+	}))
+	
+	
+	SKILL IDEAS
+		
 	
 		-Deal 10 damage to an enemy in a 5 radius (4 cooldown)
 		^^^ DONE ^^^
@@ -230,39 +243,20 @@ func hand_rolled_skill_tree():
 		-Whenever you take  damage, summon a blorb (3 cooldown)
 		-Whenever you take damage reducing you to less than 25% hp
 			deal 20 damage to enemies in range 1
-		
-	
-		damage
-		move
-		attack
-		hit
-		target dies
-		
-		DamageDealt, 
-		DamageRecieved,
-		Death,
-		#cheap to add
-		# movement
-		# uses ability
-		# misses
-		# encounter start
-		# fixed threshold (25%) "bloodied"
-		# attack
-		monster summon
 
-	
-	enum EffectType
-		Damage
-		StatBuff
-		summons
-		accelerate turn priority (via "bonus time")
+		Whenever you take damage reducing you to less than 25% HP, summon a crab, range 2
+		Whenever you take damage, debuff eyesight by 1 and buff brawn by 2, cooldown 5
+		Whenever an enemy moves, debuff their hustle by 1, range 5 cooldown 3
+		Ice damage 5 to any, range 0, cooldown 10, aoe 3
 		
+
+
 	
 	"""
 
 # syntactic sugar over like 3 calls to make an ability
 func append_and_create_ability(opt: Dictionary): 
-	opt.label = SkillName.generate_name()
+	opt.label = opt.label if opt.label else SkillName.generate_name()
 	var modifiers = opt.modifiers
 	var row = opt.row
 	opt.erase('modifiers')

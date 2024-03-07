@@ -20,7 +20,7 @@ var cooldown_time: int = 30
 
 enum Filter{
 	DamageDealt, 
-	DamageRecieved,
+	DamageReceived,
 	Death,
 	Movement,
 	Start,
@@ -53,7 +53,7 @@ const FILTER_FOCUS = [
 	]
 const FILTER_EVENT = [
 	EncounterEventKind.Kind.Damage, # DamageDealt
-	EncounterEventKind.Kind.Damage, # DamageRecieved
+	EncounterEventKind.Kind.Damage, # DamageReceived
 	EncounterEventKind.Kind.Death, # Death
 	EncounterEventKind.Kind.Move,  # Movement
 	EncounterEventKind.Kind.EncounterStart,  # Start

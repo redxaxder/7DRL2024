@@ -57,11 +57,11 @@ func chance_to_hit_other(other: CombatEntity) -> float:
 	# chance to hit is 1 - 1 / 100 = .99
 	#example: self accuracy 10, other evasion 12
 	# chance to hit is 1 - abs(5 - 12) / 100 = .93
-	#example: self accuracy, other evasion 20
+	#example: self accuracy 10, other evasion 20
 	# chance to hit is 1 - abs(5 - 20) / 100 = .85
 	var numerator: float = 1.0
 	if stats.accuracy() < other.stats.evasion():
-		numerator = float(stats.accuracy()) / 2.0 - float(stats.evasion())
+		numerator =  float(other.stats.evasion()) - float(stats.accuracy()) / 2.0
 	return 1.0 - numerator / chance_denom
 	
 func basic_attack_damage_to_other(other: CombatEntity) -> Array:
