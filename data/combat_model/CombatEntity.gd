@@ -30,12 +30,12 @@ func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int
 	faction = _faction
 	name = moniker
 
-func can_use_ability(a: Ability, when: int) -> bool:
+func can_use_ability(a: Ability, when: float) -> bool:
 	var last_used = last_used_time.get(a.name)
 	if last_used == null: return true
 	return (when - last_used) >= a.cooldown_time(stats)
 
-func mark_ability_use(a: Ability, when: int):
+func mark_ability_use(a: Ability, when: float):
 	assert(when >= last_used_time.get(a.name, 0), "using ability before cooldown is up is not allowed")
 	last_used_time[a.name] = when
 

@@ -13,6 +13,8 @@ const BACKGROUND: Color = Color(0.4,0.4,0.4)
 
 func _draw():
 	var x = round(fill_percent * breakpoints) / float(breakpoints)
+	if fill_percent > 0:
+		x = max(x,1)
 	var sz
 	var filled: Rect2 = Rect2(Vector2.ZERO, Vector2(x,1) * rect_size)
 	draw_rect(filled, FOREGROUND)
