@@ -50,7 +50,7 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 
 	return result
 
-static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: int) -> Array: # [ EncounterEvent ]
+static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: float) -> Array: # [ EncounterEvent ]
 	if !actor.can_use_ability(ability, timestamp): return []
 	return [EncEvent.ability_event(timestamp, actor, ability, target, ability.effect.element)]
 
@@ -88,7 +88,7 @@ static func handle_ability_activation(state: EncounterState, event: EncounterEve
 				events.append(EncEvent.stat_change_event(event.timestamp, source, target, ability.effect.mod_stat, power))
 	return events
 
-static func trigger_reaction(timestamp: int, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
+static func trigger_reaction(timestamp: float, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:
 	assert(reaction.activation.trigger == SkillsCore.Trigger.Automatic)
 	if event.kind == EncounterEventKind.Kind.Death:
 		pass

@@ -219,7 +219,8 @@ func _refresh():
 # warning-ignore:narrowing_conversion
 	var current_event = history.get_event(index)
 	var time = 0
-	if current_event: time = current_event.timestamp
+	if current_event:
+		time = int(current_event.timestamp)
 	get_node("%timestamp").text = "%d" % time
 	var progressbar = get_node("%progress_bar")
 	progressbar.value = index

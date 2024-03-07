@@ -20,7 +20,7 @@ var element: int = Elements.Kind.Physical
 # stats that do
 var cur_hp: int
 var location: Vector2 # duplicated from driver
-var time_spent: int
+var time_spent: float
 
 func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int, hustle: int, _faction: int, moniker: String):
 	stats = StatBlock.new()

@@ -19,7 +19,7 @@ var stat: int = -9999
 
 var target_location: Vector2 = Vector2(-99999,-99999)
 
-var timestamp: int = -99999
+var timestamp: float = -99999
 
 var ability: Ability
 var displayed_radius: int = -9999 # 
