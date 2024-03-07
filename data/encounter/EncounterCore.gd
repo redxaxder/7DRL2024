@@ -26,11 +26,8 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			var source = state.actors[event.actor_idx]
 			if event.damage > 0:
 				var target = state.actors[event.target_idx]
-	# warning-ignore:narrowing_conversion
-				var modified_damage = get_damage_with_element(state, event)
-				modified_damage = max(modified_damage,1)
 				var target_was_bloodied = (float(target.cur_hp) / float(target.stats.max_hp())) < 0.25
-				state.resolve_attack(event.target_idx, modified_damage)
+				state.resolve_attack(event.target_idx, event.damage)
 				var target_is_bloodied = (float(target.cur_hp) / float(target.stats.max_hp())) < 0.25
 				if !target.is_alive():
 					result.append(EncEvent.death_event(event.timestamp, source, target))
@@ -53,16 +50,6 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 static func use_ability(actor: CombatEntity, target: Vector2, ability: Ability, timestamp: float) -> Array: # [ EncounterEvent ]
 	if !actor.can_use_ability(ability, timestamp): return []
 	return [EncEvent.ability_event(timestamp, actor, ability, target, ability.effect.element)]
-
-static func get_damage_with_element(state: EncounterState, event: EncounterEvent) -> float:
-	assert(event.kind == EncounterEventKind.Kind.Damage)
-	var damage: float = float(event.damage)
-	assert(damage > 0)
-	var target = state.actors[event.target_idx]
-	var resist_multiplier = target.element_resist_multiplier(event.element)
-	damage *= resist_multiplier
-	assert(damage > 0)
-	return damage
 	
 static func handle_ability_activation(state: EncounterState, event: EncounterEvent) -> Array: # [ EncounterEvent ]
 	var ability = event.ability

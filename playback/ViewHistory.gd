@@ -61,9 +61,9 @@ func view(_history: EncounterHistory, _map: Map, extra_messages: Array = []):
 	var history_amount = history.size() - 1
 	for i in history_amount:
 		var event = history.get_event(i)
-		add_log_message(event_text(event), i)
+		add_log_message(event_text(event), i, event)
 	for i in extra_messages.size():
-		add_log_message(extra_messages[i], i + history_amount)
+		add_log_message(extra_messages[i], i + history_amount, null)
 	# _end()
 	play()
 
@@ -94,9 +94,9 @@ func event_text(evt: EncounterEvent) -> String:
 			return "{time}: {an} activated ability {m}".format(evt.dict())
 		EncounterEventKind.Kind.Damage:
 			if evt.is_crit:
-				return "{time}: Critical hit! {tn} took {d} damage!!!".format(evt.dict())
+				return "{time}: Critical hit! {tn} took {d} {el}damage!!!".format(evt.dict())
 			else:
-				return "{time}: {tn} took {d} damage!".format(evt.dict())
+				return "{time}: {tn} took {d} {el}damage!".format(evt.dict())
 		EncounterEventKind.Kind.StatChange:
 			var gained = "gained"
 			if evt.damage < 0:
@@ -108,8 +108,17 @@ func event_text(evt: EncounterEvent) -> String:
 	return ""
 
 
-func add_log_message(text: String, index: int):
+func add_log_message(text: String, index: int, evt: EncounterEvent):
 	var log_node = preload("res://playback/log_line.tscn").instance()
+	
+	if evt:
+		if evt.kind == EncounterEventKind.Kind.AbilityActivation:
+			log_node.modulate = Color.cyan
+		if evt.kind == EncounterEventKind.Kind.Death:
+			log_node.modulate = Color.red
+	else:
+		log_node.modulate = Color("#ff2bfa")
+	
 	log_node.set_label(text)
 	log_node.connect("pressed", self, "log_line_click", [index])
 	get_node("%combat_log").add_child(log_node)

@@ -175,6 +175,7 @@ func hand_rolled_skill_tree():
 	# Deal 10 damage to an enemy in a 5 radius (4 cooldown)
 	append_and_create_ability({
 		"label": "Icy Clutch",
+		"element": Elements.Kind.Ice,
 		"trigger": SkillsCore.Trigger.Action,
 		"effect_type": SkillsCore.EffectType.Damage,
 		"ability_range": 0,
@@ -191,6 +192,65 @@ func hand_rolled_skill_tree():
 	
 	append_skill(create_ability_skill(aoe_test_ability), 1)
 	
+	append_and_create_ability({
+		"label": "Poison pustule",
+		"element": Elements.Kind.Poison,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.Damage,
+		"power":			500,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Random,
+		"ability_range":  7,
+		"radius":			2,
+		"targets": 		SkillsCore.Target.Enemies,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Death,
+		"filter_actor": 	SkillsCore.Target.Enemies,
+		"cooldown_time":	1,
+	})
+	
+	append_and_create_ability({
+		"label": "Rake the coals",
+		"element": Elements.Kind.Fire,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.StatBuff,
+		"mod_stat": 		Stat.Kind.Health,
+		"power":			5,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Self,
+		"ability_range":  0,
+		"radius":			0,
+		"targets": 		SkillsCore.Target.Self,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Action,
+		"filter": 		Activation.Filter.DamageReceived,
+		"filter_actor": 	SkillsCore.Target.Self,
+		"cooldown_time":	10,
+	})
+	
+	append_and_create_ability({
+		"label": "Fiery Fire",
+		"element": Elements.Kind.Fire,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.StatBuff,
+		"mod_stat": 		Stat.Kind.Accuracy,
+		"power":			20,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Self,
+		"ability_range":  0,
+		"radius":			0,
+		"targets": 		SkillsCore.Target.Self,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Movement,
+		"filter_actor": 	SkillsCore.Target.Self,
+		"cooldown_time":	1,
+	})
+	
 	append_skill(create_bonus_skill(Stat.Kind.Brawn, 5, SkillName.generate_name()), 0)
 	append_skill(create_bonus_skill(Stat.Kind.Brains, 5, SkillName.generate_name()), 1)
 	append_skill(create_bonus_skill(Stat.Kind.Guts, 5, SkillName.generate_name()), 2)
@@ -199,33 +259,58 @@ func hand_rolled_skill_tree():
 	append_skill(create_bonus_skill(Stat.Kind.Hustle, 5, SkillName.generate_name()), 2)
 	
 	
+	
 	var comment = """
 	
 append_and_create_ability(opt : Dictionary)
+
+	***INFO***
+	label: 			String
+	element:		Element.Kind {Physical, Fire, Ice, Poison}
+	row:			int
 	
-	effect_type: { Damage, StatBuff }  
-							StatBuff effectively includes buff, debuff, "healing"
-	
+	***EFFECT***
+	effect_type:	SkillsCore.EffectType { Damage, StatBuff }
 	mod_stat: 		Stat.Kind.Health,
-	trigger: 		{ Action, Automatic }
+	power:			float
+	
+	***EFFECT AIM***
+	trigger_aim : 	SkillsCore.TriggerAim { Self, EventSource, EventTarget, Random }
+	ability_range:  float
+	radius:			float
+	targets: 		SkillsCore.Target {Self, Enemies, Allies, Empty }
+	
+	***TRIGGER***
+	trigger: 		SkillsCore.Trigger{ Action, Automatic }
+	filter: 		Activation.Filter { DamageDealt, DamageReceived, Death,
+						Movement, Start, Bloodied, Miss, Dodge, Attack }
 	filter_actor : 	SkillsCore.TargetAny or
 					SkillsCore.Target {Self, Enemies, Allies, Empty }
-	trigger_aim : 	SkillsCore.TriggerAim { Self, EventSource, EventTarget, Random }
-	}
+	cooldown_time:	float
+	
 
+	***EXAMPLE***
 
-	var abil: Skill = create_ability_skill(build_ability({
-		"label": SkillName.generate_name(),
-		"trigger": SkillsCore.Trigger.Automatic,
-		"filter": Activation.Filter.DamageDealt,
-		"filter_actor": SkillsCore.TargetAny,
-		"trigger_aim": SkillsCore.TriggerAim.Self,
-		"effect_type": SkillsCore.EffectType.StatBuff,
-		"ability_range": 4,
-		"mod_stat": Stat.Kind.Health,
-		"power": 10,
-		"targets": SkillsCore.Target.Self,
-	}))
+	
+	append_and_create_ability({
+		"label": "Fiery Fire",
+		"element": Elements.Kind.Fire,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.StatBuff,
+		"mod_stat": 		Stat.Kind.Accuracy,
+		"power":			20,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Self,
+		"ability_range":  0,
+		"radius":			0,
+		"targets": 		SkillsCore.Target.Self,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Movement,
+		"filter_actor": 	SkillsCore.Target.Self,
+		"cooldown_time":	1,
+	})
 	
 	
 	SKILL IDEAS
@@ -250,14 +335,16 @@ append_and_create_ability(opt : Dictionary)
 		Ice damage 5 to any, range 0, cooldown 10, aoe 3
 		
 
-
+		
 	
 	"""
 
 # syntactic sugar over like 3 calls to make an ability
 func append_and_create_ability(opt: Dictionary): 
 	opt.label = opt.label if opt.label else SkillName.generate_name()
-	var modifiers = opt.modifiers
+	var modifiers = []
+	if opt.has('modifiers') :
+		modifiers = opt.modifiers
 	var row = opt.row
 	opt.erase('modifiers')
 	opt.erase('row')

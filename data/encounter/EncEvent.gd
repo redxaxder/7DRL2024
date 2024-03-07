@@ -76,7 +76,18 @@ static func damage_event(timestamp: float, source: CombatEntity, target: CombatE
 	set_actor(evt, source)
 	evt.timestamp = timestamp
 	evt.is_crit = is_crit
-	evt.damage = max(1,damage)
+					
+	var modified_damage = float(damage)
+	
+	var attack_stat = Elements.ATTACK[element]
+	var attack_bonus = float(source.stats.get_modified_stat(attack_stat))
+	var source_multiplier = attack_bonus / 100 + 1
+	modified_damage *= source_multiplier
+	
+	var resist_multiplier = target.element_resist_multiplier(element)
+	modified_damage *= resist_multiplier
+	
+	evt.damage = max(1,modified_damage)
 	evt.element = element
 	return evt
 

@@ -36,4 +36,5 @@ func dict() -> Dictionary:
 		"m": ab_name,
 		"an": actor_name,
 		"tn": target_name,
+		"el": Elements.Kind.keys()[element] + " " if true ||  element > 0 else ""
 	}
