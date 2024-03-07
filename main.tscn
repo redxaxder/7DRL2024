@@ -42,7 +42,7 @@ margin_bottom = 600.0
 
 [node name="GO" parent="." instance=ExtResource( 10 )]
 unique_name_in_owner = true
-modulate = Color( 0.611765, 0.611765, 0.611765, 1 )
+modulate = Color( 0.102334, 0.864355, 0.609407, 1 )
 margin_left = 764.0
 margin_top = 538.0
 margin_right = 816.0
