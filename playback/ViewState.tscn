@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://playback/ViewState.gd" type="Script" id=1]
 [ext_resource path="res://fonts/CommitMono-400-Regular.otf" type="DynamicFontData" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://graphics/reticles/reticle2.png" type="Texture" id=4]
 [ext_resource path="res://playback/aoe_indicator.gd" type="Script" id=5]
 [ext_resource path="res://graphics/reticles/reticle3.png" type="Texture" id=6]
+[ext_resource path="res://playback/hp_bar.gd" type="Script" id=7]
 
 [sub_resource type="DynamicFont" id=2]
 size = 24
@@ -63,3 +64,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 5 )
 texture = ExtResource( 6 )
+
+[node name="hp_bar" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 7 )

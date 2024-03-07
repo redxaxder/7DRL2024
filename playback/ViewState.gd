@@ -69,6 +69,7 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 	var n = st.actors.size()
 	var actorsprites = get_node("%actors").get_children()
 	assert(n == actorsprites.size())
+	$hp_bar.visible = false
 	$aoe_indicator.visible = false
 	for i in n:
 		var actor: CombatEntity = st.actors[i]
@@ -83,6 +84,12 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 			$reticle.scale = Vector2(scale_factor, scale_factor)
 			$reticle.position = actorsprites[i].position - $reticle.scale
 			$reticle.visible = true
+			if what.kind == EncounterEventKind.Kind.Damage:
+				var bar_offset = scale_factor * Vector2(1,-1)
+				$hp_bar.rect_position = actorsprites[i].position + bar_offset
+				$hp_bar.rect_size = scale_factor * Vector2(Constants.TILE_SIZE - 2,1)
+				$hp_bar.visible = true
+				$hp_bar.fill_percent = max(0,float(actor.cur_hp)) / float(actor.stats.max_hp())
 #			actorsprites[i].modulate = target_actor_color
 	if what and what.target_location != null and !$reticle.visible \
 		and what.kind != EncounterEventKind.Kind.Move:
@@ -100,25 +107,8 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 				$aoe_indicator.color = color
 				$aoe_indicator.scale_factor = scale_factor
 				$aoe_indicator.visible = true
-
-
-#func set_input(input):
-#	seed(hash(input))
-#	icon_index = randi()
-#	var s = randf() / 2 + 0.5
-#	var v = randf() / 2 + 0.5
-#	var h = randf()
-#	color = Color.from_hsv(h,s,v)
-#		$location_highlight.rect_position = what.target_location * scaled_size
-#		$location_highlight.visible = true
-#		$location_highlight.rect_size = scaled_size * Vector2(1,1)
 	else:
 		$location_highlight.visible = false
 		
 	map.updateSprites(scaled_size, scale_factor)
 	emit_hover()
-
-func layout_rect(rect: Rect2):
-	for x in rect.size.x: for y in rect.size.y:
-		var p = rect.position + Vector2(x,y)
-		pass
