@@ -6,7 +6,7 @@ enum Kind{	Brawn, Brains, Guts, Eyesight, Footwork, Hustle,
 			MAX}
 const NAME = [	"Brawn", "Brains", "Guts", "Eyesight", "Footwork", "Hustle",
 				"Accuracy", "Crit", "Evasion", "Power", "Speed", "Health",
-				"Physical", "Fire", "Ice", "Poison",
+				"Physical Bonus", "Fire Bonus", "Ice Bonus", "Poison Bonus",
 				"Physical Resist", "Fire Resist", "Ice Resist", "Poison Resist"
 	]
 	
