@@ -46,8 +46,9 @@ func _refresh():
 			field = "Hp:"
 			value = "{cur_hp} / {max_hp}".format(dict)
 		else:
-			dict["field_name"] = field_display.get(key, "MISSING")
+			assert(field_display.has(key), str("missing ", key))
 			field = str(field_display.get(key, "MISSING"),":")
+#			assert(field != "NISSING:")
 			value = str("{", key, "}").format(dict)
 		var is_shown = dict[key] != 0 or key == "max_hp"
 		if is_shown:
@@ -65,14 +66,14 @@ const field_display: Dictionary = {
 	"evasion": "Evasion",
 	"damage": "Power",
 	"physical": "Physical",
-	"poision": "Poison",
+	"poison": "Poison",
 	"crit": "Base Crit",
 	"crit_chance": "Crit Chance",
 	"crit_mult": "Crit Mult",
 	"fire": "Fire",
 	"ice": "Ice",
 	"physical_resist": "Physical Resist",
-	"poision_resist": "Poison Resist",
+	"poison_resist": "Poison Resist",
 	"fire_resist": "Fire Resist",
 	"ice_resist": "Ice Resist"
 }

@@ -3,3 +3,4 @@
 *.md5
 */.DS_Store
 .DS_Store
+out/
