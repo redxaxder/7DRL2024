@@ -2,8 +2,8 @@ extends Resource
 
 class_name Bonus
 
-export var stat: int = 0
-export var power: int = 0
+var stat: int = 0
+var power: int = 0
 
 func initialize_bonus(_stat: int, bpower: int):
 	stat = _stat
@@ -17,7 +17,7 @@ func generate_description() -> String:
 		description += "Permanently lowers "
 	description += Stat.NAME[stat]
 	if power > 0:
-		description += " by {0}".format([power])
+		description += " by {0}.".format([power])
 	else:
-		description += " by {0}".format([-power])
+		description += " by {0}.".format([-power])
 	return description

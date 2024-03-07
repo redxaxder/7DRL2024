@@ -171,10 +171,12 @@ func init_starting_consumables():
 func hover_button(config, button):
 	button.self_modulate = Color(1,1,1)
 	get_node("%ConsumableTooltip").text = config.name + ": " +config.description
+	get_node("%ConsumableTooltip").visible = true
 	
 func unhover_button(config, button):
 	button.self_modulate = config.color
 	get_node("%ConsumableTooltip").text = ""
+	get_node("%ConsumableTooltip").visible = false
 	
 func use_consumable(type: String):
 	if consumable_inventory[type] > 0:	

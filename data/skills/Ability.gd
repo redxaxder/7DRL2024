@@ -66,12 +66,14 @@ static func mod(stat: int, param:int , coeff: float) -> AbilityMod:
 func describe_effect(stats: StatBlock) -> String:
 	match effect.effect_type:
 		SkillsCore.EffectType.Damage:
-			return "deal {0} damage".format([power(stats)])
+			return "Deal {0} damage".format([power(stats)])
 		SkillsCore.EffectType.StatBuff:
-			var increase = "increase"
-			if effect.power < 0: increase = "decrease"
-			return "{increase} {stat} by {power}".format({
-				"increase": increase,
+			var increase = "Add"
+			if effect.power < 0: increase = "Decrease"
+			var buff = "buff" if effect.power > 0 else "debuff"
+			
+			return "Add {power} {stat} {buff}".format({
+				"buff": buff,
 				"stat": Stat.NAME[effect.mod_stat],
 				"power": power(stats)
 			})
@@ -98,14 +100,28 @@ func generate_description(stats: StatBlock) -> String:
 	dict["cooldown"] = cooldown_time(stats)
 #	prints("hp", stats.max_hp())
 	var text = ""
-	text += "{trigger}\n".format(dict)
-	text += "range: {range}\n".format(dict)
-	text += "radius: {radius}\n".format(dict)
-	text += "cooldown: {cooldown}\n".format(dict)
-	text += "affects: {target}\n".format(dict)
+	# text += "{trigger}\n".format(dict)
 	if activation.trigger == SkillsCore.Trigger.Automatic:
 		text += "{activation_text}\n".format(dict)
-	text += "effect: {effect_text}\n".format(dict)
+		
+	text += "{effect_text}".format(dict)
+	text += " to {target}.\n".format(dict)
+	
+	for m in modifiers:
+		text += "{0} scales off {1}% of {2}.  \n".format([
+			ModParam.keys()[m.modified_param],
+			str(m.coefficient),
+			Stat.Kind.keys()[m.modifier_stat]
+		])
+	text += "\n"
+	
+	if dict["range"] > 0:
+		text += "Range: {range}\n".format(dict)
+	if dict["radius"] > 0:
+		text += "Radius: {radius}\n".format(dict)
+	if dict["cooldown"] > 0:
+		text += "Cooldown: {cooldown}\n".format(dict)
+		
 	return text
 
 

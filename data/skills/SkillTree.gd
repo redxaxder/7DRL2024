@@ -185,12 +185,108 @@ func hand_rolled_skill_tree():
 		"targets": SkillsCore.Target.Enemies,
 		"modifiers": [
 			# as a rule, single digit coefficients on mods
-			Ability.mod(Stat.Kind.Health, Ability.ModParam.Radius, 10)
+			Ability.mod(Stat.Kind.Guts, Ability.ModParam.Radius, 10)
 		],
 		"row": 2
 	})
 	
 	append_skill(create_ability_skill(aoe_test_ability), 1)
+	
+	
+	append_and_create_ability({
+		"label": "Penetrating Thorns",
+		"element": Elements.Kind.Physical,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.Damage,
+		"power": 20,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.EventTarget,
+		"ability_range": 0,
+		"radius": 1,
+		"targets": 		SkillsCore.Target.Enemies,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Attack,
+		"filter_actor": 	SkillsCore.Target.Enemies,
+		"cooldown_time":	0,
+	})
+	
+	append_and_create_ability({
+		"label": "Two Step",
+		"element": Elements.Kind.Physical,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.Damage,
+		"power": 500,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Self,
+		"ability_range": 0,
+		"radius": 6,
+		"targets": 		SkillsCore.Target.Enemies,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Dodge,
+		"filter_actor": 	SkillsCore.Target.Enemies,
+		"cooldown_time":	30,
+	})
+	
+	append_and_create_ability({
+		"label": "Peerless Sleight",
+		"element": Elements.Kind.Physical,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.Damage,
+		"power": 500,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Self,
+		"ability_range": 0,
+		"radius": 6,
+		"targets": 		SkillsCore.Target.Enemies,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Miss,
+		"filter_actor": 	SkillsCore.Target.Enemies,
+		"cooldown_time":	30,
+	})
+	
+	append_and_create_ability({
+		"label": "Poison Gulp",
+		"element": Elements.Kind.Poison,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.Damage,
+		"power": 500,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Self,
+		"ability_range": 0,
+		"radius": 6,
+		"targets": 		SkillsCore.Target.Enemies,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Bloodied,
+		"filter_actor": 	SkillsCore.Target.Self,
+		"cooldown_time":	1,
+	})
+	
+	append_and_create_ability({
+		"label": "Poison Overflow",
+		"element": Elements.Kind.Poison,
+		"row": 0,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.Damage,
+		"power": 500,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Self,
+		"ability_range": 0,
+		"radius": 6,
+		"targets": 		SkillsCore.Target.Enemies,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Start,
+		"filter_actor": 	SkillsCore.Target.Self,
+		"cooldown_time":	0,
+	})
 	
 	append_and_create_ability({
 		"label": "Poison pustule",

@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://playback/ViewHistory.tscn" type="PackedScene" id=2]
@@ -11,7 +11,7 @@
 [ext_resource path="res://graphics/gui/play-button.svg" type="Texture" id=9]
 [ext_resource path="res://misc/BetterButton.tscn" type="PackedScene" id=10]
 
-[sub_resource type="StyleBoxTexture" id=6]
+[sub_resource type="StyleBoxTexture" id=8]
 texture = ExtResource( 9 )
 region_rect = Rect2( 0, 0, 512, 512 )
 
@@ -31,6 +31,9 @@ font_data = ExtResource( 6 )
 size = 18
 font_data = ExtResource( 6 )
 
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.09, 0.08, 0.1, 1 )
+
 [node name="main" type="Node2D"]
 script = ExtResource( 1 )
 show_extra_history = false
@@ -47,10 +50,9 @@ margin_left = 764.0
 margin_top = 538.0
 margin_right = 816.0
 margin_bottom = 590.0
-custom_styles/panel = SubResource( 6 )
+custom_styles/panel = SubResource( 8 )
 image = ExtResource( 9 )
 text = ""
-use_hover_mod = true
 
 [node name="SAYS_GO" type="Label" parent="GO"]
 margin_left = -5.0
@@ -170,6 +172,16 @@ margin_bottom = 37.0
 custom_fonts/font = SubResource( 1 )
 text = "PREVIEW"
 
+[node name="ConsumableTooltip" type="Label" parent="."]
+unique_name_in_owner = true
+margin_left = 22.0
+margin_top = 486.0
+margin_right = 99.0
+margin_bottom = 507.0
+custom_fonts/font = SubResource( 2 )
+custom_styles/normal = SubResource( 7 )
+text = "Foo bar"
+
 [node name="ConsumablesContainer" type="Control" parent="."]
 unique_name_in_owner = true
 margin_left = 43.0
@@ -187,14 +199,6 @@ margin_bottom = 21.0
 [node name="InventoryInner" type="HBoxContainer" parent="ConsumablesContainer/Inventory"]
 unique_name_in_owner = true
 margin_bottom = 21.0
-
-[node name="ConsumableTooltip" type="Label" parent="ConsumablesContainer/Inventory"]
-unique_name_in_owner = true
-margin_left = 4.0
-margin_right = 81.0
-margin_bottom = 21.0
-custom_fonts/font = SubResource( 2 )
-text = "Foo bar"
 
 [node name="RewardsContainer" type="VBoxContainer" parent="ConsumablesContainer"]
 margin_left = 662.0
