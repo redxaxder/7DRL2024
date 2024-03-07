@@ -74,7 +74,6 @@ func win_rewards():
 	pass
 		
 func transfer_reward():
-	print("transfer_reward")
 	var r = won_rewards.pop_back()
 	if(r):	
 		print("transfer_reward type"+r)

@@ -199,6 +199,24 @@ func hand_rolled_skill_tree():
 	
 	
 	var comment = """
+	enum EffectType { Damage, StatBuff }
+		StatBuff effectively includes buff, debuff, "healing"
+	enum Trigger { 
+		Action, # the actor initiates the skill using their turn
+		Automatic, # automatic listens for event}
+	enum TriggerAim { 
+		Self, # trigger aims at the owner of the ability
+		EventSource, # trigger aims at the originator of the event that tripped it
+		EventTarget, # trigger aims at the target of the event that tripped it
+		Random, # trigger aims at some appropriate target #Doesn't work!
+	}
+	# where can the effect take place?
+	# this is used in two kinds of checks:
+	# 1) to determine if an effect affects a space
+	# 2) to filter what events triggers listen to
+	enum Target {Self = 1, Enemies = 2, Allies = 4, Empty = 8}
+	const TargetAny = Target.Self | Target.Enemies | Target.Allies | Target.Empty
+
 	
 		-Deal 10 damage to an enemy in a 5 radius (4 cooldown)
 		^^^ DONE ^^^

@@ -175,6 +175,15 @@ func unlockSkill():
 	
 func recalculate_player_bonuses():
 	player_stats.clear_bonuses()
+	
+	# look up player stat bonuses from stats table
+	var proto = Actor.STATS.get(Actor.Type.Player, null)
+	if proto: for key in proto.keys():
+		if typeof(key) == TYPE_INT:
+			var bonus = Actor.bonus(key, proto.get(key))
+			player_stats.apply_bonus(bonus)
+	
+	# add in skill tree unlock bonuses
 	for skill in skill_tree.unlocks:
 		if skill.kind == Skill.Kind.Bonus:
 			player_stats.apply_bonus(skill.bonus)
