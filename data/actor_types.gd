@@ -41,6 +41,7 @@ const SPRITES = [ \
 const STATS = {
 	Type.Player: {
 		"base": [10, 10, 10, 10, 10, 10],
+		Stat.Kind.Health: 30,
 		 }, 
 	Type.Wolf: {
 		"base": [15, 12, 8, 5, 12, 10],

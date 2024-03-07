@@ -22,14 +22,14 @@ var CONSUMABLE_TYPES = {
 		"description": "Heal {0} health.".format([health_potion_amount]),
 		"sprite": preload("res://graphics/consumables/heart-bottle.svg"),
 		"color": Color("#00ca67"),
-		"start_count": 2
+		"start_count": 0
 	},
 	"invisibility": {
 		"name": "Invisibility Potion",
 		"description": "Sneak past enemies to grab rewards.",
 		"sprite": preload("res://graphics/consumables/cowled.svg"),
 		"color": Color("#5b583e"),
-		"start_count": 1
+		"start_count": 0
 	}
 }
 
@@ -70,7 +70,9 @@ func _ready():
 		unhover_button(config, better_button)
 
 func win_rewards():
+	print("win rewards reward count: "+str(rewards.size()))
 	won_rewards = DataUtil.dup_array(rewards)
+	pass
 		
 func transfer_reward():
 	var r = won_rewards.pop_back()
@@ -87,23 +89,30 @@ func init_rewards():
 	# create random 
 	var r = randf()
 	var num_rewards
-	if(r < 0.05): 			#  5% => 4
-		num_rewards = 4
-	elif(r < .15): 			# 10% => 3
+	if(r < .02): 			#  2% => 3
 		num_rewards = 3
-	elif(r < .4): 			# 25% => 2
+	elif(r < .4): 			# 38% => 2
 		num_rewards = 2
-	elif(r < .9): 			# 50% => 1
+	else:			 		# 60% => 1
 		num_rewards = 1
-	else:			 		# 10% => 0
-		num_rewards = 0
 		
 	rewards = []
 	
 	var reward_counts = {}
 		
 	for i in num_rewards:
-		var type = DataUtil.pick(CONSUMABLE_TYPES.keys())
+		var type = DataUtil.pick([
+			"teleport",
+			"teleport",
+			"teleport",
+			"teleport",
+			"teleport",
+			"teleport",
+			"health",
+			"health",
+			"health",
+			"invisibility"
+		])
 		if(!rewards.has(type)):
 			reward_counts[type] = 1
 		else:
@@ -152,7 +161,7 @@ func init_rewards():
 		
 		unhover_button(config, better_button)
 		
-	
+	print("reward count: "+str(rewards.size()))
 		
 func init_starting_consumables():
 	for c in CONSUMABLE_TYPES:

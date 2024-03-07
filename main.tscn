@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://playback/ViewHistory.tscn" type="PackedScene" id=2]
@@ -7,6 +7,11 @@
 [ext_resource path="res://data/consumables/Consumables.gd" type="Script" id=5]
 [ext_resource path="res://fonts/CommitMono-400-Regular.otf" type="DynamicFontData" id=6]
 [ext_resource path="res://playback/actor_info.tscn" type="PackedScene" id=7]
+[ext_resource path="res://SkillTreePanel.gd" type="Script" id=8]
+
+[sub_resource type="DynamicFont" id=3]
+size = 24
+font_data = ExtResource( 6 )
 
 [sub_resource type="DynamicFont" id=1]
 size = 24
@@ -97,6 +102,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = 1024.0
 margin_bottom = 597.0
+script = ExtResource( 8 )
 
 [node name="ViewSkillTree" parent="SkillTreePanel" instance=ExtResource( 4 )]
 unique_name_in_owner = true
@@ -112,6 +118,24 @@ margin_top = 20.0
 margin_right = 995.0
 margin_bottom = 69.0
 text = "Close"
+
+[node name="FloorNumber" type="Label" parent="."]
+unique_name_in_owner = true
+margin_left = 260.0
+margin_top = 12.0
+margin_right = 386.0
+margin_bottom = 39.0
+custom_fonts/font = SubResource( 3 )
+text = "FLOOR: "
+
+[node name="SkillPoints" type="Label" parent="."]
+unique_name_in_owner = true
+margin_left = 426.0
+margin_top = 12.0
+margin_right = 552.0
+margin_bottom = 39.0
+custom_fonts/font = SubResource( 3 )
+text = "SKILL POINTS"
 
 [node name="actor_info" parent="." instance=ExtResource( 7 )]
 anchor_left = 0.5

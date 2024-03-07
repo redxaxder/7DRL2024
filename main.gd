@@ -55,6 +55,8 @@ func _ready():
 # warning-ignore:return_value_discarded
 	get_node("%ConsumablesContainer").connect("consume_invisibility", self, "sneak")
 	get_node("%history_view").show_extra_history = show_extra_history
+	get_node("%ViewSkillTree").connect("skill_unlocked",self,"update_skill_points")
+	
 	new_game()
 	
 	var timer : Timer = get_node("%ConsumablesCounter")
@@ -62,7 +64,10 @@ func _ready():
 # warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
 
-
+func update_skill_points():
+	print("update_skill_points")
+	get_node("%ViewSkillTree").update_num_skills_to_unlock(progress)
+	get_node("%SkillPoints").text = "Skill Points: "+str(get_node("%ViewSkillTree").num_skills_to_unlock)
 
 func transfer_reward():
 	if gonogo && !gameover:
@@ -83,13 +88,13 @@ func new_game():
 	skill_tree.hand_rolled_skill_tree()
 	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = Actor.get_stat_block(Actor.Type.Player)
-	player_hp = 20
+	player_hp = player_stats.max_hp()
 	progress = 0
 
 	get_node("%ViewSkillTree").player_stats = player_stats
 	randomize()
-	make_encounter()
 	get_node("%ConsumablesContainer").init_starting_consumables()
+	make_encounter()
 
 
 func history_scroll(s: EncounterState, what: EncounterEvent):
@@ -105,6 +110,8 @@ func update_button_visibility():
 	get_node("%GO").visible = gonogo and !gameover
 	get_node("%RESTART").visible = gameover
 	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
+	get_node("%FloorNumber").visible = gonogo and !$SkillTreePanel.visible
+	get_node("%SkillPoints").visible = gonogo
 
 func apply_player_mods(s: EncounterState) -> EncounterState:
 	var st = DataUtil.deep_dup(s)
@@ -161,6 +168,8 @@ func restart():
 func make_encounter(use_seed: int = 0):
 	progress += 1
 	has_seen_end = false
+	update_skill_points()
+	get_node("%FloorNumber").text = "Floor: " + str(progress)
 	var encounter_seed = use_seed
 	if encounter_seed == 0:
 		encounter_seed = randi()

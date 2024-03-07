@@ -1,8 +1,11 @@
 extends Control
 
+signal skill_unlocked
+
 export var skill_tree: Resource
 
 var num_skills_to_unlock: int = 0
+var progress: int = 0
 var player_stats: StatBlock
 var selected_skill : Skill
 var unlocked_skills: Dictionary
@@ -152,8 +155,7 @@ func is_available(skill: Skill):
 	
 
 func update_unlock_button(skill: Skill):
-	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(skill.name) && is_available(skill)
-	#&& num_skills_to_unlock > 0
+	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(skill.name) && is_available(skill) && num_skills_to_unlock > 0
 
 
 func get_skill(i: int, j: int) -> Skill:
@@ -170,6 +172,8 @@ func unlockSkill():
 		skill_tree.unlock(selected_skill)
 		recalculate_player_bonuses()
 		_draw()
+		update_num_skills_to_unlock(progress)
+		emit_signal("skill_unlocked")
 	
 func recalculate_player_bonuses():
 	player_stats.clear_bonuses()
@@ -177,7 +181,11 @@ func recalculate_player_bonuses():
 		if skill.kind == Skill.Kind.Bonus:
 			player_stats.apply_bonus(skill.bonus)
 
-func update_num_skills_to_unlock(progress: int):
+func update_num_skills_to_unlock(p_progress: int):
+	progress = p_progress
+	print("total progress "+str(progress))
+	print("total_skills_to_unlock " + str(total_skills_to_unlock(progress)))
+	print("unlocked_skills.keys().size() " + str(unlocked_skills.keys().size()))
 	num_skills_to_unlock = total_skills_to_unlock(progress) - unlocked_skills.keys().size()
 	#update_unlock_button()
 
