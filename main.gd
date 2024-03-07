@@ -111,6 +111,7 @@ func update_button_visibility():
 	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
 	get_node("%FloorNumber").visible = gonogo and !$SkillTreePanel.visible
 	get_node("%SkillPoints").visible = gonogo
+	get_node("%OpenSkillTree").visible = gonogo
 
 func apply_player_mods(s: EncounterState) -> EncounterState:
 	var st = DataUtil.deep_dup(s)
