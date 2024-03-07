@@ -11,7 +11,6 @@ var tiles: Array
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print('in map')
 	pass # Replace with function body.
 
 func generate() -> bool:
@@ -64,7 +63,6 @@ func list_passable() -> Array:
 
 func is_map_connected(num_passbles: int) -> bool:
 	var island_size = get_connected_island(random_passable_tile(null)).size()
-	print("island_size: {0} passables: {1}".format([island_size, num_passbles]))
 	return island_size == num_passbles
 	
 func get_connected_island(starting_tile: Tile):

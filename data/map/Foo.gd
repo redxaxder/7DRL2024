@@ -11,7 +11,6 @@ var tiles: Array;
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print('in map')
 	pass # Replace with function body.
 
 func generate():

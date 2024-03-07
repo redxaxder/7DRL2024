@@ -147,9 +147,7 @@ func is_available(skill: Skill):
 	]
 	for n in neighbors:
 		var neighbor = get_skill(loc.x + n.x, loc.y + n.y)
-		print(neighbor)
 		if neighbor && unlocked_skills.has(neighbor.name):
-			print("skill available: " + skill.name)
 			return true
 	return false
 	
@@ -183,9 +181,6 @@ func recalculate_player_bonuses():
 
 func update_num_skills_to_unlock(p_progress: int):
 	progress = p_progress
-	print("total progress "+str(progress))
-	print("total_skills_to_unlock " + str(total_skills_to_unlock(progress)))
-	print("unlocked_skills.keys().size() " + str(unlocked_skills.keys().size()))
 	num_skills_to_unlock = total_skills_to_unlock(progress) - unlocked_skills.keys().size()
 	#update_unlock_button()
 

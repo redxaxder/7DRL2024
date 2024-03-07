@@ -158,16 +158,86 @@ func hand_rolled_skill_tree():
 #		"power": 20,
 #		}))
 #	append_skill(abil2, 0)
+
+
+	# Deal 10 damage to an enemy in a 5 radius (4 cooldown)
+	append_and_create_ability({
+		"trigger": SkillsCore.Trigger.Action,
+		"effect_type": SkillsCore.EffectType.Damage,
+		"ability_range": 0,
+		"power": 10,
+		"radius": 1,
+		"cooldown_time": 4,
+		"targets": SkillsCore.Target.Enemies,
+		"modifiers": [
+			# as a rule, single digit coefficients on mods
+			Ability.mod(Stat.Kind.Health, Ability.ModParam.Radius, 10)
+		],
+		"row": 2
+	})
+	
 	append_skill(create_ability_skill(aoe_test_ability), 1)
-#	append_skill(create_ability_skill(build_ability({
-#		"label": SkillName.generate_name(),
-#
-#		})), 2)
+	
 	append_skill(create_bonus_skill(Stat.Kind.Brawn, 5, SkillName.generate_name()), 0)
 	append_skill(create_bonus_skill(Stat.Kind.Brains, 5, SkillName.generate_name()), 1)
 	append_skill(create_bonus_skill(Stat.Kind.Guts, 5, SkillName.generate_name()), 2)
 	append_skill(create_bonus_skill(Stat.Kind.Eyesight, 5, SkillName.generate_name()), 0)
 	append_skill(create_bonus_skill(Stat.Kind.Footwork, 5, SkillName.generate_name()), 1)
 	append_skill(create_bonus_skill(Stat.Kind.Hustle, 5, SkillName.generate_name()), 2)
+	
+	
+	var comment = """
+	
+		-Deal 10 damage to an enemy in a 5 radius (4 cooldown)
+		^^^ DONE ^^^
+		-When entering level, deal 20 damage to enemies in 2 range
+		-When you move, buff footwork by 1 (min cooldown)
+		-Deal 5 damage to enemies in a 3 radius aoe around the player
+		-Deal 10 damage to enemies in a 2 tile radius, 4 range (10 ccooldown)
+		-Buff brawn by 1 (5 cooldown)
+		-Whenever an enemy dies, buff guts by 2
+		-Whenever you miss an enemy, buff eyesight by 2
+		-Whenever you take  damage, summon a blorb (3 cooldown)
+		-Whenever you take damage reducing you to less than 25% hp
+			deal 20 damage to enemies in range 1
+		
+	
+		damage
+		move
+		attack
+		hit
+		target dies
+		
+		DamageDealt, 
+		DamageRecieved,
+		Death,
+		#cheap to add
+		# movement
+		# uses ability
+		# misses
+		# encounter start
+		# fixed threshold (25%) "bloodied"
+		# attack
+		monster summon
 
+	
+	enum EffectType
+		Damage
+		StatBuff
+		summons
+		accelerate turn priority (via "bonus time")
+		
+	
+	"""
 
+# syntactic sugar over like 3 calls to make an ability
+func append_and_create_ability(opt: Dictionary): 
+	opt.label = SkillName.generate_name()
+	var modifiers = opt.modifiers
+	var row = opt.row
+	opt.erase('modifiers')
+	opt.erase('row')
+	var ability: Ability = build_ability(opt)
+	ability.modifiers = modifiers
+	append_skill(create_ability_skill(ability), row)
+	

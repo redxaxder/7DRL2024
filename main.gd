@@ -65,7 +65,6 @@ func _ready():
 	timer.connect("timeout", self, "transfer_reward")
 
 func update_skill_points():
-	print("update_skill_points")
 	get_node("%ViewSkillTree").update_num_skills_to_unlock(progress)
 	get_node("%SkillPoints").text = "Skill Points: "+str(get_node("%ViewSkillTree").num_skills_to_unlock)
 

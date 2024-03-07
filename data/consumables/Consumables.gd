@@ -70,15 +70,12 @@ func _ready():
 		unhover_button(config, better_button)
 
 func win_rewards():
-	print("win rewards reward count: "+str(rewards.size()))
 	won_rewards = DataUtil.dup_array(rewards)
 	pass
 		
 func transfer_reward():
 	var r = won_rewards.pop_back()
 	if(r):
-		print("transfer: "+(r))
-		consumable_inventory[r] += 1
 		CONSUMABLE_TYPES[r].shake = 30
 		
 func init_rewards():
@@ -160,8 +157,6 @@ func init_rewards():
 		better_button.connect("mouse_exited",self,"unhover_button", [config, better_button])
 		
 		unhover_button(config, better_button)
-		
-	print("reward count: "+str(rewards.size()))
 		
 func init_starting_consumables():
 	for c in CONSUMABLE_TYPES:
