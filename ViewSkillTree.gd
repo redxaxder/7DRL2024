@@ -71,6 +71,7 @@ func set_skills(st: SkillTree):
 			button.connect("mouse_entered", self, 'hover_button', [skill, button])
 			#button.connect("mouse_exited", self, 'unhover_button', [skill, button])
 			button.set_input(skill)
+			button.mouse_filter = Control.MOUSE_FILTER_PASS
 			containers[i].add_child(button)
 			button.rect_min_size = Vector2(80, 80)
 			
@@ -99,7 +100,6 @@ func click_skill(skill, button):
 
 func _draw():
 	
-	print("view skill tree draw")
 	# TODO:
 	#	-move skill creation to separate class?
 	# 	-draw lines between skills
