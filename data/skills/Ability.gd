@@ -85,6 +85,7 @@ func get_modifier_scaling_desc(modified_param : int ):
 				Stat.NAME[m.modifier_stat]
 			])
 
+const ELEMENT_NAME = ["physical", "fire", "ice", "poison"]
 func describe_effect(stats: StatBlock) -> String:
 	var scaled_power = power(stats)
 	var base_power = effect.power
@@ -98,22 +99,23 @@ func describe_effect(stats: StatBlock) -> String:
 				
 	match effect.effect_type:
 		SkillsCore.EffectType.Damage:
-			return "deal {0}{1} damage".format([
+			return "deal {0}{1} {2} damage".format([
 				power(stats),
-				scaled_string
+				scaled_string,
+				ELEMENT_NAME[effect.element]
 			])
 		SkillsCore.EffectType.StatBuff:
-			var buff = "buff" if effect.power > 0 else "debuff"
+			var plus = "+" if effect.power > 0 else ""
 			
 			var power_string = "{0}{1}".format([
 				power(stats),
 				scaled_string
 			])
 			
-			return "add {power} {stat} {buff}".format({
-				"buff": buff,
+			return "apply {plus}{power} {stat}".format({
 				"stat": Stat.NAME[effect.mod_stat],
-				"power": power_string 
+				"power": power_string,
+				"plus": plus
 			})
 	assert(false, "missing effect description")
 	return ""
@@ -230,7 +232,7 @@ func generate_description(stats: StatBlock) -> String:
 	if activation.trigger == SkillsCore.Trigger.Automatic:
 		text += "{activation_text}, ".format(dict)
 	else:
-		text += "On your turn, "
+		text += "As an action, "
 		
 	text += "{effect_text}".format(dict)
 		
