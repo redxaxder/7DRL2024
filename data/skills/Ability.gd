@@ -130,11 +130,20 @@ func describe_target(target_filter:int, radius: float, trigger_aim : int, trigge
 			SkillsCore.Target.Allies: return "allies"
 			SkillsCore.Target.Enemies: return "enemies"
 			SkillsCore.TargetAny: return "all targets"
-
+	
+	var who_affected = ""
+	match target_filter:
+		SkillsCore.Target.Allies: who_affected = "allies"
+		SkillsCore.Target.Enemies: who_affected = "enemies"
+		SkillsCore.TargetAny: who_affected = "targets"
+	
+	var where_effect = ""
+	var is_radius = ""
+	
 	if radius > 0:
 		if(trigger_aim == SkillsCore.TriggerAim.Self):
 			match target_filter:
-				SkillsCore.Target.Allies: return "allies around you"
+				SkillsCore.Target.Allies: return "nearby allies"
 				SkillsCore.Target.Enemies: return "enemies around you"
 				SkillsCore.TargetAny: return "anyone around you"
 		if(trigger_aim == SkillsCore.TriggerAim.EventSource ||
@@ -156,9 +165,9 @@ func describe_target(target_filter:int, radius: float, trigger_aim : int, trigge
 			return "them"
 		if(trigger_aim == SkillsCore.TriggerAim.Random):
 			match target_filter:
-				SkillsCore.Target.Allies: return "a random ally"
-				SkillsCore.Target.Enemies: return "a random enemy"
-				SkillsCore.TargetAny: return "a random unit"
+				SkillsCore.Target.Allies: return "an ally"
+				SkillsCore.Target.Enemies: return "an enemy"
+				SkillsCore.TargetAny: return "a unit"
 	assert(false, "unhandled target")
 	return ""
 	

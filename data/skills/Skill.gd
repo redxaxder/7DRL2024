@@ -118,7 +118,7 @@ static func random_ability(skill_seed: int) -> Ability:
 	
 	
 	var act: Activation = Activation.new()
-	if rng.randf() < 1: #0.5:
+	if rng.randf() < 0.5:
 		act.trigger = SkillsCore.Trigger.Action
 		power += 3*sign(power)
 		var mod_table = [	Ability.ModParam.CooldownTime,
@@ -126,10 +126,7 @@ static func random_ability(skill_seed: int) -> Ability:
 		if !(eff.targets == SkillsCore.Target.Self):
 			mod_table.append(Ability.ModParam.AbilityRange)
 			mod_table.append(Ability.ModParam.Radius)
-		var rolls = []
 		var n = mod_table.size()
-		rolls.resize(n)
-		rolls.fill(0)
 
 		var num_rolls = 6
 		var num_mods = 0
@@ -146,7 +143,7 @@ static func random_ability(skill_seed: int) -> Ability:
 		a.modifiers = []
 		for _i in num_mods:
 			var mod_param = Ability.ModParam.Power
-			if _i > 0:
+			if _i > 0 or (randf() < 0.3):
 				mod_param = mod_table[rng.randi() % n]
 			var mod_stat = rng.randi() % 6
 			if a.modifiers.size() > 0:
@@ -156,6 +153,9 @@ static func random_ability(skill_seed: int) -> Ability:
 					break
 			a.modifiers.append(Ability.mod(mod_stat, mod_param, 4))
 
+		var rolls = []
+		rolls.resize(n)
+		rolls.fill(0)
 		for _i in num_rolls:
 			rolls[rng.randi() % n] += 1
 		for i in n:
@@ -173,17 +173,73 @@ static func random_ability(skill_seed: int) -> Ability:
 			act.ability_range = 0
 		elif act.radius == 0:
 			act.ability_range += 1
-#			var mod = Ability.mod(mod_stat, mod_param, coeff)
-		
-#		# radius, range, cooldown, power
-#		for _i in 6:
-#			if
 	else: 
 		act.trigger = SkillsCore.Trigger.Automatic
 		act.filter = rng.randi() % Activation.Filter.MAX
+		
+		act.trigger_aim = SkillsCore.TriggerAim.Random if rng.randf() < 0.4 \
+			else SkillsCore.TriggerAim.Self if rng.randf() < 0.1 \
+			else SkillsCore.TriggerAim.EventSource if rng.randf() < 0.5 \
+			else SkillsCore.TriggerAim.EventTarget
+		match act.filter: 
+			Activation.Filter.Death:
+				act.filter_actor = SkillsCore.Target.Enemy
+			Activation.Filter.Start:
+				act.filter_actor = SkillsCore.Target.Self
+			Activation.Filter.Bloodied:
+				act.filter_actor = SkillsCore.Target.Self
+			_:
+				act.filter_actor = SkillsCore.TargetAny if randf() < 0.2 \
+					else SkillsCore.Target.Self if randf() < 0.5 \
+					else SkillsCore.Target.Enemies
+		var mod_table = [Ability.ModParam.Power]
+		var num_rolls = 3
+		var num_mods = 0
+		if (eff.targets == SkillsCore.Target.Self):
+			act.trigger_aim = SkillsCore.Target.Self
+			act.radius = 0
+		else:
+			act.radius = 1
+			mod_table.append(Ability.ModParam.Radius)
+		if act.trigger_aim == SkillsCore.TriggerAim.Random:
+			mod_table.append(Ability.ModParam.AbilityRange)
+			num_rolls += 3
 		act.cooldown_time = 1
-		power *= TRIGGER_PREMIUM[act.filter]
-		#TODO
+
+		num_rolls += TRIGGER_PREMIUM[act.filter]
+		var n = mod_table.size()
+
+		if randf() < 0.5:
+			num_rolls += 3
+		else:
+			num_mods += 1
+
+		var rolls = []
+		rolls.resize(n)
+		rolls.fill(0)
+		for _i in num_rolls:
+			rolls[rng.randi() % n] += 1
+
+		for i in n:
+			var rolled = rolls[i]
+			match mod_table[i]:
+				Ability.ModParam.Power:
+					power *= pow(1.20, rolled)
+				Ability.ModParam.AbilityRange:
+					act.ability_range = rolled
+				Ability.ModParam.Radius:
+					act.radius = ceil(float(rolled) /2)
+		if eff.targets == SkillsCore.Target.Self:
+			act.ability_range = 0
+		elif act.radius == 0:
+			act.ability_range += 1
+
+
+		a.modifiers = []
+		for _i in num_mods:
+			var mod_param = mod_table[rng.randi() % n]
+			var mod_stat = rng.randi() % 6
+			a.modifiers.append(Ability.mod(mod_stat, mod_param, 4))
 
 	eff.power = int(power)
 	a.activation = act
@@ -192,14 +248,14 @@ static func random_ability(skill_seed: int) -> Ability:
 
 # extra stuff for things that activate rarely
 const TRIGGER_PREMIUM = {
-	Activation.Filter.DamageDealt: 1, 
-	Activation.Filter.DamageReceived: 3,
-	Activation.Filter.Death: 5,
-	Activation.Filter.Movement: 1,
+	Activation.Filter.DamageDealt: 0, 
+	Activation.Filter.DamageReceived: 1,
+	Activation.Filter.Death: 3,
+	Activation.Filter.Movement: 0,
 	Activation.Filter.Start: 10,
-	Activation.Filter.Bloodied: 20,
-	Activation.Filter.Miss: 5,
-	Activation.Filter.Dodge: 5,
-	Activation.Filter.Attack: 5,
+	Activation.Filter.Bloodied: 15,
+	Activation.Filter.Miss: 2,
+	Activation.Filter.Dodge: 2,
+	Activation.Filter.Attack: 2,
 	}
 
