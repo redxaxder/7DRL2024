@@ -148,6 +148,11 @@ func no_go():
 	make_encounter()
 
 
+func _unhandled_input(event):
+	if event.is_action_pressed("toggle"):
+		if get_node("%GO").visible == true: go()
+	if event.is_action_pressed("return"):
+		if get_node("%DONE").visible == true: done()
 
 func done():
 	var final_player_state = encounter_result.get_player()
@@ -232,7 +237,7 @@ func make_encounter(use_seed: int = 0):
 
 const DEFAULT_WEIGHT = 100
 const DEFAULT_SPREAD = 20
-const WHOEVER = [
+var WHOEVER: Array = [ \
 	Actor.Type.Blorp, 
 	Actor.Type.Snake,
 	Actor.Type.Goblin,
