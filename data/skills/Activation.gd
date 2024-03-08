@@ -40,6 +40,7 @@ enum Filter{
 	# on-crit
 	#medium
 	# overkill
+	MAX
 	}
 enum FilterFocus { Source, Target }
 const FILTER_FOCUS = [
