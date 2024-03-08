@@ -64,7 +64,7 @@ func update_texture():
 	icon = t
 	
 func should_flip_x():
-	if skill.bonus:
+	if skill.bonuses:
 		return true;
 	if skill.ability && skill.ability.effect:
 		if skill.ability.effect.element == Elements.Kind.Physical:
@@ -77,7 +77,7 @@ func should_flip_x():
 			return true
 	
 func should_flip_y():
-	if skill.bonus:
+	if skill.bonuses:
 		return true;
 	if skill.ability && skill.ability.effect:
 		if skill.ability.effect.element == Elements.Kind.Physical:
@@ -90,7 +90,7 @@ func should_flip_y():
 			return true
 	
 func get_big_off(x,y, d):
-	if skill.bonus:
+	if skill.bonuses:
 		pass
 	if skill.ability && skill.ability.effect:
 		if skill.ability.effect.element == Elements.Kind.Physical:
@@ -99,13 +99,6 @@ func get_big_off(x,y, d):
 			return ((1 - (d - 1) / 6)*0.3 + 0.2) < rng.randf()
 		elif skill.ability.effect.element == Elements.Kind.Fire:
 			return pow((float(max(0,y+0.5 -x*0.5))/full_size), 1) < rng.randf()
-			# 0 means => OFF
-			# 1 means => ON
-			
-			# 0,0 => 0
-			# 4,0 => 1
-			# 0,8 => 1
-			# 4,8 => 1
 		elif skill.ability.effect.element == Elements.Kind.Ice:
 			pass
 	return (rng.randf()>.4)
@@ -116,7 +109,7 @@ func dist(a: Vector2, b: Vector2) -> float:
 func get_on(x, y, xx, yy, d):
 	var inner_d = dist(Vector2(float(xx),float(yy)), Vector2(3.5, 3.5))
 	var full_d = dist(Vector2(float(x*scale + xx),float(y*scale + yy)), Vector2(3.5*scale, 3.5*scale))
-	if skill.bonus:
+	if skill.bonuses:
 		return (3 - d + cos(y*scale + yy))  < rng.randf()
 	if skill.ability && skill.ability.effect:
 		if skill.ability.effect.element == Elements.Kind.Physical:
