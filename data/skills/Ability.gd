@@ -282,7 +282,7 @@ func describe_activation_condition() -> String:
 			optional_s
 		])
 	elif activation.filter == Activation.Filter.Attack:
-		return "Whenever {0} attack{1}".format([
+		return "Whenever {0} land{1} an attack".format([
 			filter_actor_desc,
 			optional_s
 		])
