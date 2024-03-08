@@ -40,9 +40,11 @@ func append_skill(skill: Skill, row: int):
 func unlock(skill: Skill):
 	unlocks[skill] = true
 
-static func create_bonus(stat, power: int) -> Bonus:
-	var skill = Bonus.new()
-	skill.initialize_bonus(stat, power)
+static func random_bonus_skill(skill_name: String, rng_seed: int) -> Skill:
+	var skill = Skill.new()
+	skill.kind = Skill.Kind.Bonus
+	skill.name = skill_name
+	skill.bonuses = Skill.random_bonus(rng_seed)
 	return skill
 
 static func create_ability_skill(ability: Ability) -> Skill:
@@ -50,14 +52,6 @@ static func create_ability_skill(ability: Ability) -> Skill:
 	skill.name = ability.name
 	skill.kind = Skill.Kind.Ability
 	skill.ability = ability
-	return skill
-	
-static func create_bonus_skill(stat: int, power: int, skill_name: String) -> Skill:
-	var bonus: Bonus = create_bonus(stat, power)
-	var skill = Skill.new()
-	skill.name = skill_name
-	skill.kind = Skill.Kind.Bonus
-	skill.bonuses = [bonus]
 	return skill
 
 static func build_ability(d: Dictionary) -> Ability:
@@ -176,7 +170,10 @@ func hand_rolled_skill_tree():
 		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.AbilityRange, 5)]
 	})
 	
-	append_skill(create_bonus_skill(Stat.Kind.Brawn, 5, SkillName.generate_name()), 0)
+	append_skill(
+		random_bonus_skill(SkillName.generate_name(), randi())
+		, 0
+		)
 	
 	append_and_create_ability({
 		"label": "Fiery Fire",
@@ -199,7 +196,10 @@ func hand_rolled_skill_tree():
 		"modifiers": [Ability.mod(Stat.Kind.Brains, Ability.ModParam.Power, 1)]
 	})
 	
-	append_skill(create_bonus_skill(Stat.Kind.Eyesight, 5, SkillName.generate_name()), 0)
+	append_skill(
+		random_bonus_skill(SkillName.generate_name(), randi())
+		, 0
+		)
 	
 	# Deal 10 damage to an enemy in a 5 radius (4 cooldown)
 	append_and_create_ability({
@@ -241,7 +241,10 @@ func hand_rolled_skill_tree():
 		"modifiers": [Ability.mod(Stat.Kind.Damage, Ability.ModParam.Power, 1)]
 	})
 	
-	append_skill(create_bonus_skill(Stat.Kind.Brains, 5, SkillName.generate_name()), 1)
+	append_skill(
+		random_bonus_skill(SkillName.generate_name(), randi()),
+		1
+		)
 	
 	append_and_create_ability({
 		"label": "Two Step",
@@ -263,7 +266,10 @@ func hand_rolled_skill_tree():
 		"modifiers": [Ability.mod(Stat.Kind.Evasion, Ability.ModParam.CooldownTime, 2)]
 	})
 	
-	append_skill(create_bonus_skill(Stat.Kind.Footwork, 5, SkillName.generate_name()), 1)
+	append_skill(
+		random_bonus_skill(SkillName.generate_name(), randi()),
+		1
+		)
 	
 	append_and_create_ability({
 		"label": "Peerless Sleight",
@@ -307,7 +313,10 @@ func hand_rolled_skill_tree():
 		"cooldown_time":	100,
 	})
 	
-	append_skill(create_bonus_skill(Stat.Kind.Guts, 5, SkillName.generate_name()), 2)
+	append_skill(
+		random_bonus_skill(SkillName.generate_name(), randi()),
+		2
+		)
 	
 	append_and_create_ability({
 		"label": "Poison Overflow",
@@ -330,7 +339,10 @@ func hand_rolled_skill_tree():
 	
 	# todo: don't display cooldown time for start
 	
-	append_skill(create_bonus_skill(Stat.Kind.Hustle, 5, SkillName.generate_name()), 2)
+	append_skill(
+		random_bonus_skill(SkillName.generate_name(), randi()),
+		2
+		)
 	
 	append_and_create_ability({
 		"label": "Rake the Coals",

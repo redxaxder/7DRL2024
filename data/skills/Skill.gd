@@ -32,27 +32,45 @@ func get_color():
 	return RandomUtil.color_hash(name)
 
 
-#const STAT_PREMIUMS = { \
-#	Brawn,
-#	Brains,
-#	Guts,
-#	Eyesight,
-#	Footwork,
-#	Hustle, 
-#	Accuracy,
-#	Crit,
-#	Evasion,
-#	Damage,
-#	Speed,
-#	Health,
-#	Physical,
-#	Fire,
-#	Ice,
-#	Poison,
-#	PhysicalResist,
-#	FireResist,
-#	IceResist,
-#	PoisonResist,
-#}
-func random_bonus_skill(skill_seed: int):
-	return null
+const STAT_PREMIUM = { \
+	Stat.Kind.Brawn: 1,
+	Stat.Kind.Brains: 1,
+	Stat.Kind.Guts: 1,
+	Stat.Kind.Eyesight: 1,
+	Stat.Kind.Footwork: 1,
+	Stat.Kind.Hustle: 1,
+	Stat.Kind.Accuracy: 3,
+	Stat.Kind.Crit: 3,
+	Stat.Kind.Evasion: 3,
+	Stat.Kind.Damage: 3,
+	Stat.Kind.Speed: 3,
+	Stat.Kind.Health: 3,
+	Stat.Kind.Physical: 2,
+	Stat.Kind.Fire: 2,
+	Stat.Kind.Ice: 2,
+	Stat.Kind.Poison: 2,
+	Stat.Kind.PhysicalResist: 5,
+	Stat.Kind.FireResist: 5,
+	Stat.Kind.IceResist: 5,
+	Stat.Kind.PoisonResist: 5,
+}
+static func random_bonus(skill_seed: int) -> Array:
+	var rng = RandomNumberGenerator.new()
+	rng.seed = skill_seed
+	var plus = Bonus.new()
+	var magnitude = rng.randi() % 4
+	var variance = (rng.randf() - 0.5) /6
+	var power = (1 + magnitude) * 10 * (1+ variance)
+	plus.stat = rng.randi() % Stat.Kind.MAX
+	plus.power = power * STAT_PREMIUM[plus.stat]
+	if magnitude == 0: return [plus]
+	var minus = Bonus.new()
+	var minus_stats = []
+	for s in Stat.Kind.MAX:
+		if s == plus.stat: continue
+		if Stat.MINIMUM[s] == 0: continue
+		minus_stats.append(s)
+	minus.stat = minus_stats[rng.randi() % minus_stats.size()]
+	minus.power = plus.power * -0.5
+	minus.power *= STAT_PREMIUM[minus.stat]
+	return  [plus, minus]
