@@ -229,9 +229,9 @@ func hand_rolled_skill_tree():
 		"effect_type":	SkillsCore.EffectType.Damage,
 		"power": 5,
 			# ***EFFECT AIM***
-		"trigger_aim": 	SkillsCore.TriggerAim.EventTarget,
+		"trigger_aim": 	SkillsCore.TriggerAim.EventSource,
 		"ability_range": 0,
-		"radius": 1,
+		"radius": 0,
 		"targets": 		SkillsCore.Target.Enemies,
 			# ***TRIGGER***
 		"trigger": 		SkillsCore.Trigger.Automatic,
@@ -342,12 +342,10 @@ func hand_rolled_skill_tree():
 		"power":			10,
 			# ***EFFECT AIM***
 		"trigger_aim": 	SkillsCore.TriggerAim.Random,
-		"ability_range":  4,
-		"radius":		1,
 		"targets": 		SkillsCore.Target.Self,
 			# ***TRIGGER***
 		"trigger": 		SkillsCore.Trigger.Automatic,
-		"filter": 		Activation.Filter.DamageReceived,
+		"filter": 		Activation.Filter.DamageDealt,
 		"filter_actor": 	SkillsCore.Target.Self,
 		"cooldown_time":	15,
 	})
@@ -456,6 +454,10 @@ func append_and_create_ability(opt: Dictionary):
 	var modifiers = []
 	if opt.has('modifiers') :
 		modifiers = opt.modifiers
+	if !opt.has('ability_range'):
+		opt['ability_range'] = 0
+	if !opt.has('radius'):
+		opt['radius'] = 0
 	var row = opt.row
 	opt.erase('modifiers')
 	opt.erase('row')

@@ -16,3 +16,17 @@ func generate_description(stats: StatBlock) -> String:
 			return bonus.generate_description()
 	assert(false)
 	return "Error: no description"
+
+func get_color():
+	if bonus:
+		return Color("#b700ff")
+	if ability && ability.effect:
+		if ability.effect.element == Elements.Kind.Physical:
+			return Color("#e7ad47")
+		elif ability.effect.element == Elements.Kind.Poison:
+			return Color("#24ff7a")
+		elif ability.effect.element == Elements.Kind.Fire:
+			return Color("#ff2503")
+		elif ability.effect.element == Elements.Kind.Ice:
+			return Color("#3eb7ff")
+	return RandomUtil.color_hash(name)

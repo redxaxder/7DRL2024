@@ -86,13 +86,11 @@ func describe_effect(stats: StatBlock) -> String:
 				
 	match effect.effect_type:
 		SkillsCore.EffectType.Damage:
-			return "Deal {0}{1} damage".format([
+			return "deal {0}{1} damage".format([
 				power(stats),
 				scaled_string
 			])
 		SkillsCore.EffectType.StatBuff:
-			var increase = "Add"
-			if effect.power < 0: increase = "Decrease"
 			var buff = "buff" if effect.power > 0 else "debuff"
 			
 			var power_string = "{0}{1}".format([
@@ -100,7 +98,7 @@ func describe_effect(stats: StatBlock) -> String:
 				scaled_string
 			])
 			
-			return "Add {power} {stat} {buff}".format({
+			return "add {power} {stat} {buff}".format({
 				"buff": buff,
 				"stat": Stat.NAME[effect.mod_stat],
 				"power": power_string 
@@ -108,12 +106,40 @@ func describe_effect(stats: StatBlock) -> String:
 	assert(false, "missing effect description")
 	return ""
 			
-func describe_target(target_filter:int) -> String:
-	match target_filter:
-		SkillsCore.Target.Self: return "self"
-		SkillsCore.Target.Allies: return "ally"
-		SkillsCore.Target.Enemies: return "enemy"
-		SkillsCore.TargetAny: return "any"
+
+			
+			
+func describe_target(target_filter:int, radius: float, trigger_aim : int) -> String:
+	if target_filter == SkillsCore.Target.Self:
+		return "yourself"
+	if radius > 0:
+		if(trigger_aim == SkillsCore.TriggerAim.Self):
+			match target_filter:
+				SkillsCore.Target.Allies: return "allies around you"
+				SkillsCore.Target.Enemies: return "enemies around you"
+				SkillsCore.TargetAny: return "anyone around you"
+		if(trigger_aim == SkillsCore.TriggerAim.EventSource ||
+		trigger_aim == SkillsCore.TriggerAim.EventTarget):
+			match target_filter:
+				SkillsCore.Target.Allies: return "allies around them"
+				SkillsCore.Target.Enemies: return "enemies around them"
+				SkillsCore.TargetAny: return "anyone around them"
+		if(trigger_aim == SkillsCore.TriggerAim.Random):
+			match target_filter:
+				SkillsCore.Target.Allies: return "random allies"
+				SkillsCore.Target.Enemies: return "random enemies"
+				SkillsCore.TargetAny: return "random units"
+	else: #radius 0
+		if(trigger_aim == SkillsCore.TriggerAim.Self):
+			return "yourself";
+		if(trigger_aim == SkillsCore.TriggerAim.EventSource ||
+		trigger_aim == SkillsCore.TriggerAim.EventTarget):
+			return "them"
+		if(trigger_aim == SkillsCore.TriggerAim.Random):
+			match target_filter:
+				SkillsCore.Target.Allies: return "a random ally"
+				SkillsCore.Target.Enemies: return "a random enemy"
+				SkillsCore.TargetAny: return "a random unit"
 	assert(false, "unhandled target")
 	return ""
 	
@@ -166,7 +192,7 @@ func generate_description(stats: StatBlock) -> String:
 	
 	dict["range"] = describe_range(stats)
 	dict["radius"] = describe_radius(stats)
-	dict["target"] = describe_target(effect.targets)
+	dict["target"] = describe_target(effect.targets, radius(stats), activation.trigger_aim)
 	dict["activation_text"] = describe_activation_condition()
 	dict["effect_text"] = describe_effect(stats)
 	dict["cooldown"] = describe_cooldown(stats)
@@ -175,8 +201,10 @@ func generate_description(stats: StatBlock) -> String:
 	# text += "{trigger}\n".format(dict)
 	if activation.trigger == SkillsCore.Trigger.Automatic:
 		text += "{activation_text}, ".format(dict)
+		text += "{effect_text}".format(dict)
+	else:
+		text += "{effect_text}".format(dict).capitalize()
 		
-	text += "{effect_text}".format(dict)
 	text += " to {target}.\n".format(dict)
 	
 #	for m in modifiers:
@@ -197,9 +225,67 @@ func generate_description(stats: StatBlock) -> String:
 	return text
 
 
+func describe_filter_actor(target_filter:int) -> String:
+	match target_filter:
+		SkillsCore.Target.Self: return "you"
+		SkillsCore.Target.Allies: return "an ally"
+		SkillsCore.Target.Enemies: return "an enemy"
+		SkillsCore.TargetAny: return "anyone"
+	assert(false, "unhandled target")
+	return ""
+
+func describe_filter_actor_possessive(target_filter:int) -> String:
+	match target_filter:
+		SkillsCore.Target.Self: return "your"
+		SkillsCore.Target.Allies: return "an ally's"
+		SkillsCore.Target.Enemies: return "an enemy's"
+		SkillsCore.TargetAny: return "anyone's"
+	assert(false, "unhandled target")
+	return ""
+
 func describe_activation_condition() -> String:
-	if activation.filter == Activation.Filter.DamageReceived:
-		return "whenever damage is dealt"
-	else:
-		return "whenever else"
-	
+	var filter_actor_desc = describe_filter_actor(activation.filter_actor)
+	var filter_actor_desc_ = describe_filter_actor(activation.filter_actor)
+	var optional_s = "" if filter_actor_desc == "you" else "s"
+	if activation.filter == Activation.Filter.DamageDealt:
+		return "Whenever {0} deal{1} damage".format([
+			filter_actor_desc,
+			optional_s
+		])
+	elif activation.filter == Activation.Filter.DamageReceived:
+		return "Whenever damage is dealt to {0}".format([
+			describe_filter_actor(activation.filter_actor)
+		])
+	elif activation.filter == Activation.Filter.Death:
+		return "Whenever {0} die{1}".format([
+			filter_actor_desc,
+			optional_s
+		])
+	elif activation.filter == Activation.Filter.Movement:
+		return "Whenever {0} move{1}".format([
+			filter_actor_desc,
+			optional_s
+		])
+	elif activation.filter == Activation.Filter.Start:
+		return "At the start of an encounter"
+	elif activation.filter == Activation.Filter.Bloodied:
+		return "Whenever {0} HP drops below 25%".format([
+			describe_filter_actor_possessive(activation.filter_actor)
+		])
+	elif activation.filter == Activation.Filter.Miss:
+		return "Whenever {0} attack misses".format([
+			describe_filter_actor_possessive(activation.filter_actor)
+		])
+	elif activation.filter == Activation.Filter.Dodge:
+		return "Whenever {0} dodge{1} an attack".format([
+			filter_actor_desc,
+			optional_s
+		])
+	elif activation.filter == Activation.Filter.Attack:
+		return "Whenever {0} attack{1}".format([
+			filter_actor_desc,
+			optional_s
+		])
+	assert(false, "unhandled target")
+	return ""
+

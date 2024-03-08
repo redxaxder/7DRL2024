@@ -92,14 +92,14 @@ func _draw():
 				drawButtonUnselected(button)
 				
 			if(unlocked_skills.has(skill.name)):
-				drawButtonUnlocked(button, skill.name)
+				drawButtonUnlocked(button, skill)
 			elif(is_available(skill)):
 				drawButtonAvailable(button)
 			else:
 				drawButtonUnavailable(button)
 				
-func drawButtonUnlocked(button: Button, skill_name : String):
-	button.modulate = RandomUtil.color_hash(skill_name)
+func drawButtonUnlocked(button: Button, skill : Skill):
+	button.modulate = skill.get_color()
 	
 func drawButtonAvailable(button: Button):
 	button.modulate = Color.white
@@ -122,6 +122,8 @@ func drawButtonUnselected(button: Button):
 func selectSkill(skill: Skill, button: Button = null):
 	selected_skill = skill
 	$VBoxContainer/SkillName.text = skill.name
+	$VBoxContainer/SkillName.modulate = skill.get_color()
+	$VBoxContainer/SkillName.margin_left = 3
 	$VBoxContainer/ScrollContainer/SkillDescription.text = ""
 	$VBoxContainer/ScrollContainer/SkillDescription.bbcode_enabled = true
 	$VBoxContainer/ScrollContainer/SkillDescription.append_bbcode(
