@@ -150,14 +150,15 @@ func tick_ai(actor: CombatEntity) -> Array: # EncounterEvent
 	var targets: Array = []
 	var dirs = []
 	use_seeded_rng()
-	actor.actions.shuffle()
-	for ability in actor.actions:
-		assert(ability.activation.trigger == SkillsCore.Trigger.Action)
-		var atarget = EncounterCore.get_ability_target(cur_state, actor, ability)
-		if atarget == Vector2.INF: continue
-		var ab_evt = EncounterCore.use_ability(actor, atarget, ability, current_time)
-		if ab_evt.size() > 0: 
-			return ab_evt
+	if randf() < 0.9:
+		actor.actions.shuffle()
+		for ability in actor.actions:
+			assert(ability.activation.trigger == SkillsCore.Trigger.Action)
+			var atarget = EncounterCore.get_ability_target(cur_state, actor, ability)
+			if atarget == Vector2.INF: continue
+			var ab_evt = EncounterCore.use_ability(actor, atarget, ability, current_time)
+			if ab_evt.size() > 0: 
+				return ab_evt
 		
 	cardinal.shuffle()
 	diagonal.shuffle()

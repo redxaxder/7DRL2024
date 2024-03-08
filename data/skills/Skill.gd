@@ -135,8 +135,9 @@ static func random_ability(skill_seed: int) -> Ability:
 		var num_mods = 0
 	
 		if rng.randf() < 0.3:
-			num_rolls += 4
-		elif rng.randf() < 0.4:
+			num_rolls += 5
+			power *= 2.5
+		elif rng.randf() < 0.3:
 			num_rolls += 1
 			num_mods = 1
 		else:
@@ -144,11 +145,15 @@ static func random_ability(skill_seed: int) -> Ability:
 
 		a.modifiers = []
 		for _i in num_mods:
-			var mod_param = mod_table[rng.randi() % n]
+			var mod_param = Ability.ModParam.Power
+			if _i > 0:
+				mod_param = mod_table[rng.randi() % n]
 			var mod_stat = rng.randi() % 6
-			if a.modifiers.size() > 0 and a.modifiers[0].modified_param == mod_param:
-				num_rolls += 1
-				break
+			if a.modifiers.size() > 0:
+				if a.modifiers[0].modified_param == mod_param \
+				or a.modifiers[0].modifier_stat == mod_stat:
+					num_rolls += 1
+					break
 			a.modifiers.append(Ability.mod(mod_stat, mod_param, 4))
 
 		for _i in num_rolls:
