@@ -96,111 +96,96 @@ func hand_rolled_skill_tree():
 		skills.append([])
 	seed(1234)
 # warning-ignore:unused_variable
-	var abil: Skill = create_ability_skill(build_ability({
-		"label": SkillName.generate_name(),
-		"trigger": SkillsCore.Trigger.Automatic,
-		"filter": Activation.Filter.DamageDealt,
-		"filter_actor": SkillsCore.TargetAny,
-		"trigger_aim": SkillsCore.TriggerAim.Self,
-		"effect_type": SkillsCore.EffectType.StatBuff,
-		"ability_range": 4,
-		"mod_stat": Stat.Kind.Health,
-		"power": 10,
-		"targets": SkillsCore.Target.Self,
-		}))
-# warning-ignore:unused_variable
-	var my_cool_skill: Skill = create_ability_skill(build_ability({
-		"label": SkillName.generate_name(),
-		"trigger": SkillsCore.Trigger.Automatic,
-		"filter": Activation.Filter.DamageReceived,
-		"filter_actor": SkillsCore.Target.Self,
-		"trigger_aim": SkillsCore.TriggerAim.Self,
-		"effect_type": SkillsCore.EffectType.StatBuff,
-		"mod_stat": Stat.Kind.Damage,
-		"power": 1000,
-		"targets": SkillsCore.Target.Self
-	}))
-	var my_cool_death_ability: Ability = build_ability({
-		"label": SkillName.generate_name(),
-		"trigger": SkillsCore.Trigger.Automatic,
-		"filter": Activation.Filter.Death,
-		"filter_actor": SkillsCore.Target.Enemies,
-		"trigger_aim": SkillsCore.TriggerAim.Random,
-		"effect_type": SkillsCore.EffectType.StatBuff,
-		"mod_stat": Stat.Kind.Speed,
-		"ability_range": 0,
-		"power": -5,
-		"targets": SkillsCore.Target.Enemies,
-	})
-	my_cool_death_ability.modifiers = [
-		Ability.mod(Stat.Kind.Health, Ability.ModParam.AbilityRange, 100)
-	]
-	
-	var aoe_test_ability: Ability = build_ability({
-		"label": SkillName.generate_name(),
-		"trigger": SkillsCore.Trigger.Action,
-		"effect_type": SkillsCore.EffectType.Damage,
-		"ability_range": 0,
-		"power": 1,
-		"radius": 1,
-		"cooldown_time": 1,
-		"targets": SkillsCore.Target.Enemies,
-	})
-	aoe_test_ability.modifiers = [
-		Ability.mod(Stat.Kind.Health, Ability.ModParam.Radius, 100)
-	]
-
-#	-When you move, buff footwork by 1 (min cooldown)
-#	-Deal 10 damage to an enemy in a 5 radius (4 cooldown)
-#	-Deal 5 damage to enemies in a 3 radius aoe around the player
-#	-Deal 10 damage to enemies in a 2 tile radius, 4 range (10 ccooldown)
-#	-Buff brawn by 1 (5 cooldown)
-#	-Whenever an enemy dies, buff guts by 2
-#	-Whenever you miss an enemy, buff eyesight by 2
-#	-Whenever you take  damage, summon a blorb (3 cooldown)
-#	-Whenever you take damage reducing you to less than 25% hp
-#		deal 20 damage to enemies in range 1
-
-
-#	var abil2: Skill = create_ability_skill(build_ability({
+#	var abil: Skill = create_ability_skill(build_ability({
 #		"label": SkillName.generate_name(),
-#		"target": SkillsCore.Target.Self,
+#		"trigger": SkillsCore.Trigger.Automatic,
+#		"filter": Activation.Filter.DamageDealt,
+#		"filter_actor": SkillsCore.TargetAny,
+#		"trigger_aim": SkillsCore.TriggerAim.Self,
 #		"effect_type": SkillsCore.EffectType.StatBuff,
+#		"ability_range": 4,
 #		"mod_stat": Stat.Kind.Health,
-#		"power": 20,
+#		"power": 10,
+#		"targets": SkillsCore.Target.Self,
 #		}))
-#	append_skill(abil2, 0)
+## warning-ignore:unused_variable
+#	var my_cool_skill: Skill = create_ability_skill(build_ability({
+#		"label": SkillName.generate_name(),
+#		"trigger": SkillsCore.Trigger.Automatic,
+#		"filter": Activation.Filter.DamageReceived,
+#		"filter_actor": SkillsCore.Target.Self,
+#		"trigger_aim": SkillsCore.TriggerAim.Self,
+#		"effect_type": SkillsCore.EffectType.StatBuff,
+#		"mod_stat": Stat.Kind.Damage,
+#		"power": 1000,
+#		"targets": SkillsCore.Target.Self
+#	}))
+#	var my_cool_death_ability: Ability = build_ability({
+#		"label": SkillName.generate_name(),
+#		"trigger": SkillsCore.Trigger.Automatic,
+#		"filter": Activation.Filter.Death,
+#		"filter_actor": SkillsCore.Target.Enemies,
+#		"trigger_aim": SkillsCore.TriggerAim.Random,
+#		"effect_type": SkillsCore.EffectType.StatBuff,
+#		"mod_stat": Stat.Kind.Speed,
+#		"ability_range": 0,
+#		"power": -5,
+#		"targets": SkillsCore.Target.Enemies,
+#	})
+#	my_cool_death_ability.modifiers = [
+#		Ability.mod(Stat.Kind.Health, Ability.ModParam.AbilityRange, 100)
+#	]
+	
+#	var aoe_test_ability: Ability = build_ability({
+#		"label": SkillName.generate_name(),
+#		"trigger": SkillsCore.Trigger.Action,
+#		"effect_type": SkillsCore.EffectType.Damage,
+#		"ability_range": 0,
+#		"power": 1,
+#		"radius": 1,
+#		"cooldown_time": 1,
+#		"targets": SkillsCore.Target.Enemies,
+#	})
+#	aoe_test_ability.modifiers = [
+#		Ability.mod(Stat.Kind.Health, Ability.ModParam.Radius, 100)
+#	]
 
+
+#	append_skill(create_ability_skill(aoe_test_ability), 1)
 
 	
+	# ROW 0
+	# *****
 	append_and_create_ability({
 		"label": "Poison Pustule",
 		"element": Elements.Kind.Poison,
-		"row": 2,
+		"row": 0,
 			# ***EFFECT***
 		"effect_type":	SkillsCore.EffectType.Damage,
-		"power":			500,
+		"power":		10,
 			# ***EFFECT AIM***
 		"trigger_aim": 	SkillsCore.TriggerAim.Random,
-		"ability_range":  6,
-		"radius":			2,
+		"ability_range":3,
+		"radius":		2,
 		"targets": 		SkillsCore.Target.Enemies,
 			# ***TRIGGER***
 		"trigger": 		SkillsCore.Trigger.Automatic,
 		"filter": 		Activation.Filter.Death,
-		"filter_actor": 	SkillsCore.Target.Enemies,
-		"cooldown_time":	1,
-		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.AbilityRange, 10)]
+		"filter_actor": SkillsCore.Target.Enemies,
+		"cooldown_time": 5,
+		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.AbilityRange, 5)]
 	})
+	
+	append_skill(create_bonus_skill(Stat.Kind.Brawn, 5, SkillName.generate_name()), 0)
 	
 	append_and_create_ability({
 		"label": "Fiery Fire",
 		"element": Elements.Kind.Fire,
-		"row": 2,
+		"row": 0,
 			# ***EFFECT***
 		"effect_type":	SkillsCore.EffectType.StatBuff,
 		"mod_stat": 		Stat.Kind.Accuracy,
-		"power":			20,
+		"power":			10,
 			# ***EFFECT AIM***
 		"trigger_aim": 	SkillsCore.TriggerAim.Self,
 		"ability_range":  0,
@@ -211,8 +196,10 @@ func hand_rolled_skill_tree():
 		"filter": 		Activation.Filter.Movement,
 		"filter_actor": 	SkillsCore.Target.Self,
 		"cooldown_time":	1,
-		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.Power, 1)]
+		"modifiers": [Ability.mod(Stat.Kind.Brains, Ability.ModParam.Power, 1)]
 	})
+	
+	append_skill(create_bonus_skill(Stat.Kind.Eyesight, 5, SkillName.generate_name()), 0)
 	
 	# Deal 10 damage to an enemy in a 5 radius (4 cooldown)
 	append_and_create_ability({
@@ -223,24 +210,24 @@ func hand_rolled_skill_tree():
 		"ability_range": 0,
 		"power": 10,
 		"radius": 5,
-		"cooldown_time": 4,
+		"cooldown_time": 30,
 		"targets": SkillsCore.Target.Enemies,
 		"modifiers": [
-			Ability.mod(Stat.Kind.Guts, Ability.ModParam.Radius, 1)
+			Ability.mod(Stat.Kind.Crit, Ability.ModParam.Radius, 1)
 		],
-		"row": 1
+		"row": 0
 	})
 	
-	append_skill(create_ability_skill(aoe_test_ability), 1)
 	
-	
+	# ROW 1
+	# *****
 	append_and_create_ability({
 		"label": "Penetrating Thorns",
 		"element": Elements.Kind.Physical,
-		"row": 0,
+		"row": 1,
 			# ***EFFECT***
 		"effect_type":	SkillsCore.EffectType.Damage,
-		"power": 20,
+		"power": 5,
 			# ***EFFECT AIM***
 		"trigger_aim": 	SkillsCore.TriggerAim.EventTarget,
 		"ability_range": 0,
@@ -250,75 +237,85 @@ func hand_rolled_skill_tree():
 		"trigger": 		SkillsCore.Trigger.Automatic,
 		"filter": 		Activation.Filter.Attack,
 		"filter_actor": 	SkillsCore.Target.Enemies,
-		"cooldown_time":	0,
-		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.Power, .6)]
+		"cooldown_time":	1,
+		"modifiers": [Ability.mod(Stat.Kind.Damage, Ability.ModParam.Power, 1)]
 	})
+	
+	append_skill(create_bonus_skill(Stat.Kind.Brains, 5, SkillName.generate_name()), 1)
 	
 	append_and_create_ability({
 		"label": "Two Step",
 		"element": Elements.Kind.Physical,
-		"row": 0,
+		"row": 1,
 			# ***EFFECT***
 		"effect_type":	SkillsCore.EffectType.Damage,
-		"power": 500,
+		"power": 3,
 			# ***EFFECT AIM***
 		"trigger_aim": 	SkillsCore.TriggerAim.Self,
 		"ability_range": 0,
-		"radius": 6,
+		"radius": 3,
 		"targets": 		SkillsCore.Target.Enemies,
 			# ***TRIGGER***
 		"trigger": 		SkillsCore.Trigger.Automatic,
 		"filter": 		Activation.Filter.Dodge,
 		"filter_actor": 	SkillsCore.Target.Enemies,
-		"cooldown_time":	30,
-		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.CooldownTime, 2)]
+		"cooldown_time":	20,
+		"modifiers": [Ability.mod(Stat.Kind.Evasion, Ability.ModParam.CooldownTime, 2)]
 	})
+	
+	append_skill(create_bonus_skill(Stat.Kind.Footwork, 5, SkillName.generate_name()), 1)
 	
 	append_and_create_ability({
 		"label": "Peerless Sleight",
 		"element": Elements.Kind.Physical,
-		"row": 0,
+		"row": 1,
 			# ***EFFECT***
 		"effect_type":	SkillsCore.EffectType.Damage,
-		"power": 500,
+		"power": 5,
 			# ***EFFECT AIM***
-		"trigger_aim": 	SkillsCore.TriggerAim.Self,
-		"ability_range": 0,
-		"radius": 6,
+		"trigger_aim": 	SkillsCore.TriggerAim.Random,
+		"ability_range": 4,
+		"radius": 0,
 		"targets": 		SkillsCore.Target.Enemies,
 			# ***TRIGGER***
 		"trigger": 		SkillsCore.Trigger.Automatic,
 		"filter": 		Activation.Filter.Miss,
 		"filter_actor": 	SkillsCore.Target.Enemies,
-		"cooldown_time":	30,
+		"cooldown_time":	10,
 	})
+	
+	
+	# ROW 2
+	# *****
 	
 	append_and_create_ability({
 		"label": "Poison Gulp",
 		"element": Elements.Kind.Poison,
-		"row": 0,
+		"row": 2,
 			# ***EFFECT***
 		"effect_type":	SkillsCore.EffectType.Damage,
-		"power": 500,
+		"power": 25,
 			# ***EFFECT AIM***
 		"trigger_aim": 	SkillsCore.TriggerAim.Self,
 		"ability_range": 0,
-		"radius": 6,
+		"radius": 2,
 		"targets": 		SkillsCore.Target.Enemies,
 			# ***TRIGGER***
 		"trigger": 		SkillsCore.Trigger.Automatic,
 		"filter": 		Activation.Filter.Bloodied,
 		"filter_actor": 	SkillsCore.Target.Self,
-		"cooldown_time":	1,
+		"cooldown_time":	100,
 	})
+	
+	append_skill(create_bonus_skill(Stat.Kind.Guts, 5, SkillName.generate_name()), 2)
 	
 	append_and_create_ability({
 		"label": "Poison Overflow",
 		"element": Elements.Kind.Poison,
-		"row": 0,
+		"row": 2,
 			# ***EFFECT***
 		"effect_type":	SkillsCore.EffectType.Damage,
-		"power": 500,
+		"power": 10,
 			# ***EFFECT AIM***
 		"trigger_aim": 	SkillsCore.TriggerAim.Self,
 		"ability_range": 0,
@@ -331,32 +328,30 @@ func hand_rolled_skill_tree():
 		"cooldown_time":	0,
 	})
 	
+	# todo: don't display cooldown time for start
+	
+	append_skill(create_bonus_skill(Stat.Kind.Hustle, 5, SkillName.generate_name()), 2)
+	
 	append_and_create_ability({
-		"label": "Rake the coals",
+		"label": "Rake the Coals",
 		"element": Elements.Kind.Fire,
-		"row": 0,
+		"row": 2,
 			# ***EFFECT***
 		"effect_type":	SkillsCore.EffectType.StatBuff,
 		"mod_stat": 		Stat.Kind.Health,
-		"power":			5,
+		"power":			10,
 			# ***EFFECT AIM***
-		"trigger_aim": 	SkillsCore.TriggerAim.Self,
-		"ability_range":  0,
-		"radius":			0,
+		"trigger_aim": 	SkillsCore.TriggerAim.Random,
+		"ability_range":  4,
+		"radius":		1,
 		"targets": 		SkillsCore.Target.Self,
 			# ***TRIGGER***
-		"trigger": 		SkillsCore.Trigger.Action,
+		"trigger": 		SkillsCore.Trigger.Automatic,
 		"filter": 		Activation.Filter.DamageReceived,
 		"filter_actor": 	SkillsCore.Target.Self,
-		"cooldown_time":	10,
+		"cooldown_time":	15,
 	})
 	
-	append_skill(create_bonus_skill(Stat.Kind.Brawn, 5, SkillName.generate_name()), 0)
-	append_skill(create_bonus_skill(Stat.Kind.Brains, 5, SkillName.generate_name()), 1)
-	append_skill(create_bonus_skill(Stat.Kind.Guts, 5, SkillName.generate_name()), 2)
-	append_skill(create_bonus_skill(Stat.Kind.Eyesight, 5, SkillName.generate_name()), 0)
-	append_skill(create_bonus_skill(Stat.Kind.Footwork, 5, SkillName.generate_name()), 1)
-	append_skill(create_bonus_skill(Stat.Kind.Hustle, 5, SkillName.generate_name()), 2)
 	
 	
 	

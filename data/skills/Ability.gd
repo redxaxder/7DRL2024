@@ -149,7 +149,7 @@ func describe_range(stats: StatBlock):
 	var scaled_string = ""
 	var modifier_scaling = get_modifier_scaling_desc(ModParam.AbilityRange)
 	if modifier_scaling: # always remind about scaling
-		scaled_string = " ([color=#3affa9]{0} - {1} scaling[/color])".format([
+		scaled_string = " ([color=#3affa9]{0} + {1} scaling[/color])".format([
 			activation.ability_range,
 			modifier_scaling,
 		])
@@ -158,10 +158,12 @@ func describe_range(stats: StatBlock):
 		ability_range(stats),
 		scaled_string
 	])
+	
 
 func generate_description(stats: StatBlock) -> String:
 	var dict = {}
 	dict["trigger"] = ["Action","Reaction"][activation.trigger]
+	
 	dict["range"] = describe_range(stats)
 	dict["radius"] = describe_radius(stats)
 	dict["target"] = describe_target(effect.targets)
@@ -172,7 +174,7 @@ func generate_description(stats: StatBlock) -> String:
 	var text = ""
 	# text += "{trigger}\n".format(dict)
 	if activation.trigger == SkillsCore.Trigger.Automatic:
-		text += "{activation_text}\n".format(dict)
+		text += "{activation_text}, ".format(dict)
 		
 	text += "{effect_text}".format(dict)
 	text += " to {target}.\n".format(dict)
@@ -196,5 +198,8 @@ func generate_description(stats: StatBlock) -> String:
 
 
 func describe_activation_condition() -> String:
-	return "" #TODO
+	if activation.filter == Activation.Filter.DamageReceived:
+		return "whenever damage is dealt"
+	else:
+		return "whenever else"
 	
