@@ -41,7 +41,7 @@ func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 		if !actor.get("inert"):
 			queue.insert(actor, actor.time_spent)
 	
-	history.add_state(DataUtil.deep_dup(cur_state))
+	history.initialize(DataUtil.deep_dup(cur_state))
 
 
 func tick() -> bool:
@@ -99,7 +99,7 @@ func handle_events(events: Array):
 		assert(typeof(evt) != TYPE_ARRAY)
 		if evt.kind == EncounterEventKind.Kind.PrepareReaction:
 			reactions_to_prepare.append(evt)
-		history.add_event(evt)
+		history.add_event(DataUtil.deep_dup(cur_state), evt)
 		var triggered_events = EncounterCore.update(cur_state, evt)
 		if evt.kind == EncounterEventKind.Kind.Spawn:
 			#create the unit
@@ -111,7 +111,6 @@ func handle_events(events: Array):
 		for r in triggered_events:
 			assert(r != null)
 			assert(typeof(r) != TYPE_ARRAY)
-		history.add_state(DataUtil.deep_dup(cur_state))
 		triggered_events.shuffle()
 		events.append_array(triggered_events)
 	reactions_to_prepare.shuffle()
