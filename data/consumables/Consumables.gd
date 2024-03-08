@@ -1,7 +1,10 @@
 extends Node
 
+# warning-ignore:unused_signal
 signal consume_teleport
+# warning-ignore:unused_signal
 signal consume_health
+# warning-ignore:unused_signal
 signal consume_invisibility
 
 export var health_potion_amount = 25

@@ -13,7 +13,7 @@ enum TriggerAim {
 	Self, # trigger aims at the owner of the ability
 	EventSource, # trigger aims at the originator of the event that tripped it
 	EventTarget, # trigger aims at the target of the event that tripped it
-	Random, # trigger aims at some appropriate target #Doesn't work!
+	Random, # trigger aims at some appropriate target
 	}
 
 # where can the effect take place?

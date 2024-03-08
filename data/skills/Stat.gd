@@ -15,3 +15,5 @@ const MINIMUM = [	1, 1, 1, 1, 1, 1, # 6 primary (base) stats don't go below 1 [m
 				0, 0, 0, 0, # elemental attack stats don't go below 0. they are bonuses only, not penalties
 				-999,-999,-999,-999, # elemental resists can get low but not crazy low
 				]
+
+const DERIVED_STATS = [ Kind.Accuracy, Kind.Crit, Kind.Evasion, Kind.Damage, Kind.Speed, Kind.Health ]
