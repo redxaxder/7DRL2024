@@ -87,7 +87,7 @@ func event_text(evt: EncounterEvent) -> String:
 		EncounterEventKind.Kind.Miss:
 			return "{time}: {an} missed {tn}!".format(evt.dict())
 		EncounterEventKind.Kind.Bloodied:
-			return "{time}: {an} fell to low hp".format(evt.dict())
+			return "{time}: {tn} fell to low hp".format(evt.dict())
 		EncounterEventKind.Kind.Death:
 			return "{time}: {tn} died!".format(evt.dict())
 		EncounterEventKind.Kind.Move:
