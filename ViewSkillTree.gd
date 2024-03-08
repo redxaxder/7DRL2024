@@ -45,12 +45,15 @@ func _ready():
 #	for i in skill_tree.skillsPerRow:
 #		skill_tree.skills.append([])
 #
-	containers.append($VBoxContainer/SkillRow1)
-	containers.append($VBoxContainer/SkillRow2)
-	containers.append($VBoxContainer/SkillRow3)
-	$VBoxContainer/UnlockButton.visible = false
+	containers.append($SkillTreeContainer/SkillRow1)
+	containers.append($SkillTreeContainer/SkillRow2)
+	containers.append($SkillTreeContainer/SkillRow3)
+	$SkillTreeContainer/UnlockButton.visible = false
 # warning-ignore:return_value_discarded
-	$VBoxContainer/UnlockButton.connect("pressed", self, 'unlockSkill', [])
+	$SkillTreeContainer/UnlockButton.connect("pressed", self, 'unlockSkill', [])
+	
+	
+	get_node("%SkillTreeContainer").connect("mouse_exited", self, 'unhover_container', [])
 
 func set_skills(st: SkillTree):
 	selected_skill = null
@@ -66,7 +69,7 @@ func set_skills(st: SkillTree):
 			var button = preload("res://graphics/random_icon.tscn").instance()
 			button.connect("pressed", self, 'click_skill', [skill, button])
 			button.connect("mouse_entered", self, 'hover_button', [skill, button])
-			button.connect("mouse_exited", self, 'unhover_button', [skill, button])
+			#button.connect("mouse_exited", self, 'unhover_button', [skill, button])
 			button.set_input(skill)
 			containers[i].add_child(button)
 			button.rect_min_size = Vector2(80, 80)
@@ -80,6 +83,11 @@ func set_skills(st: SkillTree):
 
 func hover_button(skill, button):
 	selectSkill(skill, button)
+	
+func unhover_container():
+	if clicked_skill:
+		selectSkill(clicked_skill)
+	_draw()
 	
 func unhover_button(skill, button):
 	if clicked_skill:
@@ -114,6 +122,9 @@ func _draw():
 			else:
 				drawButtonUnavailable(button)
 				
+			if skill == selected_skill:
+				button.modulate = Color.white
+				
 func drawButtonUnlocked(button: Button, skill : Skill):
 	button.modulate = skill.get_color()
 	
@@ -141,12 +152,12 @@ func selectSkill(skill: Skill, button: Button = null):
 	
 		
 func show_skill_description(skill: Skill, button: Button = null):
-	$VBoxContainer/SkillName.text = skill.name
-	$VBoxContainer/SkillName.modulate = skill.get_color()
-	$VBoxContainer/SkillName.margin_left = 3
-	$VBoxContainer/ScrollContainer/SkillDescription.text = ""
-	$VBoxContainer/ScrollContainer/SkillDescription.bbcode_enabled = true
-	$VBoxContainer/ScrollContainer/SkillDescription.append_bbcode(
+	$SkillTreeContainer/SkillName.text = skill.name
+	$SkillTreeContainer/SkillName.modulate = skill.get_color()
+	$SkillTreeContainer/SkillName.margin_left = 3
+	$SkillTreeContainer/ScrollContainer/SkillDescription.text = ""
+	$SkillTreeContainer/ScrollContainer/SkillDescription.bbcode_enabled = true
+	$SkillTreeContainer/ScrollContainer/SkillDescription.append_bbcode(
 		skill.generate_description(player_stats)
 	)
 	update_unlock_button(skill)
@@ -181,7 +192,7 @@ func is_available(skill: Skill):
 	
 
 func update_unlock_button(skill: Skill):
-	$VBoxContainer/UnlockButton.visible = !unlocked_skills.has(skill.name) && is_available(skill) && num_skills_to_unlock > 0
+	$SkillTreeContainer/UnlockButton.visible = !unlocked_skills.has(skill.name) && is_available(skill) && num_skills_to_unlock > 0
 
 
 func get_skill(i: int, j: int) -> Skill:
