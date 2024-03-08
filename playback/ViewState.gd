@@ -44,7 +44,7 @@ func actor_hover(is_hover: bool, index: int):
 	emit_hover()
 
 func emit_hover():
-	if hover_index >= 0:
+	if hover_index >= 0 and hover_index < state.actors.size():
 		emit_signal("actor_hovered", state.actors[hover_index])
 	else:
 		emit_signal("actor_hovered", null)

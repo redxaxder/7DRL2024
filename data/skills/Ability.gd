@@ -70,7 +70,7 @@ func get_modifier_scaling_desc(modified_param : int ):
 		if m.modified_param == modified_param:
 			return "{0}".format([
 				# str(m.coefficient * 100),
-				Stat.Kind.keys()[m.modifier_stat]
+				Stat.NAME[m.modifier_stat]
 			])
 
 func describe_effect(stats: StatBlock) -> String:

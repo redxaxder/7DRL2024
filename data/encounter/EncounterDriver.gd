@@ -125,7 +125,7 @@ func handle_events(events: Array):
 		queue.force_front(reaction, reaction.trigger_time)
 
 class Reaction extends Resource:
-	var trigger_time: int = -1
+	var trigger_time: float = -1
 	var ability: Ability = null
 	var actor_idx: int = -1
 	var target_idx: int = -1

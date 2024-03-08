@@ -237,20 +237,26 @@ var encounters = [
 		"max": 6,
 		"units": [Actor.Type.Blorp]
 	},
-	{	"weight": 100,
-		"weight_scaling": -1,
+	{	"weight": 100, # how frequent it is in early game
+		"weight_scaling": 3, # how frequent it is in late game
 		"min": 1,
+		"max": 6,
+		"units": [Actor.Type.Crab]
+	},
+	{	"weight": 400,
+		"weight_scaling": -30,
+		"min": 2,
 		"max": 2,
 		"units": [Actor.Type.Wolf]
 	},
 	{	"weight": 0,
-		"weight_scaling": 1,
+		"weight_scaling": 3,
 		"min": 1,
 		"max": 2,
-		"units": [Actor.Type.Wolf]
+		"units": [Actor.Type.Wolf, Actor.Type.Imp]
 	},
 	{	"weight": 0,
-		"weight_scaling": 2,
+		"weight_scaling": 6,
 		"min": 3,
 		"max": 7,
 		"units": [Actor.Type.Wolf]
@@ -260,6 +266,12 @@ var encounters = [
 		"min": 1,
 		"max": 6,
 		"units": [Actor.Type.Goblin]
+	},
+	{	"weight": 50,
+		"weight_scaling": 4,
+		"min": 1,
+		"max": 6,
+		"units": [Actor.Type.Imp]
 	},
 	{	"weight": 0,
 		"weight_scaling": 3,

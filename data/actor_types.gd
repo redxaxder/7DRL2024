@@ -43,7 +43,7 @@ const SPRITES = [ \
 
 const STATS = {
 	Type.Player: {
-		"base": [10, 10, 80, 10, 10, 10],
+		"base": [10, 10, 10, 10, 10, 10],
 		Stat.Kind.Health: 30,
 		 }, 
 	Type.Gazer: {
@@ -180,7 +180,7 @@ static func create_big_shrine(stat: int) -> CombatEntity:
 		"effect_type": SkillsCore.EffectType.StatBuff,
 		"mod_stat": stat,
 		"radius": 100,
-		"power": 5,
+		"power": 10,
 		"targets": SkillsCore.Target.Allies,
 		"cooldown_time": 1,
 	})
