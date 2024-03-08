@@ -38,7 +38,7 @@ const fire_adjectives = [
 	"Seething",
 	"Fuming",
 	"Steaming",
-	"Srackling",
+	"Crackling",
 	"Smoking",
 	"Consuming",
 ]

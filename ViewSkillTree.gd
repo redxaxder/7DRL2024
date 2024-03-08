@@ -10,6 +10,7 @@ var num_skills_to_unlock: int = 0
 var progress: int = 0
 var player_stats: StatBlock
 var selected_skill : Skill
+var clicked_skill: Skill
 var unlocked_skills: Dictionary
 var containers: Array
 
@@ -63,7 +64,9 @@ func set_skills(st: SkillTree):
 			var skill = skill_tree.skills[i][j]
 #			var skill = skill_tree.addSkill(skill_names[j*skill_tree.skillsPerRow + i], i, j)
 			var button = preload("res://graphics/random_icon.tscn").instance()
-			button.connect("pressed", self, 'selectSkill', [skill, button])
+			button.connect("pressed", self, 'click_skill', [skill, button])
+			button.connect("mouse_entered", self, 'hover_button', [skill, button])
+			button.connect("mouse_exited", self, 'unhover_button', [skill, button])
 			button.set_input(skill)
 			containers[i].add_child(button)
 			button.rect_min_size = Vector2(80, 80)
@@ -75,7 +78,20 @@ func set_skills(st: SkillTree):
 			pass
 #			markSkillAvailable(i, j)
 
+func hover_button(skill, button):
+	selectSkill(skill, button)
+	
+func unhover_button(skill, button):
+	if clicked_skill:
+		selectSkill(clicked_skill, button)
+
+func click_skill(skill, button):
+	clicked_skill = skill
+	show_skill_description(skill, button)
+
 func _draw():
+	
+	print("view skill tree draw")
 	# TODO:
 	#	-move skill creation to separate class?
 	# 	-draw lines between skills
@@ -121,6 +137,10 @@ func drawButtonUnselected(button: Button):
 
 func selectSkill(skill: Skill, button: Button = null):
 	selected_skill = skill
+	show_skill_description(skill, button)
+	
+		
+func show_skill_description(skill: Skill, button: Button = null):
 	$VBoxContainer/SkillName.text = skill.name
 	$VBoxContainer/SkillName.modulate = skill.get_color()
 	$VBoxContainer/SkillName.margin_left = 3
@@ -194,7 +214,8 @@ func recalculate_player_bonuses():
 	# add in skill tree unlock bonuses
 	for skill in skill_tree.unlocks:
 		if skill.kind == Skill.Kind.Bonus:
-			player_stats.apply_bonus(skill.bonus)
+			pass
+			#player_stats.apply_bonus(skill.bonus)
 
 func update_num_skills_to_unlock(p_progress: int):
 	progress = p_progress

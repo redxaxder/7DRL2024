@@ -65,6 +65,18 @@ static func mod(stat: int, param:int , coeff: float) -> AbilityMod:
 	mod.coefficient = coeff
 	return mod
 	
+func get_color():
+	if effect:
+		if effect.element == Elements.Kind.Physical:
+			return Color("#e7ad47")
+		elif effect.element == Elements.Kind.Poison:
+			return Color("#24ff7a")
+		elif effect.element == Elements.Kind.Fire:
+			return Color("#ff2503")
+		elif effect.element == Elements.Kind.Ice:
+			return Color("#3eb7ff")
+	return Color.wheat
+	
 func get_modifier_scaling_desc(modified_param : int ):
 	for m in modifiers:
 		if m.modified_param == modified_param:
@@ -109,9 +121,16 @@ func describe_effect(stats: StatBlock) -> String:
 
 			
 			
-func describe_target(target_filter:int, radius: float, trigger_aim : int) -> String:
+func describe_target(target_filter:int, radius: float, trigger_aim : int, trigger: int) -> String:
 	if target_filter == SkillsCore.Target.Self:
 		return "yourself"
+		
+	if trigger == SkillsCore.Trigger.Action:
+		match target_filter:
+			SkillsCore.Target.Allies: return "allies"
+			SkillsCore.Target.Enemies: return "enemies"
+			SkillsCore.TargetAny: return "all targets"
+
 	if radius > 0:
 		if(trigger_aim == SkillsCore.TriggerAim.Self):
 			match target_filter:
@@ -192,7 +211,7 @@ func generate_description(stats: StatBlock) -> String:
 	
 	dict["range"] = describe_range(stats)
 	dict["radius"] = describe_radius(stats)
-	dict["target"] = describe_target(effect.targets, radius(stats), activation.trigger_aim)
+	dict["target"] = describe_target(effect.targets, radius(stats), activation.trigger_aim, activation.trigger)
 	dict["activation_text"] = describe_activation_condition()
 	dict["effect_text"] = describe_effect(stats)
 	dict["cooldown"] = describe_cooldown(stats)
@@ -201,9 +220,10 @@ func generate_description(stats: StatBlock) -> String:
 	# text += "{trigger}\n".format(dict)
 	if activation.trigger == SkillsCore.Trigger.Automatic:
 		text += "{activation_text}, ".format(dict)
-		text += "{effect_text}".format(dict)
 	else:
-		text += "{effect_text}".format(dict).capitalize()
+		text += "On your turn, "
+		
+	text += "{effect_text}".format(dict)
 		
 	text += " to {target}.\n".format(dict)
 	

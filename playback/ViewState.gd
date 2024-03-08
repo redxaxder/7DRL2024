@@ -44,7 +44,7 @@ func actor_hover(is_hover: bool, index: int):
 	emit_hover()
 
 func emit_hover():
-	if hover_index >= 0 and hover_index < state.actors.size():
+	if hover_index >= 0:
 		emit_signal("actor_hovered", state.actors[hover_index])
 	else:
 		emit_signal("actor_hovered", null)
@@ -101,7 +101,7 @@ func update_view(st: EncounterState, what: EncounterEvent = null):
 		if !what.get("ability"):
 			$reticle2.modulate = Color(0.5,0.5,0,5)
 		else:
-			var color = RandomUtil.color_hash(what.ability.name)
+			var color = what.get("ability").get_color()
 			$reticle2.modulate = color
 			if what.displayed_radius > 0:
 				$aoe_indicator.radius = what.displayed_radius
