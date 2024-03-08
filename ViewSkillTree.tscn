@@ -38,6 +38,7 @@ margin_top = 45.0
 margin_right = 200.0
 margin_bottom = 73.0
 rect_clip_content = false
+mouse_filter = 1
 custom_fonts/normal_font = SubResource( 1 )
 fit_content_height = true
 

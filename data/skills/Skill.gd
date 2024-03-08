@@ -164,7 +164,9 @@ static func random_ability(skill_seed: int) -> Ability:
 					act.ability_range = rolled
 				Ability.ModParam.Radius:
 					act.radius = ceil(float(rolled) /2)
-		if act.radius == 0:
+		if eff.targets == SkillsCore.Target.Self:
+			act.ability_range = 0
+		elif act.radius == 0:
 			act.ability_range += 1
 #			var mod = Ability.mod(mod_stat, mod_param, coeff)
 		

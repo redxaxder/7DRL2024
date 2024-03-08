@@ -91,7 +91,8 @@ func new_game():
 	gameover = false
 
 	skill_tree = SkillTree.new()
-	skill_tree.hand_rolled_skill_tree()
+#	skill_tree.hand_rolled_skill_tree()
+	skill_tree.random_skill_tree(1234)
 	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = Actor.get_stat_block(Actor.Type.Player)
 	player_hp = player_stats.max_hp()

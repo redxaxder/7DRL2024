@@ -92,6 +92,28 @@ var filter_event_target = SkillsCore.TargetAny
 
 # for automatic triggers: where does the effect get applied
 var trigger_aim = SkillsCore.TriggerAim.EventSource
+
+func random_skill_tree(rng_seed: int):
+	seed(rng_seed) # TODO: should use local rng here,
+	# but we're using global rng in dependencies right now
+	var rng = RandomNumberGenerator.new()
+	name = "" # TODO
+	skills = []
+	for i in numRows:
+		skills.append([])
+	rng.seed = rng_seed
+	for row in 3:
+		for column in 5:
+			if (row + column) % 2 == 0:
+				append_skill(
+					random_ability_skill(rng.randi()),
+					row
+				)
+			else:
+				append_skill(
+					random_bonus_skill(SkillName.generate_name(), rng.randi()), row
+					)
+
 func hand_rolled_skill_tree():
 	name = "Jack of All Trades"
 	skills = []
