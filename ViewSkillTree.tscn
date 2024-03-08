@@ -64,3 +64,12 @@ margin_top = 203.0
 margin_right = 200.0
 margin_bottom = 223.0
 text = "Unlock"
+
+[node name="Stats" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+margin_left = 670.0
+margin_top = 284.0
+margin_right = 970.0
+margin_bottom = 584.0
+text = "Foo bar asdkflasjfdsa
+"

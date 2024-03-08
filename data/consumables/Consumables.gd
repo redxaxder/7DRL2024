@@ -9,8 +9,11 @@ signal consume_invisibility
 
 export var health_potion_amount = 25
 
+export var stat_reward_increase = 4
+
 var rewards = []
-var won_rewards = [];
+var won_rewards = []
+var won_stats = []
 
 var CONSUMABLE_TYPES = {
 	"teleport": {
@@ -72,9 +75,21 @@ func _ready():
 		better_button.connect("mouse_exited",self,"unhover_button", [config, better_button])
 		unhover_button(config, better_button)
 
+# copy consumable rewards to won_rewards so they can be slowly transferred out
+# immediately returned reward stat bonuses
 func win_rewards():
 	won_rewards = DataUtil.dup_array(rewards)
-	pass
+	
+	var reward_bonuses = []
+	for s in won_stats:
+		var bonus = Bonus.new()
+		bonus.initialize_bonus(s, stat_reward_increase)
+		reward_bonuses.append(bonus)
+	
+	
+	print("won rewards "+ str(stat_reward_increase))
+	
+	return reward_bonuses
 		
 func transfer_reward():
 	var r = won_rewards.pop_back()
@@ -83,7 +98,37 @@ func transfer_reward():
 		consumable_inventory[r] += 1
 		CONSUMABLE_TYPES[r].shake = 30
 		
+func get_reward_messages():
+	var messages = []
+	for reward_key in rewards:
+		var reward_name = CONSUMABLE_TYPES[reward_key].name
+		messages.append(str("You got a ", reward_name,"."))
+	
+	print("get rewards messages"+ str(stat_reward_increase))
+	
+	for s in won_stats:
+		messages.append("You gain {0} {1}.".format([
+			stat_reward_increase,
+			Stat.NAME[s]
+		]))
+	return messages
+		
 func init_rewards():
+	var stat_text = ""
+	won_stats = [
+		randi() % 6
+	]
+	stat_reward_increase = (randi() % 3) + 3
+	print("init rewards "+ str(stat_reward_increase))
+	
+	for s in won_stats:
+		stat_text += "Also permanently gain {0} {1}.\n".format([
+			stat_reward_increase,
+			Stat.NAME[s]
+		])
+	get_node("%stat").text = stat_text
+	
+	
 	var children = get_node("%Rewards").get_children()
 	for c in children:
 		c.queue_free()

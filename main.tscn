@@ -219,20 +219,23 @@ margin_right = 715.0
 margin_bottom = -291.0
 
 [node name="Label" type="Label" parent="ConsumablesContainer/RewardsContainer"]
-margin_right = 53.0
+margin_right = 69.0
 margin_bottom = 14.0
 text = "Rewards"
 
 [node name="Rewards" type="HBoxContainer" parent="ConsumablesContainer/RewardsContainer"]
 unique_name_in_owner = true
 margin_top = 18.0
-margin_right = 53.0
+margin_right = 69.0
 margin_bottom = 18.0
 
 [node name="stat" type="Label" parent="ConsumablesContainer/RewardsContainer"]
+unique_name_in_owner = true
 margin_top = 22.0
-margin_right = 53.0
-margin_bottom = 36.0
+margin_right = 69.0
+margin_bottom = 53.0
+text = "Gain stat 1
+Gain stat 2"
 
 [node name="ConsumablesCounter" type="Timer" parent="."]
 unique_name_in_owner = true

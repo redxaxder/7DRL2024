@@ -14,6 +14,8 @@ var clicked_skill: Skill
 var unlocked_skills: Dictionary
 var containers: Array
 
+var reward_bonuses = []
+
 
 
 # approximately follows the curve level=unlocks^2.1073
@@ -53,7 +55,7 @@ func _ready():
 	$SkillTreeContainer/UnlockButton.connect("pressed", self, 'unlockSkill', [])
 	
 	
-	get_node("%SkillTreeContainer").connect("mouse_exited", self, 'unhover_container', [])
+	# get_node("%SkillTreeContainer").connect("mouse_exited", self, 'unhover_container', [])
 
 func set_skills(st: SkillTree):
 	selected_skill = null
@@ -69,7 +71,7 @@ func set_skills(st: SkillTree):
 			var button = preload("res://graphics/random_icon.tscn").instance()
 			button.connect("pressed", self, 'click_skill', [skill, button])
 			button.connect("mouse_entered", self, 'hover_button', [skill, button])
-			#button.connect("mouse_exited", self, 'unhover_button', [skill, button])
+			button.connect("mouse_exited", self, 'unhover_button', [skill, button])
 			button.set_input(skill)
 			button.mouse_filter = Control.MOUSE_FILTER_PASS
 			containers[i].add_child(button)
@@ -212,6 +214,9 @@ func unlockSkill():
 		update_num_skills_to_unlock(progress)
 		emit_signal("skill_unlocked")
 	
+func set_reward_bonuses(p_reward_bonuses):
+	reward_bonuses = p_reward_bonuses
+	
 func recalculate_player_bonuses():
 	player_stats.clear_bonuses()
 	
@@ -225,8 +230,47 @@ func recalculate_player_bonuses():
 	# add in skill tree unlock bonuses
 	for skill in skill_tree.unlocks:
 		if skill.kind == Skill.Kind.Bonus:
-			pass
-			#player_stats.apply_bonus(skill.bonus)
+			for b in skill.bonuses:
+				player_stats.apply_bonus(b)
+			
+	
+	for b in reward_bonuses:
+		player_stats.apply_bonus(b)
+		
+	update_stats(player_stats)
+		
+func update_stats(player_stats):
+	var methods = [
+		"Brawn", 
+		"Brains", 
+		"Guts", 
+		"Eyesight", 
+		"Footwork", 
+		"Hustle", 
+#
+#		"max_hp", 
+#		"damage", 
+#		"speed",
+#		"accuracy", 
+#		"evasion",
+#		"crit",
+#		"crit_chance",
+#		"crit_mult",
+#		"physical", "fire", "poison", "ice",
+#		"physical_resist", "fire_resist", "poison_resist", "ice_resist"
+	]
+	var dict = {}
+	for k in methods: dict[k] = player_stats.call(k.to_lower())
+	var stats_text = ""
+	stats_text += "Stats:\n"
+	stats_text += "------\n"
+	for key in dict:
+		stats_text += "{0}: {1}    ({2})\n".format([
+			key,
+			dict[key],
+			player_stats.call(key.to_lower()+"_desc")
+		])
+	get_node("%Stats").text = stats_text
 
 func update_num_skills_to_unlock(p_progress: int):
 	progress = p_progress

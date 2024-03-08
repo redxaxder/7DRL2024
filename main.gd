@@ -24,6 +24,8 @@ var next_encounter_base_state: EncounterState # without player buffs applied
 var next_encounter_map: Map
 var encounter_result: EncounterState
 
+var reward_bonuses = []
+
 # are we waiting for the player to decide to do an encounter, (true) or
 # are we in the history view (false)?
 var gonogo: bool = false
@@ -89,12 +91,15 @@ func consume_health_potion():
 
 func new_game():
 	gameover = false
+	
+	reward_bonuses = []
 
 	skill_tree = SkillTree.new()
 #	skill_tree.hand_rolled_skill_tree()
 	skill_tree.random_skill_tree(1234)
 	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = Actor.get_stat_block(Actor.Type.Player)
+	get_node("%ViewSkillTree").update_stats(player_stats)
 	player_hp = player_stats.max_hp()
 	progress = 0
 
@@ -102,6 +107,7 @@ func new_game():
 	randomize()
 	get_node("%ConsumablesContainer").init_starting_consumables()
 	make_encounter()
+	
 
 
 func history_scroll(s: EncounterState, what: EncounterEvent):
@@ -136,9 +142,8 @@ func go():
 	var victory_text = []
 	var Consumables =  get_node("ConsumablesContainer")
 	victory_text.append("You won!")
-	for reward_key in Consumables.rewards:
-		var reward_name = Consumables.CONSUMABLE_TYPES[reward_key].name
-		victory_text.append(str("You got a ", reward_name,"."))
+	victory_text.append_array(Consumables.get_reward_messages())
+	
 	driver.tick()
 	get_node("%state_view").init_view(driver.history.get_state(0), map)
 	get_node("%history_view").view(driver.history, map, victory_text)
@@ -164,15 +169,25 @@ func done():
 	player_hp = remaining_hp - temp_hp
 
 	if player_hp > 0:
-		get_node("%ConsumablesContainer").win_rewards()
+		win_rewards()
 		make_encounter()
 	else:
 		gameover = true
 		update_button_visibility()
 		
 func sneak():
-	get_node("%ConsumablesContainer").win_rewards()
+	win_rewards()
 	no_go()
+	
+func win_rewards():
+	reward_bonuses.append_array(
+		get_node("%ConsumablesContainer").win_rewards()
+	)
+	var prev_max_hp = player_stats.max_hp()
+	get_node("%ViewSkillTree").set_reward_bonuses(reward_bonuses)
+	get_node("%ViewSkillTree").recalculate_player_bonuses()
+	var new_max_hp = player_stats.max_hp()
+	player_hp = player_hp + new_max_hp - prev_max_hp
 
 func restart():
 	new_game()
@@ -220,7 +235,7 @@ func make_encounter(use_seed: int = 0):
 		var spawn = e.units[randi() % e.units.size()]
 		state.add_actor(Actor.create_unit(spawn, Constants.ENEMY_FACTION), passable.pop_back().loc)
 
-	var max_shrines = 1 + int(progress / 5)
+	var max_shrines = int(progress / 5)
 	var num_shrines = randi() % (max_shrines + 1)
 	for _i in num_shrines:
 		if passable.size() == 0: break
