@@ -49,6 +49,12 @@ const STATS = {
 	Type.Gazer: {
 		"base": [30,30,30,30,30,30],
 		"attack": Elements.Kind.Ice,
+		Stat.Kind.Speed: 200
+		},
+	Type.Imp: {
+		"base": [6, 21, 9, 22, 4, 17],
+		"attack": Elements.Kind.Fire,
+		Stat.Kind.FireResist: 200,
 		},
 	Type.Wolf: {
 		"base": [15, 12, 8, 5, 12, 10],
@@ -84,8 +90,8 @@ const STATS = {
 		Stat.Kind.Health: 98, # 100 total
 	},
 	Type.Goblin: {
-		"base": [1,1,1,1,1,1],
-		Stat.Kind.Speed: 100
+		"base": [3,3,3,3,3,3],
+		Stat.Kind.Evasion: 50,
 	},
 }
 
@@ -173,7 +179,7 @@ static func create_shrine(stat: int) -> CombatEntity:
 static func create_big_shrine(stat: int) -> CombatEntity:
 	var shrine = create_unit(Type.BigShrine, Constants.ENEMY_FACTION)
 	var big_shrine_spell = SkillTree.build_ability({
-		"label": Stat.NAME[stat] + " Buff",
+		"label": Stat.NAME[stat] + " Sacrifice",
 		"ability_range": 0,
 		"trigger": SkillsCore.Trigger.Automatic,
 		"filter": Activation.Filter.Death,

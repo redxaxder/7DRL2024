@@ -204,7 +204,8 @@ func make_encounter(use_seed: int = 0):
 	var weights = []
 	weights.resize(encounters.size())
 	for i in encounters.size():
-		var w = max(0, encounters[i].weight + encounters[i].weight_scaling * progress)
+		var dist: float = abs(encounters[i].focus - progress) / encounters[i].get("spread", DEFAULT_SPREAD)
+		var w = encounters[i].get("weight",DEFAULT_WEIGHT) * exp(-1 * dist * dist)
 		weights[i] = w
 	var e = encounters[roll_weighted_table(weights)]
 	var spawns = e.min + (randi() % (1 + e.max - e.min))
@@ -229,61 +230,86 @@ func make_encounter(use_seed: int = 0):
 	update_preview()
 	update_outcome()
 
-
+const DEFAULT_WEIGHT = 100
+const DEFAULT_SPREAD = 20
+const WHOEVER = [
+	Actor.Type.Blorp, 
+	Actor.Type.Snake,
+	Actor.Type.Goblin,
+	Actor.Type.Gazer,
+	Actor.Type.Wolf,
+	Actor.Type.Crab,
+	Actor.Type.Goblin,
+	Actor.Type.Squid,
+	]
 var encounters = [
-	{	"weight": 100, # how frequent it is in early game
-		"weight_scaling": 0, # how frequent it is in late game
+	{	"weight": 300,
+		"focus": 0, # the main floor it's on
 		"min": 1,
 		"max": 6,
 		"units": [Actor.Type.Blorp]
 	},
-	{	"weight": 100, # how frequent it is in early game
-		"weight_scaling": 3, # how frequent it is in late game
-		"min": 1,
-		"max": 6,
-		"units": [Actor.Type.Crab]
-	},
-	{	"weight": 400,
-		"weight_scaling": -30,
+	{	"weight": 400000, # near guarantee of two wolves on floor 2
+		"focus": 2,
+		"spread": 0.0000001,
 		"min": 2,
 		"max": 2,
 		"units": [Actor.Type.Wolf]
 	},
-	{	"weight": 0,
-		"weight_scaling": 3,
+	{	"focus": 10,
 		"min": 1,
 		"max": 2,
 		"units": [Actor.Type.Wolf, Actor.Type.Imp]
 	},
-	{	"weight": 0,
-		"weight_scaling": 6,
-		"min": 3,
+	{	"focus": 15,
+		"min": 1,
+		"max": 6,
+		"units": [Actor.Type.Crab]
+	},
+	{	"focus": 30, # the main floor it's on
+		"min": 1,
+		"max": 6,
+		"units": [Actor.Type.Blorp, Actor.Type.Snake, Actor.Type.Crab]
+	},
+	{   "weight": 200,
+		"focus": 50,
+		"min": 1,
 		"max": 7,
 		"units": [Actor.Type.Wolf]
 	},
-	{	"weight": 50,
-		"weight_scaling": 0,
+	{	"focus": 30,
+		"spread": 50,
+		"min": 1,
+		"max": 5,
+		"units": WHOEVER,
+	},
+	{	"focus": 40,
+		"spread": 40,
 		"min": 1,
 		"max": 6,
 		"units": [Actor.Type.Goblin]
 	},
-	{	"weight": 50,
-		"weight_scaling": 4,
-		"min": 1,
-		"max": 6,
-		"units": [Actor.Type.Imp]
+	{	"focus": 30,
+		"spread": 50,
+		"min": 3,
+		"max": 8,
+		"units": WHOEVER,
 	},
-	{	"weight": 0,
-		"weight_scaling": 3,
-		"min": 6,
-		"max": 15,
+	{	"focus": 80,
+		"spread": 40,
+		"min": 4,
+		"max": 12,
 		"units": [Actor.Type.Goblin]
 	},
-	{	"weight": 100,
-		"weight_scaling": 0,
+	{	"focus": 80,
 		"min": 1,
 		"max": 6,
-		"units": [Actor.Type.Blorp, Actor.Type.Snake, Actor.Type.Goblin, Actor.Type.Squid],
+		"units": [Actor.Type.Imp, Actor.Type.Gazer, Actor.Type.Gazer, Actor.Type.Crab, Actor.Type.Goblin]
+	},
+	{	"focus": 100,
+		"min": 1,
+		"max": 6,
+		"units": [Actor.Type.Imp, Actor.Type.Gazer]
 	},
 ]
 
