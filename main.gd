@@ -289,7 +289,7 @@ var encounters = [
 		"max": 6,
 		"units": [Actor.Type.Goblin]
 	},
-	{	"focus": 30,
+	{	"focus": 70,
 		"spread": 50,
 		"min": 3,
 		"max": 8,

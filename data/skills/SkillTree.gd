@@ -57,7 +57,7 @@ static func create_bonus_skill(stat: int, power: int, skill_name: String) -> Ski
 	var skill = Skill.new()
 	skill.name = skill_name
 	skill.kind = Skill.Kind.Bonus
-	skill.bonus = bonus
+	skill.bonuses = [bonus]
 	return skill
 
 static func build_ability(d: Dictionary) -> Ability:

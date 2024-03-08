@@ -1,0 +1,39 @@
+
+random skill tree
+   + bonus supports multiple stats
+   - random bonus
+   - random skill
+   - populated random tree
+   - use today as seed
+
+character scaling
+   - stats from encounters
+   - v0 get some random stats after every win
+     - put it in the vicotry text
+     - only the 6 base stats
+   - v1 preview what stats you'd get [as text]
+   - v2 images???
+
+ui enhancements
+   - when do i get my next skill point?
+   - title screen?
+   - choose between using the hand-baked tree
+     - we can very easily check if this is their first run,
+       and directly drop them into the game
+     - or daily tree
+     - or pure random tree
+   - victory screen
+   - ending screen
+
+tree unlocking
+   - actually unlock today's tree
+   - ui to select from unlocked trees
+   - unlock a random new tree when reaching floor 80?
+
+run record
+   - a list of past runs made, wieh the floor reached?
+
+a boss
+   - an unskippable encounter
+
+

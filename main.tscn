@@ -229,6 +229,11 @@ margin_top = 18.0
 margin_right = 53.0
 margin_bottom = 18.0
 
+[node name="stat" type="Label" parent="ConsumablesContainer/RewardsContainer"]
+margin_top = 22.0
+margin_right = 53.0
+margin_bottom = 36.0
+
 [node name="ConsumablesCounter" type="Timer" parent="."]
 unique_name_in_owner = true
 

@@ -21,3 +21,9 @@ func generate_description() -> String:
 	else:
 		description += " by {0}.".format([-power])
 	return description
+
+static func generate_bonus_description(bonuses: Array) -> String:
+	var description = ""
+	for bonus in bonuses:
+		description += bonus.generate_description() + "\n"
+	return description
