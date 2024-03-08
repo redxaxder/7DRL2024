@@ -93,7 +93,10 @@ func event_text(evt: EncounterEvent) -> String:
 		EncounterEventKind.Kind.Move:
 			return "{time}: {an} moved -> {loc}".format(evt.dict())
 		EncounterEventKind.Kind.AbilityActivation:
-			return "{time}: {an} activated ability {m}".format(evt.dict())
+			if evt.ability.activation.trigger == SkillsCore.Trigger.Action:
+				return "{time}: {an} activated ability {m}".format(evt.dict())
+			else:
+				return "{time}: {an} reacted with {m}".format(evt.dict())
 		EncounterEventKind.Kind.Damage:
 			if evt.is_crit:
 				return "{time}: Critical hit! {tn} took {d} {el}damage!!!".format(evt.dict())

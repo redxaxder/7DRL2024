@@ -374,7 +374,7 @@ static func generate_name(element = null) -> String:
 	element_adjectives.shuffle()	
 	var has_trailer: bool = randf() < 0.2
 	for i in num_adjectives:
-		if i==0 && element_adjectives.size() > 0:
+		if i==0 and element_adjectives.size() > 0 and (randf() <0.3) :
 			name += element_adjectives.pop_front() + " "
 		else:
 			name += available_adjectives.pop_front() + " "

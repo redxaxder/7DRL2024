@@ -94,7 +94,7 @@ static func random_ability(skill_seed: int) -> Ability:
 	eff.element = rng.randi() % Elements.Kind.MAX
 	var power: float = (rng.randf() + rng.randf() + rng.randf())
 	match eff.targets:
-		SkillsCore.Target.Player:
+		SkillsCore.Target.Self:
 			eff.effect_type = SkillsCore.EffectType.StatBuff
 		SkillsCore.Target.Enemies:
 			eff.effect_type = SkillsCore.EffectType.Damage if rng.randf() < 0.7 \

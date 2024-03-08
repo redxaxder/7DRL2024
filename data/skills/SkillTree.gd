@@ -40,6 +40,15 @@ func append_skill(skill: Skill, row: int):
 func unlock(skill: Skill):
 	unlocks[skill] = true
 
+static func random_ability_skill(rng_seed: int) -> Skill:
+	var skill = Skill.new()
+	skill.kind = Skill.Kind.Ability
+	skill.ability = Skill.random_ability(rng_seed)
+	var name = SkillName.generate_name(skill.ability.effect.element)
+	skill.ability.name = name
+	skill.name = name
+	return skill
+
 static func random_bonus_skill(skill_name: String, rng_seed: int) -> Skill:
 	var skill = Skill.new()
 	skill.kind = Skill.Kind.Bonus
