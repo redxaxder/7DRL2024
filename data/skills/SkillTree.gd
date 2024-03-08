@@ -151,7 +151,6 @@ func hand_rolled_skill_tree():
 	# ROW 0
 	# *****
 	append_and_create_ability({
-		"label": "Poison Pustule",
 		"element": Elements.Kind.Poison,
 		"row": 0,
 			# ***EFFECT***
@@ -176,7 +175,7 @@ func hand_rolled_skill_tree():
 		)
 	
 	append_and_create_ability({
-		"label": "Fiery Fire",
+		# "label": "Fiery Fire",
 		"element": Elements.Kind.Fire,
 		"row": 0,
 			# ***EFFECT***
@@ -203,7 +202,6 @@ func hand_rolled_skill_tree():
 	
 	# Deal 10 damage to an enemy in a 5 radius (4 cooldown)
 	append_and_create_ability({
-		"label": "Icy Clutch",
 		"element": Elements.Kind.Ice,
 		"trigger": SkillsCore.Trigger.Action,
 		"effect_type": SkillsCore.EffectType.Damage,
@@ -222,7 +220,6 @@ func hand_rolled_skill_tree():
 	# ROW 1
 	# *****
 	append_and_create_ability({
-		"label": "Penetrating Thorns",
 		"element": Elements.Kind.Physical,
 		"row": 1,
 			# ***EFFECT***
@@ -247,7 +244,6 @@ func hand_rolled_skill_tree():
 		)
 	
 	append_and_create_ability({
-		"label": "Two Step",
 		"element": Elements.Kind.Physical,
 		"row": 1,
 			# ***EFFECT***
@@ -272,7 +268,6 @@ func hand_rolled_skill_tree():
 		)
 	
 	append_and_create_ability({
-		"label": "Peerless Sleight",
 		"element": Elements.Kind.Physical,
 		"row": 1,
 			# ***EFFECT***
@@ -295,7 +290,6 @@ func hand_rolled_skill_tree():
 	# *****
 	
 	append_and_create_ability({
-		"label": "Poison Gulp",
 		"element": Elements.Kind.Poison,
 		"row": 2,
 			# ***EFFECT***
@@ -319,7 +313,6 @@ func hand_rolled_skill_tree():
 		)
 	
 	append_and_create_ability({
-		"label": "Poison Overflow",
 		"element": Elements.Kind.Poison,
 		"row": 2,
 			# ***EFFECT***
@@ -345,7 +338,6 @@ func hand_rolled_skill_tree():
 		)
 	
 	append_and_create_ability({
-		"label": "Rake the Coals",
 		"element": Elements.Kind.Fire,
 		"row": 2,
 			# ***EFFECT***
@@ -462,8 +454,10 @@ append_and_create_ability(opt : Dictionary)
 
 # syntactic sugar over like 3 calls to make an ability
 func append_and_create_ability(opt: Dictionary): 
-	opt.label = opt.label if opt.label else SkillName.generate_name()
+	opt.label = opt.label if opt.has('label') else SkillName.generate_name(opt.element)
 	var modifiers = []
+	
+	#opt.element = Elements.Kind.Fire
 	if opt.has('modifiers') :
 		modifiers = opt.modifiers
 	if !opt.has('ability_range'):

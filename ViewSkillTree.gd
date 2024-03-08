@@ -4,7 +4,7 @@ signal skill_unlocked
 
 export var skill_tree: Resource
 
-var extra_skill_points : int = 0
+var extra_skill_points : int = 100
 
 var num_skills_to_unlock: int = 0
 var progress: int = 0
@@ -64,7 +64,7 @@ func set_skills(st: SkillTree):
 #			var skill = skill_tree.addSkill(skill_names[j*skill_tree.skillsPerRow + i], i, j)
 			var button = preload("res://graphics/random_icon.tscn").instance()
 			button.connect("pressed", self, 'selectSkill', [skill, button])
-			button.set_input(skill.name)
+			button.set_input(skill)
 			containers[i].add_child(button)
 			button.rect_min_size = Vector2(80, 80)
 			

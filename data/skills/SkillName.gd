@@ -1,5 +1,85 @@
 class_name SkillName
 
+const physical_adjectives = [
+	"Piercing",
+	"Jagged",
+	"Spiky",
+	"Pointed",
+	"Lacerating",
+	"Heavy",
+	"Devastating",
+	"Blunt",
+	"Sharpened",
+	"Razor-sharp",
+	"Barbed",
+	"Crushing",
+	"Gigantic",
+	"Smashing",
+	"Indestructible",
+	"Armored",
+	"Invincible",
+	"Thorned",
+	"Hammered",
+	"Scaled",
+]
+
+const fire_adjectives = [
+	"Boiling",
+	"Molten",
+	"Fiery",
+	"Red-hot",
+	"Burning",
+	"Searing",
+	"Glowing",
+	"Broiling",
+	"Scalding",
+	"Scorching",
+	"Enflamed",
+	"Seething",
+	"Fuming",
+	"Steaming",
+	"Srackling",
+	"Smoking",
+	"Consuming",
+]
+const ice_adjectives = [
+	"Frigid",
+	"Numbing",
+	"Bone-chilling",
+	"Subzero",
+	"Icy",
+	"Glacial",
+	"Frozen",
+	"Freezing",
+	"Arctic",
+	"Fractal",
+	"Gelid",
+	"Inhospitable",
+	"Cerulean",
+	"Azure",
+	"Sapphire"
+]
+const poison_adjectives = [
+	"Poisonous",
+	"Toxic",
+	"Infectious",
+	"Envenomed",
+	"Malignant",
+	"Volatile",
+	"Deadly",
+	"Virulent",
+	"Injurious",
+	"Potent",
+	"Baleful",
+	"Spiked",
+	"Tainted",
+	"Foul",
+	"Contaminated",
+	"Polluted",
+]
+
+
+
 const adjectives = [
 	"Aphotic",
 	"Draconic",
@@ -11,7 +91,6 @@ const adjectives = [
 	"Serpent's",
 	"Devil's",
 	"Burly",
-	"Poisonous",
 	"Mastadon's",
 	"Absolute",
 	"Occasional",
@@ -75,7 +154,6 @@ const adjectives = [
 	"Thundering",
 	"Resplendent",
 	"Shimmering",
-	"Glowing",
 	"Forgotten",
 	"Lost",
 	"Abandoned",
@@ -128,10 +206,30 @@ const trailers = [
 	"of the World",
 	"against Greed",
 	"against Strength",
+	"against God",
+	"against Time",
+	"against Hubris",
+	"against Sloth",
+	"against Envy",
+	"against Weakness",
+	"against Corruption",
+	"against Evil",
 	"of the Weasel",
+	"of the Snake",
+	"of the Hawk",
+	"of the Fox",
+	"of the Spider",
+	"of the Scorpion",
+	"of the Bear",
+	"of the Tiger",
 	"with Haste",
+	"with Courage",
+	"with Revenge",
+	"with Rage",
+	"with Resolve",
 	"Beyond the Limit",
 	"Turbo",
+	"Deux",
 	"Mark II",
 	"for Great Justice",
 ]
@@ -256,14 +354,30 @@ const mains = [
 	"Pulchritude",
 ]
 
-static func generate_name() -> String:
+static func generate_name(element = null) -> String:
 	var name: String = ""
 	var num_adjectives = randi() % 2 + 1
+	
 	var available_adjectives = DataUtil.deep_dup(adjectives)
+	var element_adjectives = []
+	if(element != null):
+		if(element == Elements.Kind.Physical):
+			element_adjectives = DataUtil.deep_dup(physical_adjectives)
+		elif(element == Elements.Kind.Fire):
+			element_adjectives = DataUtil.deep_dup(fire_adjectives)
+		elif(element == Elements.Kind.Ice):
+			element_adjectives = DataUtil.deep_dup(ice_adjectives)
+		elif(element == Elements.Kind.Poison):
+			element_adjectives = DataUtil.deep_dup(poison_adjectives)
+		
 	available_adjectives.shuffle()	
+	element_adjectives.shuffle()	
 	var has_trailer: bool = randf() < 0.2
 	for i in num_adjectives:
-		name += available_adjectives.pop_front() + " "
+		if i==0 && element_adjectives.size() > 0:
+			name += element_adjectives.pop_front() + " "
+		else:
+			name += available_adjectives.pop_front() + " "
 	name += mains[randi() % mains.size()]
 	if has_trailer:
 		name += " " + trailers[randi() % trailers.size()]

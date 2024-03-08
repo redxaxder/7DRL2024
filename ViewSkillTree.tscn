@@ -33,7 +33,6 @@ margin_right = 200.0
 margin_bottom = 30.0
 
 [node name="SkillName" type="RichTextLabel" parent="VBoxContainer"]
-margin_left = 20.0
 margin_top = 45.0
 margin_right = 200.0
 margin_bottom = 73.0
