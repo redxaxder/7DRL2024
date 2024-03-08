@@ -172,6 +172,48 @@ func hand_rolled_skill_tree():
 #	append_skill(abil2, 0)
 
 
+	
+	append_and_create_ability({
+		"label": "Poison Pustule",
+		"element": Elements.Kind.Poison,
+		"row": 2,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.Damage,
+		"power":			500,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Random,
+		"ability_range":  6,
+		"radius":			2,
+		"targets": 		SkillsCore.Target.Enemies,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Death,
+		"filter_actor": 	SkillsCore.Target.Enemies,
+		"cooldown_time":	1,
+		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.AbilityRange, 10)]
+	})
+	
+	append_and_create_ability({
+		"label": "Fiery Fire",
+		"element": Elements.Kind.Fire,
+		"row": 2,
+			# ***EFFECT***
+		"effect_type":	SkillsCore.EffectType.StatBuff,
+		"mod_stat": 		Stat.Kind.Accuracy,
+		"power":			20,
+			# ***EFFECT AIM***
+		"trigger_aim": 	SkillsCore.TriggerAim.Self,
+		"ability_range":  0,
+		"radius":			0,
+		"targets": 		SkillsCore.Target.Self,
+			# ***TRIGGER***
+		"trigger": 		SkillsCore.Trigger.Automatic,
+		"filter": 		Activation.Filter.Movement,
+		"filter_actor": 	SkillsCore.Target.Self,
+		"cooldown_time":	1,
+		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.Power, 1)]
+	})
+	
 	# Deal 10 damage to an enemy in a 5 radius (4 cooldown)
 	append_and_create_ability({
 		"label": "Icy Clutch",
@@ -180,14 +222,13 @@ func hand_rolled_skill_tree():
 		"effect_type": SkillsCore.EffectType.Damage,
 		"ability_range": 0,
 		"power": 10,
-		"radius": 1,
+		"radius": 5,
 		"cooldown_time": 4,
 		"targets": SkillsCore.Target.Enemies,
 		"modifiers": [
-			# as a rule, single digit coefficients on mods
-			Ability.mod(Stat.Kind.Guts, Ability.ModParam.Radius, 10)
+			Ability.mod(Stat.Kind.Guts, Ability.ModParam.Radius, 1)
 		],
-		"row": 2
+		"row": 1
 	})
 	
 	append_skill(create_ability_skill(aoe_test_ability), 1)
@@ -210,6 +251,7 @@ func hand_rolled_skill_tree():
 		"filter": 		Activation.Filter.Attack,
 		"filter_actor": 	SkillsCore.Target.Enemies,
 		"cooldown_time":	0,
+		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.Power, .6)]
 	})
 	
 	append_and_create_ability({
@@ -229,6 +271,7 @@ func hand_rolled_skill_tree():
 		"filter": 		Activation.Filter.Dodge,
 		"filter_actor": 	SkillsCore.Target.Enemies,
 		"cooldown_time":	30,
+		"modifiers": [Ability.mod(Stat.Kind.Guts, Ability.ModParam.CooldownTime, 2)]
 	})
 	
 	append_and_create_ability({
@@ -289,25 +332,6 @@ func hand_rolled_skill_tree():
 	})
 	
 	append_and_create_ability({
-		"label": "Poison pustule",
-		"element": Elements.Kind.Poison,
-		"row": 0,
-			# ***EFFECT***
-		"effect_type":	SkillsCore.EffectType.Damage,
-		"power":			500,
-			# ***EFFECT AIM***
-		"trigger_aim": 	SkillsCore.TriggerAim.Random,
-		"ability_range":  7,
-		"radius":			2,
-		"targets": 		SkillsCore.Target.Enemies,
-			# ***TRIGGER***
-		"trigger": 		SkillsCore.Trigger.Automatic,
-		"filter": 		Activation.Filter.Death,
-		"filter_actor": 	SkillsCore.Target.Enemies,
-		"cooldown_time":	1,
-	})
-	
-	append_and_create_ability({
 		"label": "Rake the coals",
 		"element": Elements.Kind.Fire,
 		"row": 0,
@@ -325,26 +349,6 @@ func hand_rolled_skill_tree():
 		"filter": 		Activation.Filter.DamageReceived,
 		"filter_actor": 	SkillsCore.Target.Self,
 		"cooldown_time":	10,
-	})
-	
-	append_and_create_ability({
-		"label": "Fiery Fire",
-		"element": Elements.Kind.Fire,
-		"row": 0,
-			# ***EFFECT***
-		"effect_type":	SkillsCore.EffectType.StatBuff,
-		"mod_stat": 		Stat.Kind.Accuracy,
-		"power":			20,
-			# ***EFFECT AIM***
-		"trigger_aim": 	SkillsCore.TriggerAim.Self,
-		"ability_range":  0,
-		"radius":			0,
-		"targets": 		SkillsCore.Target.Self,
-			# ***TRIGGER***
-		"trigger": 		SkillsCore.Trigger.Automatic,
-		"filter": 		Activation.Filter.Movement,
-		"filter_actor": 	SkillsCore.Target.Self,
-		"cooldown_time":	1,
 	})
 	
 	append_skill(create_bonus_skill(Stat.Kind.Brawn, 5, SkillName.generate_name()), 0)
@@ -367,7 +371,11 @@ append_and_create_ability(opt : Dictionary)
 	
 	***EFFECT***
 	effect_type:	SkillsCore.EffectType { Damage, StatBuff }
-	mod_stat: 		Stat.Kind.Health,
+	mod_stat: 		Stat.Kind 
+						{ Brawn, Brains, Guts, Eyesight, Footwork, Hustle, 
+						Accuracy, Crit, Evasion, Damage, Speed, Health,
+						Physical, Fire, Ice, Poison,
+						PhysicalResist, FireResist, IceResist, PoisonResist,MAX},
 	power:			float
 	
 	***EFFECT AIM***
@@ -383,6 +391,15 @@ append_and_create_ability(opt : Dictionary)
 	filter_actor : 	SkillsCore.TargetAny or
 					SkillsCore.Target {Self, Enemies, Allies, Empty }
 	cooldown_time:	float
+	
+	***MOD***
+	modifiers = [
+		Ability.mod(
+			Stat.Kind (see mod_stat above),
+			Ability.ModParam { Power, AbilityRange, CooldownTime, Radius },
+			float
+		)
+	]
 	
 
 	***EXAMPLE***
@@ -406,6 +423,9 @@ append_and_create_ability(opt : Dictionary)
 		"filter": 		Activation.Filter.Movement,
 		"filter_actor": 	SkillsCore.Target.Self,
 		"cooldown_time":	1,
+		"modifiers": [
+			Ability.mod(Stat.Kind.Guts, Ability.ModParam.Radius, 1)
+		],
 	})
 	
 	

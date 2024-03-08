@@ -62,20 +62,46 @@ static func mod(stat: int, param:int , coeff: float) -> AbilityMod:
 	mod.modified_param = param
 	mod.coefficient = coeff
 	return mod
+	
+func get_modifier_scaling_desc(modified_param : int ):
+	for m in modifiers:
+		if m.modified_param == modified_param:
+			return "{0}".format([
+				# str(m.coefficient * 100),
+				Stat.Kind.keys()[m.modifier_stat]
+			])
 
 func describe_effect(stats: StatBlock) -> String:
+	var scaled_power = power(stats)
+	var base_power = effect.power
+	var scaled_string = ""
+	var modifier_scaling = get_modifier_scaling_desc(ModParam.Power)
+	if modifier_scaling:
+		scaled_string = " ([color=#3affa9]{0} + {1} scaling[/color])".format([
+			effect.power,
+			modifier_scaling,
+		])
+				
 	match effect.effect_type:
 		SkillsCore.EffectType.Damage:
-			return "Deal {0} damage".format([power(stats)])
+			return "Deal {0}{1} damage".format([
+				power(stats),
+				scaled_string
+			])
 		SkillsCore.EffectType.StatBuff:
 			var increase = "Add"
 			if effect.power < 0: increase = "Decrease"
 			var buff = "buff" if effect.power > 0 else "debuff"
 			
+			var power_string = "{0}{1}".format([
+				power(stats),
+				scaled_string
+			])
+			
 			return "Add {power} {stat} {buff}".format({
 				"buff": buff,
 				"stat": Stat.NAME[effect.mod_stat],
-				"power": power(stats)
+				"power": power_string 
 			})
 	assert(false, "missing effect description")
 	return ""
@@ -88,16 +114,58 @@ func describe_target(target_filter:int) -> String:
 		SkillsCore.TargetAny: return "any"
 	assert(false, "unhandled target")
 	return ""
+	
+func describe_radius(stats: StatBlock):
+	var scaled_string = ""
+	var modifier_scaling = get_modifier_scaling_desc(ModParam.Radius)
+	if modifier_scaling: # always remind about scaling
+		scaled_string = " ([color=#3affa9]{0} + {1} scaling[/color])".format([
+			activation.radius,
+			modifier_scaling,
+		])
+		
+	return "Radius: {0}{1}\n".format([
+		radius(stats),
+		scaled_string
+	])
+	
+func describe_cooldown(stats: StatBlock):
+	var scaled_string = ""
+	var modifier_scaling = get_modifier_scaling_desc(ModParam.CooldownTime)
+	if modifier_scaling: # always remind about scaling
+		scaled_string = " ([color=#3affa9]{0} - {1} scaling[/color])".format([
+			activation.cooldown_time,
+			modifier_scaling,
+		])
+		
+	return "Cooldown: {0}{1}\n".format([
+		cooldown_time(stats),
+		scaled_string
+	])
+	
+func describe_range(stats: StatBlock):
+	var scaled_string = ""
+	var modifier_scaling = get_modifier_scaling_desc(ModParam.AbilityRange)
+	if modifier_scaling: # always remind about scaling
+		scaled_string = " ([color=#3affa9]{0} - {1} scaling[/color])".format([
+			activation.ability_range,
+			modifier_scaling,
+		])
+		
+	return "Range: {0}{1}\n".format([
+		ability_range(stats),
+		scaled_string
+	])
 
 func generate_description(stats: StatBlock) -> String:
 	var dict = {}
 	dict["trigger"] = ["Action","Reaction"][activation.trigger]
-	dict["range"] = ability_range(stats)
-	dict["radius"] = radius(stats)
+	dict["range"] = describe_range(stats)
+	dict["radius"] = describe_radius(stats)
 	dict["target"] = describe_target(effect.targets)
 	dict["activation_text"] = describe_activation_condition()
 	dict["effect_text"] = describe_effect(stats)
-	dict["cooldown"] = cooldown_time(stats)
+	dict["cooldown"] = describe_cooldown(stats)
 #	prints("hp", stats.max_hp())
 	var text = ""
 	# text += "{trigger}\n".format(dict)
@@ -107,20 +175,20 @@ func generate_description(stats: StatBlock) -> String:
 	text += "{effect_text}".format(dict)
 	text += " to {target}.\n".format(dict)
 	
-	for m in modifiers:
-		text += "{0} scales off {1}% of {2}.  \n".format([
-			ModParam.keys()[m.modified_param],
-			str(m.coefficient),
-			Stat.Kind.keys()[m.modifier_stat]
-		])
+#	for m in modifiers:
+#		text += "{0} scales off {1}% of {2}.  \n".format([
+#			ModParam.keys()[m.modified_param],
+#			str(m.coefficient),
+#			Stat.Kind.keys()[m.modifier_stat]
+#		])
 	text += "\n"
 	
-	if dict["range"] > 0:
-		text += "Range: {range}\n".format(dict)
-	if dict["radius"] > 0:
-		text += "Radius: {radius}\n".format(dict)
-	if dict["cooldown"] > 0:
-		text += "Cooldown: {cooldown}\n".format(dict)
+	if dict.range != "" && ability_range(stats) > 0:
+		text += dict.range
+	if dict.radius != "" && radius(stats) > 0:
+		text += dict.radius
+	if dict.cooldown != "":
+		text += dict.cooldown
 		
 	return text
 

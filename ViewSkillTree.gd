@@ -4,6 +4,8 @@ signal skill_unlocked
 
 export var skill_tree: Resource
 
+var extra_skill_points : int = 100
+
 var num_skills_to_unlock: int = 0
 var progress: int = 0
 var player_stats: StatBlock
@@ -120,7 +122,11 @@ func drawButtonUnselected(button: Button):
 func selectSkill(skill: Skill, button: Button = null):
 	selected_skill = skill
 	$VBoxContainer/SkillName.text = skill.name
-	$VBoxContainer/ScrollContainer/SkillDescription.text = skill.generate_description(player_stats)
+	$VBoxContainer/ScrollContainer/SkillDescription.text = ""
+	$VBoxContainer/ScrollContainer/SkillDescription.bbcode_enabled = true
+	$VBoxContainer/ScrollContainer/SkillDescription.append_bbcode(
+		skill.generate_description(player_stats)
+	)
 	update_unlock_button(skill)
 	
 	if(button):
@@ -190,7 +196,7 @@ func recalculate_player_bonuses():
 
 func update_num_skills_to_unlock(p_progress: int):
 	progress = p_progress
-	num_skills_to_unlock = total_skills_to_unlock(progress) - unlocked_skills.keys().size()
+	num_skills_to_unlock = extra_skill_points + total_skills_to_unlock(progress) - unlocked_skills.keys().size()
 	#update_unlock_button()
 
 func total_skills_to_unlock(progress: int) -> int:
