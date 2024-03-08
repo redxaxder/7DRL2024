@@ -43,6 +43,7 @@ static func deep_dup(what):
 
 static func dup_object(o: Object) -> Object:
 	var script: Script = o.get_script()
+	if o.get("alias_ok") == true: return o
 	#WARNING: this will fail if the script has arguments in its
 	# _init function
 	var new = script.new()

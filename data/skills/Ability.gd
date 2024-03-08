@@ -7,6 +7,8 @@ var modifiers: Array = [] #Abilitymod
 var activation: Activation
 var effect: Effect
 
+const alias_ok = true
+
 func _get_parameter_bonus(param: int, statblock: StatBlock) -> float:
 	var bonus = 0
 	for mod in modifiers:

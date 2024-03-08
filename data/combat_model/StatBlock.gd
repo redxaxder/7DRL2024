@@ -4,14 +4,18 @@ class_name StatBlock
 
 var stats: Array = [0,0,0,0,0,0]
 
+var _bonuses: Dictionary
 # bonuses
-var _bonuses: Array
+#var _bonuses: Array
 
 func clear_bonuses():
-	_bonuses = []
+	_bonuses = {}
 
 func apply_bonus(bonus: Bonus):
-	_bonuses.append(bonus)
+	var it = _bonuses.get(bonus.stat, 0)
+	it += bonus.power
+	_bonuses[bonus.stat] = it
+#	_bonuses.append(bonus)
 
 func get_base_stat(stat: int) -> int:
 	if stat < 6:
@@ -27,14 +31,9 @@ func get_base_stat(stat: int) -> int:
 	return 0
 
 func get_modified_stat(stat: int) -> int:
-	var accumulated: int = get_base_stat(stat)
-	for bonus in _bonuses:
-		if bonus.stat == stat:
-			accumulated += bonus.power
-	#TODO (C?)
-	# right now accumulated penalties down below the mimumum will cancel later incoming buffs
-	# make it not worklike that, maybe
-	return int(max(Stat.MINIMUM[stat],accumulated)) 
+	var base = get_base_stat(stat)
+	var modified = base + _bonuses.get(stat,0)
+	return int(max(Stat.MINIMUM[stat],modified)) 
 
 func brawn(): return get_modified_stat(Stat.Kind.Brawn)
 func brains(): return get_modified_stat(Stat.Kind.Brains)
@@ -71,8 +70,8 @@ func crit_chance() -> float:
 
 func initialize_array(array: Array):
 	stats  = array.duplicate()
-	_bonuses = []
+	_bonuses = {}
 
 func initialize(_brawn: int, _brains: int, _guts: int, _eyesight: int, _footwork: int, _hustle: int):
 	stats = [_brawn, _brains, _guts, _eyesight, _footwork, _hustle]
-	_bonuses = []
+	_bonuses = {}

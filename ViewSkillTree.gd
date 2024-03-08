@@ -202,7 +202,7 @@ func update_num_skills_to_unlock(p_progress: int):
 func total_skills_to_unlock(progress: int) -> int:
 	var i = 0
 	var n = unlock_thresholds.size()
-	while unlock_thresholds[i] <= progress and i < n:
+	while unlock_thresholds[i] <= progress and i < n-1:
 		i += 1
 	return i
 

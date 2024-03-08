@@ -9,6 +9,7 @@ static func is_displayed(kind: int) -> bool:
 		Kind.Move: return false
 		Kind.Bloodied: return false
 		Kind.PrepareReaction: return false
+#		Kind.StatChange: return false
 		_: return true
 
 # When the sim is in playback mode, does it play this event 
@@ -18,7 +19,7 @@ static func is_animated(kind: int) -> bool:
 		Kind.Move: return true
 		Kind.Attack: return true
 		Kind.Damage: return true
-		Kind.StatChange: return true
+#		Kind.StatChange: return true
 		Kind.AbilityActivation: return true
 		_: return false
 

@@ -100,7 +100,7 @@ func handle_events(events: Array):
 		if evt.kind == EncounterEventKind.Kind.PrepareReaction:
 			reactions_to_prepare.append(evt)
 		var triggered_events = EncounterCore.update(cur_state, evt)
-		history.add_event(DataUtil.deep_dup(cur_state), evt)
+		history.add_event(cur_state, evt)
 		if evt.kind == EncounterEventKind.Kind.Spawn:
 			#create the unit
 			# insert it in state

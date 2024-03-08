@@ -2,8 +2,8 @@ extends Resource
 
 class_name EncounterHistory
 #export var _states: Array = DataUtil.new_array()
-export var _sparse: Array = DataUtil.new_array()
-export var _events: Array = DataUtil.new_array()
+export var _sparse: Array
+export var _events: Array
 var is_done = false
 # events[i] is the event that causes a transition from
 # state[i] to state[i+1]
@@ -22,12 +22,13 @@ func size():
 func initialize(st: EncounterState):
 #	_states = [st]
 	_sparse = [st]
+	_events = []
 
 func add_event(st: EncounterState, evt: EncounterEvent):
 #	_states.append(st)
 	_events.append(evt)
 	if _events.size() % INTERVAL == 0:
-		_sparse.append(st)
+		_sparse.append(DataUtil.deep_dup(st))
 
 func get_state(i: int) -> EncounterState:
 	i = clamp(i, 0, _events.size())

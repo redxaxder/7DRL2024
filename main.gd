@@ -214,7 +214,7 @@ func make_encounter(use_seed: int = 0):
 		state.add_actor(Actor.create_unit(spawn, Constants.ENEMY_FACTION), passable.pop_back().loc)
 
 	var max_shrines = 1 + int(progress / 5)
-	var num_shrines = min(randi() % (max_shrines + 1),randi() % (max_shrines + 1))
+	var num_shrines = randi() % (max_shrines + 1)
 	for _i in num_shrines:
 		if passable.size() == 0: break
 		var shrine_stat = Actor.SHRINE_TYPES[randi() % Actor.SHRINE_TYPES.size()]
