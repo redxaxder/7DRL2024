@@ -16,7 +16,6 @@ func _draw():
 	if fill_percent > 0:
 		x = max(x,1)
 	x = x / float(breakpoints)
-	var sz
 	var filled: Rect2 = Rect2(Vector2.ZERO, Vector2(x,1) * rect_size)
 	draw_rect(filled, FOREGROUND)
 	

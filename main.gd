@@ -67,6 +67,9 @@ func _ready():
 	timer.start(0.5)
 # warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
+	var m = Meta.new()
+	randomize()
+	print(Meta.index_name(5))
 
 func _process(delta):
 	if driver != null and driver.started and !driver.done:
