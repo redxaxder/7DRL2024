@@ -255,7 +255,7 @@ func generate_description(stats: StatBlock) -> String:
 		
 		
 	# DEBUG
-	var debug = true
+	var debug = false
 	if debug:
 		text += "\n"
 		text += "\n"

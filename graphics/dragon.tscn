@@ -1,7 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
 [sub_resource type="StreamTexture" id=1]
-load_path = "res://.import/dargon.png-9f26f23d72c448dea985fa526434bad5.stex"
 
 [node name="Dragon" type="Sprite"]
 scale = Vector2( 8, 8 )
