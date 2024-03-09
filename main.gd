@@ -67,9 +67,20 @@ func _ready():
 	timer.start(0.5)
 # warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
-	var m = Meta.new()
 	randomize()
-	print(Meta.index_name(5))
+
+
+	var meta: Meta = load_meta()
+#	if !meta.is_fresh:
+#		meta.unlock_today()
+#		meta.save()
+	
+	if is_fresh():
+		print("fresh!")
+		mark_unfresh()
+	else:
+		print("unfresh")
+
 
 func _process(delta):
 	if driver != null and driver.started and !driver.done:
@@ -381,3 +392,19 @@ func update_outcome():
 	driver = EncounterDriver.new()
 	driver.initialize(mod_state, map, driver_seed)
 	driver.tick()
+
+
+func is_fresh() -> bool:
+	return load_meta().is_fresh
+
+func mark_unfresh():
+	var m = load_meta()
+	m.is_fresh = false
+	m.save()
+
+func load_meta() -> Meta:
+	var m = ResourceLoader.load(Meta.PATH)
+	if m is Meta:
+		return m
+	else:
+		return Meta.new()
