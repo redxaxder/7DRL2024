@@ -103,6 +103,8 @@ func consume_health_potion():
 func new_game():
 	gameover = false
 	
+	# set lethal encounter to random floor 1-3
+	
 	reward_bonuses = []
 
 	skill_tree = SkillTree.new()
@@ -116,6 +118,7 @@ func new_game():
 
 	get_node("%ViewSkillTree").player_stats = player_stats
 	randomize()
+	encounters[1].focus = (randi() % 3) + 1
 	get_node("%ConsumablesContainer").init_starting_consumables()
 	make_encounter()
 	
@@ -273,6 +276,7 @@ var WHOEVER: Array = [ \
 	Actor.Type.Crab,
 	Actor.Type.Goblin,
 	Actor.Type.Squid,
+	#dragon not included
 	]
 var encounters = [
 	{	"weight": 300,
@@ -282,11 +286,11 @@ var encounters = [
 		"units": [Actor.Type.Blorp]
 	},
 	{	"weight": 400000, # near guarantee of two wolves on floor 2
-		"focus": 2,
+		"focus": 2, # changed in main
 		"spread": 0.0000001,
 		"min": 2,
-		"max": 2,
-		"units": [Actor.Type.Wolf]
+		"max": 3,
+		"units": [Actor.Type.Wolf, Actor.Type.Dragon]
 	},
 	{	"focus": 10,
 		"min": 1,
@@ -341,7 +345,7 @@ var encounters = [
 	{	"focus": 100,
 		"min": 1,
 		"max": 6,
-		"units": [Actor.Type.Imp, Actor.Type.Gazer]
+		"units": [Actor.Type.Imp, Actor.Type.Gazer, Actor.Type.Dragon]
 	},
 ]
 
@@ -377,4 +381,3 @@ func update_outcome():
 	driver = EncounterDriver.new()
 	driver.initialize(mod_state, map, driver_seed)
 	driver.tick()
-	

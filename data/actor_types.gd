@@ -11,6 +11,7 @@ enum Type{
 	Goblin,
 	Gazer,
 	BigShrine,
+	Dragon,
 	}
 
 const NAMES = [ \
@@ -25,6 +26,7 @@ const NAMES = [ \
 	"Goblin",
 	"Gazer",
 	"Shrine",
+	"Dragon",
 ]
 
 const SPRITES = [ \
@@ -39,6 +41,7 @@ const SPRITES = [ \
 	preload("res://graphics/goblin/goblin.png"),
 	preload("res://graphics/gazer/gazer.tscn"),
 	preload("res://graphics/shrine/shrine.png"),
+	preload("res://graphics/dragon/dragon.png"),
   ]
 
 const STATS = {
@@ -48,7 +51,7 @@ const STATS = {
 		Stat.Kind.Health: 30,
 		 }, 
 	Type.Gazer: {
-		"base": [30,30,30,30,30,30],
+		"base": [20,20,20,20,20,20],
 		"attack": Elements.Kind.Ice,
 		Stat.Kind.Speed: 200
 		},
@@ -93,6 +96,12 @@ const STATS = {
 	Type.Goblin: {
 		"base": [3,3,3,3,3,3],
 		Stat.Kind.Evasion: 50,
+	},
+	Type.Dragon: {
+		"base": [50,50,50,50,50,50],
+		"attack": Elements.Kind.Fire,
+		Stat.Kind.FireResist: 150,
+		Stat.Kind.IceResist: 150,
 	},
 }
 

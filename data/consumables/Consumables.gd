@@ -19,7 +19,7 @@ var CONSUMABLE_TYPES = {
 		"description": "Skip the current encounter.",
 		"sprite": preload("res://graphics/consumables/magic-portal.svg"),
 		"color": Color("#a300ff"),
-		"start_count": 100
+		"start_count": 5
 	},
 	"health": {
 		"name": "Health Potion",
