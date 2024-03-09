@@ -1,7 +1,7 @@
 extends Control
 
 export var highlighted: bool = false setget set_highlighted
-
+export var payload: int = 0
 # warning-ignore:unused_signal
 signal pressed
 

@@ -30,9 +30,9 @@ const MONTHS = [31,29,31,30,31,30,31,31,30,31,30,31]
 static func get_date_index() -> int:
 	var t = OS.get_datetime(true)
 	var i = 0
-	i += t.month
+	i += t.month - 1
 	i *= 31
-	i += t.day
+	i += t.day -1
 	return i
 
 static func tree_name(tree_id: int) -> String:

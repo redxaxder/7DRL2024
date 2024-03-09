@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 [ext_resource path="res://playback/ViewHistory.tscn" type="PackedScene" id=2]
@@ -10,14 +10,7 @@
 [ext_resource path="res://SkillTreePanel.gd" type="Script" id=8]
 [ext_resource path="res://graphics/gui/play-button.svg" type="Texture" id=9]
 [ext_resource path="res://misc/BetterButton.tscn" type="PackedScene" id=10]
-
-[sub_resource type="StyleBoxTexture" id=8]
-texture = ExtResource( 9 )
-region_rect = Rect2( 0, 0, 512, 512 )
-
-[sub_resource type="DynamicFont" id=5]
-size = 40
-font_data = ExtResource( 6 )
+[ext_resource path="res://Title.tscn" type="PackedScene" id=11]
 
 [sub_resource type="DynamicFont" id=3]
 size = 24
@@ -34,6 +27,14 @@ font_data = ExtResource( 6 )
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.09, 0.08, 0.1, 1 )
 
+[sub_resource type="StyleBoxTexture" id=8]
+texture = ExtResource( 9 )
+region_rect = Rect2( 0, 0, 512, 512 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 40
+font_data = ExtResource( 6 )
+
 [node name="main" type="Node2D"]
 script = ExtResource( 1 )
 show_extra_history = false
@@ -42,37 +43,6 @@ show_extra_history = false
 unique_name_in_owner = true
 margin_right = 1024.0
 margin_bottom = 600.0
-
-[node name="GO" parent="." instance=ExtResource( 10 )]
-unique_name_in_owner = true
-modulate = Color( 0.102334, 0.864355, 0.609407, 1 )
-margin_left = 764.0
-margin_top = 538.0
-margin_right = 816.0
-margin_bottom = 590.0
-custom_styles/panel = SubResource( 8 )
-__meta__ = {
-"_edit_lock_": true
-}
-image = ExtResource( 9 )
-text = ""
-
-[node name="SAYS_GO" type="Label" parent="GO"]
-margin_left = -5.0
-margin_top = -35.0
-margin_right = 67.0
-margin_bottom = 9.0
-mouse_filter = 1
-custom_fonts/font = SubResource( 5 )
-text = "GO!"
-
-[node name="Button" type="Button" parent="GO/SAYS_GO"]
-self_modulate = Color( 1, 1, 1, 0 )
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -6.0
-margin_bottom = 50.0
-mouse_filter = 1
 
 [node name="DONE" type="Button" parent="."]
 unique_name_in_owner = true
@@ -239,6 +209,47 @@ Gain stat 2"
 
 [node name="ConsumablesCounter" type="Timer" parent="."]
 unique_name_in_owner = true
+
+[node name="Title" parent="." instance=ExtResource( 11 )]
+unique_name_in_owner = true
+visible = false
+margin_right = 1024.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true
+}
+
+[node name="GO" parent="." instance=ExtResource( 10 )]
+unique_name_in_owner = true
+modulate = Color( 0.102334, 0.864355, 0.609407, 1 )
+margin_left = 764.0
+margin_top = 538.0
+margin_right = 816.0
+margin_bottom = 590.0
+custom_styles/panel = SubResource( 8 )
+__meta__ = {
+"_edit_lock_": true
+}
+image = ExtResource( 9 )
+text = ""
+
+[node name="SAYS_GO" type="Label" parent="GO"]
+margin_left = -5.0
+margin_top = -35.0
+margin_right = 67.0
+margin_bottom = 9.0
+mouse_filter = 1
+custom_fonts/font = SubResource( 5 )
+text = "GO!"
+
+[node name="Button" type="Button" parent="GO/SAYS_GO"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -6.0
+margin_bottom = 50.0
+mouse_filter = 1
 
 [connection signal="mouse_entered" from="GO/SAYS_GO/Button" to="GO" method="mouse_entered"]
 [connection signal="mouse_exited" from="GO/SAYS_GO/Button" to="GO" method="mouse_exited"]

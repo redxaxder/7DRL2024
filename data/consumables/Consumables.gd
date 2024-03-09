@@ -234,8 +234,9 @@ func use_consumable(type: String):
 func _process(_delta):
 	for c in CONSUMABLE_TYPES:
 		var config = CONSUMABLE_TYPES[c]
-		config.button.text = "{0}".format([consumable_inventory[c]])
-		config.button.visible = consumable_inventory[c] > 0
+		var amount = consumable_inventory.get(c,0)
+		config.button.text = str(amount)
+		config.button.visible = amount > 0
 		config.shake *= 0.9
 		
 		if(config.shake < 1):

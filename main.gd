@@ -29,7 +29,7 @@ var reward_bonuses = []
 # are we waiting for the player to decide to do an encounter, (true) or
 # are we in the history view (false)?
 var gonogo: bool = false
-var gameover: bool = false
+var gameover: bool = true
 var has_seen_end: bool = false
 var map = Map.new()
 
@@ -61,7 +61,19 @@ func _ready():
 # warning-ignore:return_value_discarded
 	get_node("%ViewSkillTree").connect("skill_unlocked",self,"update_skill_points")
 	
-	new_game()
+	
+	
+	var title = get_node("%Title")
+	title.connect("select", self, "title_select")
+	mark_unfresh()
+	unlock_today()
+	for i in load_meta().get_unlocked():
+		if selected < 0: selected = i
+		title.add_unlocked_line(i)
+	
+	title.pick_something()
+	
+	update_button_visibility()
 	
 	var timer : Timer = get_node("%ConsumablesCounter")
 	timer.start(0.5)
@@ -69,6 +81,11 @@ func _ready():
 	timer.connect("timeout", self, "transfer_reward")
 	randomize()
 
+var selected = -1
+func title_select(i: int):
+	selected = i
+	print(selected)
+	
 
 func _process(delta):
 	if driver != null and driver.started and !driver.done:
@@ -120,6 +137,7 @@ func new_game():
 	encounters[1].focus = (randi() % 3) + 1
 	get_node("%ConsumablesContainer").init_starting_consumables()
 	make_encounter()
+	update_button_visibility()
 	
 
 
@@ -131,15 +149,17 @@ func seen_end(result):
 	has_seen_end = true
 	encounter_result = result
 	update_button_visibility()
-	
+
+
 func update_button_visibility():
 	get_node("%DONE").visible = !gonogo and !gameover and has_seen_end
-	get_node("%GO").visible = gonogo and !gameover
+	get_node("%GO").visible = gonogo or gameover
 	get_node("%RESTART").visible = gameover
 	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
 	get_node("%FloorNumber").visible = gonogo and !$SkillTreePanel.visible
 	get_node("%SkillPoints").visible = gonogo
 	get_node("%OpenSkillTree").visible = gonogo
+	get_node("%Title").visible = gameover
 
 func apply_player_mods(s: EncounterState) -> EncounterState:
 	var st = DataUtil.deep_dup(s)
@@ -152,6 +172,9 @@ func apply_player_mods(s: EncounterState) -> EncounterState:
 
 
 func go():
+	if gameover:
+		new_game()
+		return
 	var victory_text = []
 	var Consumables =  get_node("ConsumablesContainer")
 	victory_text.append("You won!")
@@ -225,10 +248,7 @@ func make_encounter(use_seed: int = 0):
 	var passable = map.list_passable()
 	passable.shuffle()
 
-	if progress == 15:
-		mark_unfresh()
-		unlock_today()
-	if progress == 80:
+	if progress == 50:
 		load_meta().unlock_random(randi()).save()
 
 	get_node("%ConsumablesContainer").init_rewards()
