@@ -64,7 +64,7 @@ static func random_bonus(skill_seed: int) -> Array:
 		if Stat.MINIMUM[s] == 0: continue
 		minus_stats.append(s)
 	minus.stat = minus_stats[rng.randi() % minus_stats.size()]
-	minus.power = power * -0.5
+	minus.power = power * -0.4
 	minus.power *= STAT_PREMIUM[minus.stat]
 	return  [plus, minus]
 

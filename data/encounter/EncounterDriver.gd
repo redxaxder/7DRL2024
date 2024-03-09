@@ -46,15 +46,22 @@ func initialize(state: EncounterState, p_map: Map = null, use_seed: int = 0):
 
 func tick() -> bool:
 	# 0. is the player alive?
-	if done: return false
-	if !cur_state.get_player().is_alive():
+	if done:
+		history.is_done = true
+		return false
+	if !cur_state.get_player().is_alive() or current_time > 1000:
 		done = true
 		history.is_done = true
 		return false
 	# 0.1. are there any enemies alive?
 	var enemies_alive = false
-	for actor in cur_state.actors:
-		if actor.is_alive() and actor.faction != Constants.PLAYER_FACTION:
+#	for actor in cur_state.actors:
+#		if actor.is_alive() and actor.faction != Constants.PLAYER_FACTION:
+#			enemies_alive = true
+#			break
+	for actor in queue._values:
+		if actor is CombatEntity and \
+			actor.is_alive() and actor.faction != Constants.PLAYER_FACTION:
 			enemies_alive = true
 			break
 	if !enemies_alive:

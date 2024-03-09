@@ -198,7 +198,7 @@ static func create_shrine(stat: int) -> CombatEntity:
 
 static func create_big_shrine(stat: int) -> CombatEntity:
 	var shrine = create_unit(Type.BigShrine, Constants.ENEMY_FACTION)
-	var big_shrine_spell = SkillTree.build_ability({
+	var big_shrine_spell: Ability = SkillTree.build_ability({
 		"label": Stat.NAME[stat] + " Sacrifice",
 		"ability_range": 0,
 		"trigger": SkillsCore.Trigger.Automatic,
@@ -210,6 +210,10 @@ static func create_big_shrine(stat: int) -> CombatEntity:
 		"targets": SkillsCore.Target.Allies,
 		"cooldown_time": 1,
 	})
+	for stat in SHRINE_TYPES:
+		big_shrine_spell.modifiers.append(Ability.mod(
+			stat, Ability.ModParam.Power, 1
+		))
 	shrine.name = "Greater " + Stat.NAME[stat] + " Shrine"
 	shrine.append_ability(big_shrine_spell)
 	shrine.inert = true

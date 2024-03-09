@@ -68,13 +68,9 @@ func _ready():
 	var meta = load_meta()
 	meta.unlock_today()
 	meta.save()
-	for i in meta.get_unlocked():
-		if selected < 0: selected = i
-		title.add_unlocked_line(i, meta.did_win(i))
-	
+	refresh_title_list()
 	title.pick_something()
 	update_button_visibility()
-	
 	var timer : Timer = get_node("%ConsumablesCounter")
 	timer.start(0.5)
 # warning-ignore:return_value_discarded
@@ -85,6 +81,16 @@ func _ready():
 		new_game()
 	
 
+func refresh_title_list():
+	var title = get_node("%Title")
+	var meta = load_meta()
+	for i in meta.get_unlocked():
+		if selected < 0: selected = i
+		title.add_unlocked_line(i, meta.did_win(i))
+	
+
+
+
 var selected = -1
 func title_select(i: int):
 	selected = i
@@ -92,7 +98,7 @@ func title_select(i: int):
 
 func _process(delta):
 	if driver != null and driver.started and !driver.done:
-		for _i in 20:
+		for _i in 5:
 			if !driver.tick(): break
 
 func update_skill_points():
@@ -263,6 +269,7 @@ func make_encounter(use_seed: int = 0):
 
 	if progress == 50:
 		load_meta().unlock_random(randi()).save()
+		refresh_title_list()
 
 	get_node("%ConsumablesContainer").init_rewards()
 
@@ -287,11 +294,11 @@ func make_encounter(use_seed: int = 0):
 		state.add_actor(Actor.create_unit(spawn, Constants.ENEMY_FACTION), passable.pop_back().loc)
 
 	var max_shrines = int(progress / 5)
-	var num_shrines = randi() % (max_shrines + 1)
+	var num_shrines = int(max_shrines/2) +randi() % (int(max_shrines/2) + 1)
 	for _i in num_shrines:
 		if passable.size() == 0: break
 		var shrine_stat = Actor.SHRINE_TYPES[randi() % Actor.SHRINE_TYPES.size()]
-		var shrine = Actor.create_shrine(shrine_stat) if (randf() < 0.8) else \
+		var shrine = Actor.create_shrine(shrine_stat) if (randf() < 0.5) else \
 					Actor.create_big_shrine(shrine_stat)
 		state.add_actor(shrine, passable.pop_back().loc)
 	
