@@ -29,12 +29,15 @@ func _refresh():
 	dict["cur_hp"] = max(0,actor.cur_hp)
 	dict["crit_chance"] = int(actor.stats.crit_chance() * 100)
 	dict["crit_mult"] = round(actor.stats.crit_mult() * 10) / 10
+	dict["attack_type"] = Elements.Kind.keys()[actor.element]
 	
 	var stats = get_node("%stats")
 	if !stats: return
 	for c in stats.get_children():
 		c.queue_free()
 		stats.remove_child(c)
+		
+	methods.append("attack_type")
 	
 	for key in methods:
 		var field
@@ -47,7 +50,7 @@ func _refresh():
 			field = str(field_display.get(key, "MISSING"),":")
 #			assert(field != "NISSING:")
 			value = str("{", key, "}").format(dict)
-		var is_shown = dict[key] != 0 or key == "max_hp"
+		var is_shown = key == "attack_type" or dict[key] != 0 or key == "max_hp"
 		if is_shown:
 			var label1 = Label.new()
 			stats.add_child(label1)
@@ -72,5 +75,6 @@ const field_display: Dictionary = {
 	"physical_resist": "Physical Resist",
 	"poison_resist": "Poison Resist",
 	"fire_resist": "Fire Resist",
-	"ice_resist": "Ice Resist"
+	"ice_resist": "Ice Resist",
+	"attack_type": "Element",
 }
