@@ -78,7 +78,15 @@ func _process(delta):
 
 func update_skill_points():
 	get_node("%ViewSkillTree").update_num_skills_to_unlock(progress)
-	get_node("%SkillPoints").text = "Skill Points: "+str(get_node("%ViewSkillTree").num_skills_to_unlock)
+	var next_skill_point_string = ""
+	
+	var next_skill_point = get_node("%ViewSkillTree").next_skill_point(progress)
+	if next_skill_point:
+		next_skill_point_string = " (next: Floor {0})".format([next_skill_point])
+	get_node("%SkillPoints").text = "Skill Points: {0}{1}".format([
+		get_node("%ViewSkillTree").num_skills_to_unlock,
+		next_skill_point_string
+	])
 
 func transfer_reward():
 	if gonogo && !gameover:

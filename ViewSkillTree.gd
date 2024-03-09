@@ -4,7 +4,7 @@ signal skill_unlocked
 
 export var skill_tree: Resource
 
-var extra_skill_points : int = 100
+var extra_skill_points : int = 0
 
 var num_skills_to_unlock: int = 0
 var progress: int = 0
@@ -124,7 +124,7 @@ func _draw():
 			else:
 				drawButtonUnavailable(button)
 				
-			if skill == selected_skill:
+			if skill == selected_skill && !unlocked_skills.has(skill.name):
 				button.modulate = Color.white
 				
 func drawButtonUnlocked(button: Button, skill : Skill):
@@ -280,7 +280,14 @@ func update_num_skills_to_unlock(p_progress: int):
 func total_skills_to_unlock(progress: int) -> int:
 	var i = 0
 	var n = unlock_thresholds.size()
-	while unlock_thresholds[i] <= progress and i < n-1:
+	while unlock_thresholds[i] <= progress and i < n:
 		i += 1
+		if(i>=n):
+			break
 	return i
+	
+func next_skill_point(progress: int):
+	for u in unlock_thresholds:
+		if u > progress:
+			return  u
 
