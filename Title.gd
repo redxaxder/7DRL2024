@@ -22,4 +22,4 @@ func pick_something():
 	if unlocks.get_child_count() > 0:
 		log_click(unlocks.get_child(0).payload)
 	else:
-		log_click(randi() % 366)
+		log_click(Meta.get_date_index())

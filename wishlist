@@ -7,15 +7,15 @@ random skill tree
    - use today as seed
 
 character scaling
-   - stats from encounters
-   - v0 get some random stats after every win
-     - put it in the vicotry text
-     - only the 6 base stats
-   - v1 preview what stats you'd get [as text]
+   + stats from encounters
+   + v0 get some random stats after every win
+     + put it in the vicotry text
+     + only the 6 base stats
+   + v1 preview what stats you'd get [as text]
    - v2 images???
 
 ui enhancements
-   - when do i get my next skill point?
+   + when do i get my next skill point?
    - title screen?
    - choose between using the hand-baked tree
      - we can very easily check if this is their first run,
@@ -26,9 +26,9 @@ ui enhancements
    - ending screen
 
 tree unlocking
-   - actually unlock today's tree
+   + actually unlock today's tree
    - ui to select from unlocked trees
-   - unlock a random new tree when reaching floor 80?
+   + unlock a random new tree when reaching floor 80?
 
 run record
    - a list of past runs made, wieh the floor reached?

@@ -72,14 +72,12 @@ func _ready():
 		title.add_unlocked_line(i)
 	
 	title.pick_something()
-	
 	update_button_visibility()
 	
 	var timer : Timer = get_node("%ConsumablesCounter")
 	timer.start(0.5)
 # warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
-	randomize()
 
 var selected = -1
 func title_select(i: int):
@@ -125,7 +123,9 @@ func new_game():
 
 	skill_tree = SkillTree.new()
 #	skill_tree.hand_rolled_skill_tree()
-	skill_tree.random_skill_tree(1234)
+	skill_tree.random_skill_tree(selected)
+
+	
 	get_node("%ViewSkillTree").set_skills(skill_tree)
 	player_stats = Actor.get_stat_block(Actor.Type.Player)
 	get_node("%ViewSkillTree").update_stats(player_stats)
@@ -236,7 +236,7 @@ func make_encounter(use_seed: int = 0):
 	var encounter_seed = use_seed
 	if encounter_seed == 0:
 		encounter_seed = randi()
-	prints("encounter seed", encounter_seed)
+#	prints("encounter seed", encounter_seed)
 
 	seed(encounter_seed)
 	current_encounter_seed = encounter_seed
