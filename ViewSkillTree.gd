@@ -21,7 +21,7 @@ var reward_bonuses = []
 # approximately follows the curve level=unlocks^2.1073
 # the first point is unlocked at level 1. the second at level 5, and so on
 # 8 skills unlock total
-const unlock_thresholds = [1,5,11,19,30,44,61,80]
+const unlock_thresholds = [1,5,11,19,30,44,61,80,90]
 
 func _ready():
 	unlocked_skills = {}
