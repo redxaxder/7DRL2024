@@ -106,13 +106,24 @@ static func random_ability(skill_seed: int) -> Ability:
 				else SkillsCore.EffectType.StatBuff
 			if eff.effect_type == SkillsCore.EffectType.StatBuff and rng.randf() < 0.5:
 				power *= -1
+	# power > 0: this is a buff for us
+	# can it be elemental?
+	# power: no. resist: yes.
+	#
+	# is power + or -?
+	# are we targeting ourself or an enemy?
+	#
+	# us, +     | main combat stats, elemental resists
+	# all +     | main combat stats, elemental resist
+	# all -     | main combat stats, elemental power, 
+	# enemy -   | main combat stats, elemental power
+	
 	if eff.effect_type == SkillsCore.EffectType.StatBuff:
-		if rng.randf() < 0.6: # a main combat stat
+		if rng.randf() < 0.7 : # a main combat stat
 			eff.mod_stat = Stat.DERIVED_STATS[ rng.randi() % Stat.DERIVED_STATS.size() ]
+		elif power < 0: #elemental attack or defense
+			eff.mod_stat = Elements.ATTACK[eff.element]
 		elif power > 0: #elemental attack or defense
-			eff.mod_stat = Elements.ATTACK[eff.element] if rng.randf() < 0.8 \
-						else Elements.DEFENSE[eff.element]
-		else: # if power is negative, we only hit elemental defense
 			eff.mod_stat = Elements.DEFENSE[eff.element]
 		power *= STAT_PREMIUM[eff.mod_stat] * 0.6
 	
