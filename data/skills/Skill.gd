@@ -64,7 +64,7 @@ static func random_bonus(skill_seed: int) -> Array:
 		if Stat.MINIMUM[s] == 0: continue
 		minus_stats.append(s)
 	minus.stat = minus_stats[rng.randi() % minus_stats.size()]
-	minus.power = plus.power * -0.5
+	minus.power = power * -0.5
 	minus.power *= STAT_PREMIUM[minus.stat]
 	return  [plus, minus]
 
@@ -181,6 +181,11 @@ static func random_ability(skill_seed: int) -> Ability:
 			else SkillsCore.TriggerAim.Self if rng.randf() < 0.1 \
 			else SkillsCore.TriggerAim.EventSource if rng.randf() < 0.5 \
 			else SkillsCore.TriggerAim.EventTarget
+			
+		var is_positive_ability = eff.power > 0 \
+			and eff.effect_type == SkillsCore.EffectType.StatBuff
+		if is_positive_ability:
+			act.trigger_aim = SkillsCore.TriggerAim.Self
 		match act.filter: 
 			Activation.Filter.Death:
 				act.filter_actor = SkillsCore.Target.Enemy
@@ -196,7 +201,7 @@ static func random_ability(skill_seed: int) -> Ability:
 		var num_rolls = 3
 		var num_mods = 0
 		if (eff.targets == SkillsCore.Target.Self):
-			act.trigger_aim = SkillsCore.Target.Self
+			act.trigger_aim = SkillsCore.TriggerAim.Self
 			act.radius = 0
 		else:
 			act.radius = 1

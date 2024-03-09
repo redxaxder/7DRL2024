@@ -70,18 +70,6 @@ func _ready():
 	randomize()
 
 
-	var meta: Meta = load_meta()
-#	if !meta.is_fresh:
-#		meta.unlock_today()
-#		meta.save()
-	
-	if is_fresh():
-		print("fresh!")
-		mark_unfresh()
-	else:
-		print("unfresh")
-
-
 func _process(delta):
 	if driver != null and driver.started and !driver.done:
 		for _i in 20:
@@ -109,7 +97,7 @@ func consume_health_potion():
 		max_hp,
 		player_hp + max_hp * 0.3
 	))
-	make_encounter(current_encounter_seed)
+	update_outcome()
 
 func new_game():
 	gameover = false
@@ -237,6 +225,12 @@ func make_encounter(use_seed: int = 0):
 	var passable = map.list_passable()
 	passable.shuffle()
 
+	if progress == 15:
+		mark_unfresh()
+		unlock_today()
+	if progress == 80:
+		load_meta().unlock_random(randi()).save()
+
 	get_node("%ConsumablesContainer").init_rewards()
 
 	var state = EncounterState.new()
@@ -244,7 +238,6 @@ func make_encounter(use_seed: int = 0):
 	player.initialize_with_block(player_stats, Constants.PLAYER_FACTION, "You")
 	player.actor_type = Actor.Type.Player
 	assert(player_hp > 0)
-	player.cur_hp = player_hp
 	state.add_actor(player, passable.pop_back().loc)
 	
 	var weights = []
@@ -273,7 +266,6 @@ func make_encounter(use_seed: int = 0):
 	gonogo = true
 	update_button_visibility()
 	get_node("%state_view").init_view(apply_player_mods(next_encounter_base_state), map)
-	update_preview()
 	update_outcome()
 
 const DEFAULT_WEIGHT = 100
@@ -377,19 +369,17 @@ func roll_weighted_table(table: Array) -> int:
 	return n
 
 
-func update_preview():
-	get_node("%state_view").update_view(apply_player_mods(next_encounter_base_state))
 
 func toggle_skill_tree():
 	$SkillTreePanel.visible = !$SkillTreePanel.visible
-	
 	update_button_visibility()
-	update_preview()
 	update_outcome()
 
 func update_outcome():
 	var mod_state = apply_player_mods(next_encounter_base_state)
+	mod_state.get_player().cur_hp = player_hp
 	driver = EncounterDriver.new()
+	get_node("%state_view").update_view(DataUtil.deep_dup(mod_state))
 	driver.initialize(mod_state, map, driver_seed)
 	driver.tick()
 
@@ -408,3 +398,6 @@ func load_meta() -> Meta:
 		return m
 	else:
 		return Meta.new()
+
+func unlock_today():
+	load_meta().unlock_today().save()

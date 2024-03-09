@@ -120,7 +120,7 @@ func init_rewards():
 	print("init rewards "+ str(stat_reward_increase))
 	
 	for s in won_stats:
-		stat_text += "Also permanently gain {0} {1}.\n".format([
+		stat_text += "Also gain {0} {1}.\n".format([
 			stat_reward_increase,
 			Stat.NAME[s]
 		])

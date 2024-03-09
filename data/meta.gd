@@ -6,14 +6,18 @@ export var unlocked: Dictionary = {}
 
 const PATH = "user://meta.tres"
 
-func unlock_today():
+func unlock_today() -> Resource:
 	unlocked[get_date_index()] = true
+	return self
 
-func unlock_random(rng: RandomNumberGenerator):
-	var i = rng.randi() % 366
-	while unlocked.get(i,false):
-		i += 1
-	unlocked[i] = true
+func unlock_random(i: int) -> Resource:
+	i = i % 366
+	for n in 400:
+		var it = (i + n) % 366
+		if !unlocked.get(it, false):
+			unlocked[it] = true
+			break
+	return self
 
 func get_unlocked() -> Array:
 	return unlocked.keys()

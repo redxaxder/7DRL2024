@@ -12,9 +12,9 @@ func initialize_bonus(_stat: int, bpower: int):
 func generate_description() -> String:
 	var description = ""
 	if power > 0:
-		description += "Permanently raises "
+		description += "Raises "
 	else:
-		description += "Permanently lowers "
+		description += "Lowers "
 	description += Stat.NAME[stat]
 	if power > 0:
 		description += " by {0}.".format([power])
