@@ -12,6 +12,7 @@ enum Type{
 	Gazer,
 	BigShrine,
 	Dragon,
+	Hermit,
 	}
 
 const NAMES = [ \
@@ -27,6 +28,7 @@ const NAMES = [ \
 	"Gazer",
 	"Shrine",
 	"Dragon",
+	"Hermit",
 ]
 
 const SPRITES = [ \
@@ -42,6 +44,7 @@ const SPRITES = [ \
 	preload("res://graphics/gazer/gazer.tscn"),
 	preload("res://graphics/shrine/shrine.png"),
 	preload("res://graphics/dragon/dragon.png"),
+	preload("res://graphics/hermit.png"),
   ]
 
 const STATS = {
@@ -104,6 +107,11 @@ const STATS = {
 		"attack": Elements.Kind.Fire,
 		Stat.Kind.FireResist: 150,
 		Stat.Kind.IceResist: 150,
+	},
+	Type.Hermit: {
+		"base": [7,7,7,7, 7,7],
+		"attack": Elements.Kind.Ice,
+		Stat.Kind.PhysicalResist: 200,
 	},
 }
 

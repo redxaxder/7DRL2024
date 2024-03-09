@@ -52,8 +52,8 @@ fit_content_height = true
 [node name="ScrollContainer" type="ScrollContainer" parent="SkillTreeContainer"]
 margin_top = 88.0
 margin_right = 200.0
-margin_bottom = 218.0
-rect_min_size = Vector2( 200, 130 )
+margin_bottom = 203.0
+rect_min_size = Vector2( 200, 115 )
 size_flags_vertical = 3
 follow_focus = true
 scroll_horizontal_enabled = false
@@ -67,9 +67,9 @@ fit_content_height = true
 scroll_following = true
 
 [node name="UnlockButton" type="Button" parent="SkillTreeContainer"]
-margin_top = 233.0
+margin_top = 218.0
 margin_right = 200.0
-margin_bottom = 261.0
+margin_bottom = 246.0
 custom_fonts/font = SubResource( 2 )
 text = "Unlock"
 

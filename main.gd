@@ -312,10 +312,11 @@ var WHOEVER: Array = [ \
 	Actor.Type.Crab,
 	Actor.Type.Goblin,
 	Actor.Type.Squid,
+	Actor.Type.Hermit,
 	#dragon not included
 	]
 var encounters = [
-	{	"weight": 300,
+	{	"weight": 100,
 		"focus": 0, # the main floor it's on
 		"min": 1,
 		"max": 6,
@@ -327,6 +328,11 @@ var encounters = [
 		"min": 2,
 		"max": 3,
 		"units": [Actor.Type.Wolf, Actor.Type.Dragon]
+	},
+	{	"focus": 5, #very early game encounters
+		"min": 2,
+		"max": 4,
+		"units": [Actor.Type.Blorp, Actor.Type.Snake, Actor.Type.Goblin, Actor.Type.Squid, Actor.Type.Hermit]
 	},
 	{	"focus": 10,
 		"min": 1,
