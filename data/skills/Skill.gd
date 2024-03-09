@@ -101,7 +101,7 @@ static func random_ability(skill_seed: int) -> Ability:
 							else SkillsCore.EffectType.StatBuff
 			if eff.effect_type == SkillsCore.EffectType.StatBuff:
 				power *= -1
-		SkillsCore.Target.TargetAny:
+		SkillsCore.TargetAny:
 			eff.effect_type = SkillsCore.EffectType.Damage if rng.randf() < 0.2 \
 				else SkillsCore.EffectType.StatBuff
 			if eff.effect_type == SkillsCore.EffectType.StatBuff and rng.randf() < 0.5:
