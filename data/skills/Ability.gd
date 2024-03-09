@@ -253,6 +253,17 @@ func generate_description(stats: StatBlock) -> String:
 	if dict.cooldown != "":
 		text += dict.cooldown
 		
+		
+	# DEBUG
+	var debug = true
+	if debug:
+		text += "\n"
+		text += "\n"
+		text += "DEBUG:\n"
+		text += "Trigger aim: {0}\n".format([
+			SkillsCore.TriggerAim.keys()[activation.trigger_aim]
+		])
+		
 	return text
 
 

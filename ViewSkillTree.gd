@@ -195,6 +195,7 @@ func is_available(skill: Skill):
 
 func update_unlock_button(skill: Skill):
 	$SkillTreeContainer/UnlockButton.visible = !unlocked_skills.has(skill.name) && is_available(skill) && num_skills_to_unlock > 0
+	$SkillTreeContainer/UnlockButton['custom_colors/font_color'] = skill.get_color()
 
 
 func get_skill(i: int, j: int) -> Skill:

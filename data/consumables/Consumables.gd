@@ -7,8 +7,6 @@ signal consume_health
 # warning-ignore:unused_signal
 signal consume_invisibility
 
-export var health_potion_amount = 25
-
 export var stat_reward_increase = 4
 
 var rewards = []
@@ -25,7 +23,7 @@ var CONSUMABLE_TYPES = {
 	},
 	"health": {
 		"name": "Health Potion",
-		"description": "Heal {0} health.".format([health_potion_amount]),
+		"description": "Heal 30% HP.",
 		"sprite": preload("res://graphics/consumables/heart-bottle.svg"),
 		"color": Color("#00ca67"),
 		"start_count": 0

@@ -43,8 +43,8 @@ const SPRITES = [ \
 
 const STATS = {
 	Type.Player: {
-#		"base": [10, 10, 10, 10, 10, 10],
-		"base": [100, 100, 100, 100, 100, 100],
+		"base": [10, 10, 10, 10, 10, 10],
+#		"base": [100, 100, 100, 100, 100, 100],
 		Stat.Kind.Health: 30,
 		 }, 
 	Type.Gazer: {

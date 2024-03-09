@@ -96,7 +96,7 @@ func consume_health_potion():
 	var max_hp = player_stats.max_hp()
 	player_hp = int(min(
 		max_hp,
-		player_hp + get_node("%ConsumablesContainer").health_potion_amount
+		player_hp + max_hp * 0.3
 	))
 	make_encounter(current_encounter_seed)
 
