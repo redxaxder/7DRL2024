@@ -1,6 +1,6 @@
 extends Control
 
-var playback_speed = 10
+var playback_speed = 7
 
 var show_extra_history = false setget set_show_extra_history
 func set_show_extra_history(x):
