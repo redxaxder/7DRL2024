@@ -139,11 +139,11 @@ static func random_ability(skill_seed: int) -> Ability:
 			mod_table.append(Ability.ModParam.Radius)
 		var n = mod_table.size()
 
-		var num_rolls = 6
+		var num_rolls = 8
 		var num_mods = 0
 	
-		if rng.randf() < 0.3:
-			num_rolls += 5
+		if rng.randf() < 0.2:
+			num_rolls *= 2
 			power *= 2.5
 		elif rng.randf() < 0.3:
 			num_rolls += 1
@@ -199,7 +199,7 @@ static func random_ability(skill_seed: int) -> Ability:
 			act.trigger_aim = SkillsCore.TriggerAim.Self
 		match act.filter: 
 			Activation.Filter.Death:
-				act.filter_actor = SkillsCore.Target.Enemy
+				act.filter_actor = SkillsCore.Target.Enemies
 			Activation.Filter.Start:
 				act.filter_actor = SkillsCore.Target.Self
 			Activation.Filter.Bloodied:

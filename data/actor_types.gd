@@ -82,6 +82,7 @@ const STATS = {
 		},
 	Type.Crab: {
 		"base": [12, 2, 15, 5, 15, 1],
+		"attack": Elements.Kind.Ice,
 		Stat.Kind.PhysicalResist: 150,
 		Stat.Kind.Speed: -10,
 		},
@@ -95,6 +96,7 @@ const STATS = {
 	},
 	Type.Goblin: {
 		"base": [3,3,3,3,3,3],
+		"attack": Elements.Kind.Fire,
 		Stat.Kind.Evasion: 50,
 	},
 	Type.Dragon: {
