@@ -146,14 +146,14 @@ func describe_target(target_filter:int, radius: float, trigger_aim : int, trigge
 		if(trigger_aim == SkillsCore.TriggerAim.Self):
 			match target_filter:
 				SkillsCore.Target.Allies: return "nearby allies"
-				SkillsCore.Target.Enemies: return "enemies around you"
-				SkillsCore.TargetAny: return "anyone around you"
+				SkillsCore.Target.Enemies: return "nearby enemies"
+				SkillsCore.TargetAny: return "nearby units"
 		if(trigger_aim == SkillsCore.TriggerAim.EventSource ||
 		trigger_aim == SkillsCore.TriggerAim.EventTarget):
 			match target_filter:
-				SkillsCore.Target.Allies: return "allies around them"
-				SkillsCore.Target.Enemies: return "enemies around them"
-				SkillsCore.TargetAny: return "anyone around them"
+				SkillsCore.Target.Allies: return "nearby allies"
+				SkillsCore.Target.Enemies: return "nearby enemies"
+				SkillsCore.TargetAny: return "nearby units"
 		if(trigger_aim == SkillsCore.TriggerAim.Random):
 			match target_filter:
 				SkillsCore.Target.Allies: return "random allies"
