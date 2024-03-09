@@ -16,8 +16,8 @@ character scaling
 
 ui enhancements
    + when do i get my next skill point?
-   - title screen?
-   - choose between using the hand-baked tree
+   + title screen?
+   + choose between using the hand-baked tree
      - we can very easily check if this is their first run,
        and directly drop them into the game
      - or daily tree

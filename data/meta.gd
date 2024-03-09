@@ -3,6 +3,7 @@ class_name Meta
 
 export var is_fresh: bool = true
 export var unlocked: Dictionary = {}
+export var won: Dictionary = {}
 
 const PATH = "user://meta.tres"
 
@@ -17,6 +18,13 @@ func unlock_random(i: int) -> Resource:
 		if !unlocked.get(it, false):
 			unlocked[it] = true
 			break
+	return self
+
+func did_win(id: int) -> bool:
+	return won.get(id, false)
+
+func win(id: int) -> Resource:
+	won[id] = true
 	return self
 
 func get_unlocked() -> Array:

@@ -65,11 +65,12 @@ func _ready():
 	
 	var title = get_node("%Title")
 	title.connect("select", self, "title_select")
-	mark_unfresh()
-	unlock_today()
-	for i in load_meta().get_unlocked():
+	var meta = load_meta()
+	meta.unlock_today()
+	meta.save()
+	for i in meta.get_unlocked():
 		if selected < 0: selected = i
-		title.add_unlocked_line(i)
+		title.add_unlocked_line(i, meta.did_win(i))
 	
 	title.pick_something()
 	update_button_visibility()
@@ -78,11 +79,15 @@ func _ready():
 	timer.start(0.5)
 # warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
+	if meta.is_fresh:
+		meta.is_fresh = false
+		meta.save()
+		new_game()
+	
 
 var selected = -1
 func title_select(i: int):
 	selected = i
-	print(selected)
 	
 
 func _process(delta):
@@ -209,6 +214,7 @@ func done():
 		make_encounter()
 	else:
 		gameover = true
+		get_node("%Title").set_victory(false)
 		update_button_visibility()
 		
 func sneak():
@@ -230,6 +236,13 @@ func restart():
 
 func make_encounter(use_seed: int = 0):
 	progress += 1
+	if progress > 100:
+		load_meta().win(selected).save()
+		gameover = true
+		get_node("%Title").set_victory(true)
+		get_node("%Title").mark_won(selected)
+		update_button_visibility()
+		return
 	has_seen_end = false
 	update_skill_points()
 	get_node("%FloorNumber").text = "Floor: " + str(progress)
@@ -404,13 +417,13 @@ func update_outcome():
 	driver.tick()
 
 
-func is_fresh() -> bool:
-	return load_meta().is_fresh
+#func is_fresh() -> bool:
+#	return load_meta().is_fresh
 
-func mark_unfresh():
-	var m = load_meta()
-	m.is_fresh = false
-	m.save()
+#func mark_unfresh():
+#	var m = load_meta()
+#	m.is_fresh = false
+#	m.save()
 
 func load_meta() -> Meta:
 	var m = ResourceLoader.load(Meta.PATH)

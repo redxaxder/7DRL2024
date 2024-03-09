@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://fonts/CommitMono-400-Regular.otf" type="DynamicFontData" id=2]
 [ext_resource path="res://fonts/CommitMono-700-Regular.otf" type="DynamicFontData" id=3]
@@ -12,6 +12,10 @@ size = 80
 outline_size = 3
 outline_color = Color( 0.984314, 0.992157, 0.717647, 1 )
 use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 75
 font_data = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=3]
@@ -39,14 +43,28 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = SubResource( 2 )
 text = "The Call of Judgement"
 
+[node name="victorytext" type="Label" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -168.0
+margin_top = 150.0
+margin_right = 168.0
+margin_bottom = 238.0
+custom_colors/font_color = Color( 0.623529, 0.788235, 0.0352941, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "Victory"
+align = 1
+valign = 1
+
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -117.0
+margin_left = -151.5
 margin_top = -205.0
-margin_right = 186.0
+margin_right = 151.5
 
 [node name="unlocks" type="VBoxContainer" parent="ScrollContainer"]
 unique_name_in_owner = true
