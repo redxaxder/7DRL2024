@@ -193,6 +193,8 @@ static func random_ability(skill_seed: int) -> Ability:
 				act.filter_actor = SkillsCore.Target.Self
 			Activation.Filter.Bloodied:
 				act.filter_actor = SkillsCore.Target.Self
+				act.trigger_aim = SkillsCore.TriggerAim.Self
+				act.ability_range = 0
 			_:
 				act.filter_actor = SkillsCore.TargetAny if randf() < 0.2 \
 					else SkillsCore.Target.Self if randf() < 0.5 \
@@ -258,7 +260,7 @@ const TRIGGER_PREMIUM = {
 	Activation.Filter.Death: 3,
 	Activation.Filter.Movement: 0,
 	Activation.Filter.Start: 10,
-	Activation.Filter.Bloodied: 15,
+	Activation.Filter.Bloodied: 30,
 	Activation.Filter.Miss: 2,
 	Activation.Filter.Dodge: 2,
 	Activation.Filter.Attack: 2,
