@@ -4,7 +4,7 @@ signal skill_unlocked
 
 export var skill_tree: Resource
 
-var extra_skill_points : int = 0
+var extra_skill_points : int = 99 if Constants.debug_mode else 0
 
 var num_skills_to_unlock: int = 0
 var progress: int = 0

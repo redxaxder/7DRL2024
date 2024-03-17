@@ -209,9 +209,19 @@ func _unhandled_input(event):
 		
 	# DEBUG
 	if(Constants.debug_mode):
-		if event.is_action_pressed("z"):
+		# z
+		if event.is_action_pressed("jump_encounters"):
 			progress += 9
 			make_encounter()
+		# x
+		if event.is_action_pressed("increase_stats"):
+			for i in 6:
+				var bonus = Bonus.new()
+				bonus.initialize_bonus(i, 10)
+				reward_bonuses.append(bonus)
+			get_node("%ViewSkillTree").set_reward_bonuses(reward_bonuses)
+			get_node("%ViewSkillTree").recalculate_player_bonuses()
+			update_outcome()
 
 func done():
 	var final_player_state = encounter_result.get_player()
@@ -430,10 +440,39 @@ func toggle_skill_tree():
 func update_outcome():
 	var mod_state = apply_player_mods(next_encounter_base_state)
 	mod_state.get_player().cur_hp = player_hp
+
 	driver = EncounterDriver.new()
 	get_node("%state_view").update_view(DataUtil.deep_dup(mod_state))
 	driver.initialize(mod_state, map, driver_seed)
 	driver.tick()
+	
+	if Constants.debug_mode:
+		var next_encounter_outcome = drive_encounter(DataUtil.deep_dup(mod_state), map, driver_seed)
+		print("drive history hp", next_encounter_outcome.final().get_player().cur_hp)
+		var encounter_damage = player_hp - calculate_new_hp(next_encounter_outcome)
+		print("calculate_new_hp", calculate_new_hp(next_encounter_outcome))
+		print("encounter damage", encounter_damage)
+		print("player_hp", player_hp)
+		get_node("%damage_preview").text = "[ - %d ]" % encounter_damage
+		get_node("%damage_preview").visible = true
+	
+static func drive_encounter(mod_state: EncounterState, m: Map, ds: int) -> EncounterHistory:
+	var driver = EncounterDriver.new()
+	driver.initialize(mod_state, m, ds)
+	while driver.tick() and driver.current_time < time_limit:
+		pass
+	return driver.history
+	
+func calculate_new_hp(next_encounter_outcome) -> int:
+	var final_player_state = next_encounter_outcome.final().get_player()
+	var remaining_hp = final_player_state.cur_hp
+	var temp_hp = final_player_state.stats.max_hp() - player_stats.max_hp()
+	temp_hp = min(temp_hp, remaining_hp)
+	temp_hp = max(0, temp_hp)
+	print("remaining_hp", remaining_hp)
+	print("temp_hp", temp_hp)
+	return remaining_hp - temp_hp
+	
 
 
 #func is_fresh() -> bool:
