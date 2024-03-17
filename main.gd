@@ -206,6 +206,12 @@ func _unhandled_input(event):
 		if get_node("%GO").visible == true: go()
 	if event.is_action_pressed("return"):
 		if get_node("%DONE").visible == true: done()
+		
+	# DEBUG
+	if(Constants.debug_mode):
+		if event.is_action_pressed("z"):
+			progress += 9
+			make_encounter()
 
 func done():
 	var final_player_state = encounter_result.get_player()

@@ -40,6 +40,7 @@ var CONSUMABLE_TYPES = {
 var consumable_inventory = {}
 
 func _ready():
+		
 	
 	var bb = preload("res://misc/BetterButton.tscn")
 	for c in CONSUMABLE_TYPES:
@@ -209,6 +210,8 @@ func init_rewards():
 func init_starting_consumables():
 	for c in CONSUMABLE_TYPES:
 		consumable_inventory[c] = CONSUMABLE_TYPES[c].start_count
+		if(Constants.debug_mode):
+			consumable_inventory[c] = 99
 		
 	rewards = []
 	won_rewards = []

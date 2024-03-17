@@ -18,3 +18,5 @@ static func matches_mask(mask_1: int, mask2: int) -> bool:
 
 
 const CLEAR_COLOR: Color = Color(0.086275, 0.082353, 0.098039)
+
+const debug_mode = true
