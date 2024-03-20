@@ -178,6 +178,38 @@ Gain stat 2"
 [node name="ConsumablesCounter" type="Timer" parent="."]
 unique_name_in_owner = true
 
+[node name="SkillTreePanel" type="PanelContainer" parent="."]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1024.0
+margin_bottom = 597.0
+script = ExtResource( 8 )
+
+[node name="ViewSkillTree" parent="SkillTreePanel" instance=ExtResource( 4 )]
+unique_name_in_owner = true
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1017.0
+margin_bottom = 590.0
+
+[node name="CloseButton" type="Button" parent="SkillTreePanel/ViewSkillTree"]
+unique_name_in_owner = true
+margin_left = 902.0
+margin_top = 20.0
+margin_right = 995.0
+margin_bottom = 69.0
+text = "Close"
+
+[node name="SkillPoints" type="Label" parent="."]
+unique_name_in_owner = true
+margin_left = 426.0
+margin_top = 12.0
+margin_right = 594.0
+margin_bottom = 39.0
+custom_fonts/font = SubResource( 3 )
+text = "SKILL POINTS"
+
 [node name="Title" parent="." instance=ExtResource( 11 )]
 unique_name_in_owner = true
 visible = false
@@ -218,38 +250,6 @@ anchor_bottom = 1.0
 margin_right = -6.0
 margin_bottom = 50.0
 mouse_filter = 1
-
-[node name="SkillTreePanel" type="PanelContainer" parent="."]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = 1024.0
-margin_bottom = 597.0
-script = ExtResource( 8 )
-
-[node name="ViewSkillTree" parent="SkillTreePanel" instance=ExtResource( 4 )]
-unique_name_in_owner = true
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 1017.0
-margin_bottom = 590.0
-
-[node name="CloseButton" type="Button" parent="SkillTreePanel/ViewSkillTree"]
-unique_name_in_owner = true
-margin_left = 902.0
-margin_top = 20.0
-margin_right = 995.0
-margin_bottom = 69.0
-text = "Close"
-
-[node name="SkillPoints" type="Label" parent="."]
-unique_name_in_owner = true
-margin_left = 426.0
-margin_top = 12.0
-margin_right = 594.0
-margin_bottom = 39.0
-custom_fonts/font = SubResource( 3 )
-text = "SKILL POINTS"
 
 [connection signal="mouse_entered" from="GO/SAYS_GO/Button" to="GO" method="mouse_entered"]
 [connection signal="mouse_exited" from="GO/SAYS_GO/Button" to="GO" method="mouse_exited"]
