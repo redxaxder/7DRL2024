@@ -131,6 +131,7 @@ func new_game():
 	# set lethal encounter to random floor 1-3
 	
 	reward_bonuses = []
+	get_node("%ViewSkillTree").set_reward_bonuses(reward_bonuses)
 
 	skill_tree = SkillTree.new()
 #	skill_tree.hand_rolled_skill_tree()
