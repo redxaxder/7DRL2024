@@ -21,5 +21,5 @@ enum TriggerAim {
 # 1) to determine if an effect affects a space
 # 2) to filter what events triggers listen to
 enum Target {Self = 1, Enemies = 2, Allies = 4, Empty = 8}
-const TargetAny = Target.Self | Target.Enemies | Target.Allies | Target.Empty
+const TargetAny = Target.Self | Target.Enemies
 
