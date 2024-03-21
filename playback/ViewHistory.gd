@@ -176,7 +176,6 @@ func to_start():
 	_refresh()
 
 func to_end():
-	pause()
 	cursor = _end()
 	_refresh()
 
@@ -249,7 +248,8 @@ func _refresh():
 	var highlighted_line = 0
 	for i in loglines.size():
 		var displayed_default = EncounterEventKind.is_displayed(history.get_event(i).kind)
-		var should_show = show_extra_history or displayed_default
+		var should_show = show_extra_history or displayed_default or \
+			i >= history.size()
 		loglines[i].visible = should_show and i <= max_cursor
 		if i <= index and loglines[i].visible:
 			loglines[highlighted_line].highlighted = false
