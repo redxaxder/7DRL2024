@@ -32,6 +32,7 @@ func initialize(brawn: int, brains: int, guts: int, eyesight: int, footwork: int
 	name = moniker
 
 func can_use_ability(a: Ability, when: float) -> bool:
+	if !is_alive(): return false
 	var last_used = last_used_time.get(a.name)
 	if last_used == null: return true
 	return (when - last_used) >= a.cooldown_time(stats)
