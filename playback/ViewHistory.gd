@@ -12,6 +12,7 @@ var max_cursor: int = 0
 var history: EncounterHistory
 var map: Map
 var marked_end = false
+var events_logged: int = 0
 
 signal seen_end(state)
 signal updated(encounter_state, encounter_event)
@@ -60,18 +61,22 @@ func view(_history: EncounterHistory, _map: Map, victory_messages):
 	max_cursor = 0
 	map = _map
 	marked_end = false
-
-	var history_amount = history.size() - 1
-	for i in history_amount:
-		var event = history.get_event(i)
-		add_log_message(event_text(event), i, event)
+	events_logged = 0
+	_update_history_log()
 	_victory_messages = victory_messages
-	# _end()
 	play()
-
 	var progressbar = get_node("%progress_bar")
 	progressbar.max_value = _end()
 	_refresh()
+
+func _update_history_log():
+	var history_amount = history.size() - 1
+	for i in range(events_logged, history_amount):
+		var event = history.get_event(i)
+		add_log_message(event_text(event), i, event)
+	prints("log update", events_logged, history_amount)
+	events_logged = history_amount
+
 
 func event_text(evt: EncounterEvent) -> String:
 	match evt.kind:
@@ -227,6 +232,8 @@ func _refresh():
 	var index = cursor
 	var next_max = max(max_cursor, cursor)
 	max_cursor = next_max
+	if events_logged < history.size() -1:
+		_update_history_log()
 	if cursor == _end() and history.is_done and !marked_end:
 		marked_end = true
 		emit_signal("seen_end", history.final())
