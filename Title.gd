@@ -12,6 +12,12 @@ func mark_won(i: int):
 	for unlockline in get_node("%unlocks").get_children():
 		if unlockline.payload == i:
 			unlockline.modulate = Color(0.623529, 0.788235, 0.035294)
+			
+func clear_unlocks():
+	var unlocks = get_node("%unlocks")
+	for child in unlocks.get_children():
+		child.queue_free()
+		unlocks.remove_child(child)
 
 func add_unlocked_line(i: int, did_win: bool):
 	var unlocks = get_node("%unlocks")

@@ -84,6 +84,7 @@ func _ready():
 func refresh_title_list():
 	var title = get_node("%Title")
 	var meta = load_meta()
+	title.clear_unlocks()
 	for i in meta.get_unlocked():
 		if selected < 0: selected = i
 		title.add_unlocked_line(i, meta.did_win(i))
@@ -207,6 +208,12 @@ func _unhandled_input(event):
 		if get_node("%GO").visible == true: go()
 	if event.is_action_pressed("return"):
 		if get_node("%DONE").visible == true: done()
+	if event.is_action_pressed("teleport_potion"):
+		get_node("%ConsumablesContainer").use_consumable("teleport")
+	if event.is_action_pressed("health_potion"):
+		get_node("%ConsumablesContainer").use_consumable("health")
+	if event.is_action_pressed("invisibility_potion"):
+		get_node("%ConsumablesContainer").use_consumable("invisibility")
 		
 	# DEBUG
 	if(Constants.debug_mode):
