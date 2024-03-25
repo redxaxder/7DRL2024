@@ -118,7 +118,6 @@ func init_rewards():
 		randi() % 6
 	]
 	stat_reward_increase = (randi() % 3) + 3
-	print("init rewards "+ str(stat_reward_increase))
 	
 	for s in won_stats:
 		stat_text += "Also gain {0} {1}.\n".format([

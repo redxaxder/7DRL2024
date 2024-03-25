@@ -166,7 +166,7 @@ func seen_end(result):
 
 func update_button_visibility():
 	get_node("%DONE").visible = !gonogo and !gameover and has_seen_end
-	get_node("%GO").visible = gonogo or gameover
+	get_node("%GO").visible = (gonogo or gameover) && !$SkillTreePanel.visible
 	get_node("%RESTART").visible = gameover
 	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
 	get_node("%FloorNumber").visible = gonogo and !$SkillTreePanel.visible
@@ -206,8 +206,15 @@ func no_go():
 func _unhandled_input(event):
 	if event.is_action_pressed("toggle"):
 		if get_node("%GO").visible == true: go()
-	if event.is_action_pressed("return"):
-		if get_node("%DONE").visible == true: done()
+	if event.is_action_pressed("return") && !$SkillTreePanel.visible:
+		var debounce_timer : Timer = get_node("%history_view").get_node("%DebounceTimer")
+		if debounce_timer.get_time_left() <= 0:
+			if get_node("%GO").visible == true && gonogo: 
+				debounce_timer.start(0.2)
+				go()
+			if get_node("%DONE").visible == true && !gonogo:
+				debounce_timer.start(0.2)
+				done()
 	if event.is_action_pressed("teleport_potion"):
 		get_node("%ConsumablesContainer").use_consumable("teleport")
 	if event.is_action_pressed("health_potion"):
@@ -456,11 +463,7 @@ func update_outcome():
 	
 	if Constants.debug_mode:
 		var next_encounter_outcome = drive_encounter(DataUtil.deep_dup(mod_state), map, driver_seed)
-		print("drive history hp", next_encounter_outcome.final().get_player().cur_hp)
 		var encounter_damage = player_hp - calculate_new_hp(next_encounter_outcome)
-		print("calculate_new_hp", calculate_new_hp(next_encounter_outcome))
-		print("encounter damage", encounter_damage)
-		print("player_hp", player_hp)
 		get_node("%damage_preview").text = "[ - %d ]" % encounter_damage
 		get_node("%damage_preview").visible = true
 	
@@ -477,8 +480,6 @@ func calculate_new_hp(next_encounter_outcome) -> int:
 	var temp_hp = final_player_state.stats.max_hp() - player_stats.max_hp()
 	temp_hp = min(temp_hp, remaining_hp)
 	temp_hp = max(0, temp_hp)
-	print("remaining_hp", remaining_hp)
-	print("temp_hp", temp_hp)
 	return remaining_hp - temp_hp
 	
 
