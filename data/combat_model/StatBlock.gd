@@ -30,6 +30,11 @@ func get_base_stat(stat: int) -> int:
 			Stat.Kind.Crit: return eyesight() + hustle()
 	return 0
 
+func get_elemental_power_multiplier(element: int) -> float:
+	var elemental_power_stat = Elements.ATTACK[element]
+	var elemental_bonus = float(get_modified_stat(elemental_power_stat))
+	return elemental_bonus / 100.0 + 1
+
 func get_modified_stat(stat: int) -> int:
 	var base = get_base_stat(stat)
 	var modified = base + _bonuses.get(stat,0)

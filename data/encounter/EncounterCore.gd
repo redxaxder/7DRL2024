@@ -70,7 +70,11 @@ static func handle_ability_activation(state: EncounterState, event: EncounterEve
 			SkillsCore.EffectType.Damage:
 				events.append(EncEvent.damage_event(event.timestamp, source, target, power, is_crit, event.element))
 			SkillsCore.EffectType.StatBuff:
-				events.append(EncEvent.stat_change_event(event.timestamp, source, target, ability.effect.mod_stat, power))
+				# stat buff abilities benefit from elemental power directly
+				# as opposed to damage abilities which benefit indirectly from the damage event scaling off element power
+				var multiplier = source.stats.get_elemental_power_multiplier(ability.effect.element)
+				var total_power = int(power * multiplier)
+				events.append(EncEvent.stat_change_event(event.timestamp, source, target, ability.effect.mod_stat, total_power))
 	return events
 
 static func trigger_reaction(timestamp: float, state: EncounterState, event: EncounterEvent, reactor: CombatEntity, reaction: Ability) -> Array:

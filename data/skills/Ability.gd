@@ -30,6 +30,12 @@ func cooldown_time(stats: StatBlock) -> int:
 	var modified = base * 100.0 / (100.0 + bonus)
 	modified = max(1, int(modified)) # don't go below 1
 	return modified
+	
+# returns the power modified by the elemental power multiplier
+func power_with_element_power(stats: StatBlock, element: int) -> int:
+	var base_power = power(stats)
+	var multiplier = stats.get_elemental_power_multiplier(element)
+	return int(base_power * multiplier)
 
 func power(stats: StatBlock) -> int:
 	# power gets percentage bonuses
@@ -91,16 +97,16 @@ func describe_effect(stats: StatBlock) -> String:
 	var base_power = effect.power
 	var scaled_string = ""
 	var modifier_scaling = get_modifier_scaling_desc(ModParam.Power)
-	if modifier_scaling:
-		scaled_string = " ([color=#3affa9]{0} + {1} scaling[/color])".format([
-			effect.power,
-			modifier_scaling,
-		])
+	scaled_string = " ([color=#3affa9]{0} + {1}{2} scaling[/color])".format([
+		effect.power,
+		"{0}/".format([modifier_scaling]) if modifier_scaling else "",
+		Stat.NAME[Elements.ATTACK[effect.element]]
+	])
 				
 	match effect.effect_type:
 		SkillsCore.EffectType.Damage:
 			return "deal {0}{1} {2} damage".format([
-				power(stats),
+				power_with_element_power(stats, effect.element),
 				scaled_string,
 				ELEMENT_NAME[effect.element]
 			])
@@ -108,7 +114,7 @@ func describe_effect(stats: StatBlock) -> String:
 			var plus = "+" if effect.power > 0 else ""
 			
 			var power_string = "{0}{1}".format([
-				power(stats),
+				power_with_element_power(stats, effect.element),
 				scaled_string
 			])
 			

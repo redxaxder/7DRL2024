@@ -79,9 +79,7 @@ static func damage_event(timestamp: float, source: CombatEntity, target: CombatE
 					
 	var modified_damage = float(damage)
 	
-	var attack_stat = Elements.ATTACK[element]
-	var attack_bonus = float(source.stats.get_modified_stat(attack_stat))
-	var source_multiplier = attack_bonus / 100 + 1
+	var source_multiplier = source.stats.get_elemental_power_multiplier(element)
 	modified_damage *= source_multiplier
 	
 	var resist_multiplier = target.element_resist_multiplier(element)
