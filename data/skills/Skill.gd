@@ -252,7 +252,7 @@ static func random_ability(skill_seed: int) -> Ability:
 					act.radius = ceil(float(rolled) /2)
 		if eff.targets == SkillsCore.Target.Self:
 			act.ability_range = 0
-		elif act.radius == 0:
+		elif act.radius == 0 and act.trigger_aim == SkillsCore.TriggerAim.Random:
 			act.ability_range += 1
 
 
