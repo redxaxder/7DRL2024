@@ -26,9 +26,9 @@ static func update(state: EncounterState, event: EncounterEvent) -> Array: # [ E
 			var source = state.actors[event.actor_idx]
 			if event.damage > 0:
 				var target = state.actors[event.target_idx]
-				var target_was_bloodied = (float(target.cur_hp) / float(target.stats.max_hp())) < 0.25
+				var target_was_bloodied = (float(target.cur_hp) / float(target.stats.max_hp())) < 0.5
 				state.resolve_attack(event.target_idx, event.damage)
-				var target_is_bloodied = (float(target.cur_hp) / float(target.stats.max_hp())) < 0.25
+				var target_is_bloodied = (float(target.cur_hp) / float(target.stats.max_hp())) < 0.5
 				if !target.is_alive():
 					result.append(EncEvent.death_event(event.timestamp, source, target))
 				elif target_is_bloodied and !target_was_bloodied:

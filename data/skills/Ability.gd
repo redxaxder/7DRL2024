@@ -317,7 +317,7 @@ func describe_activation_condition() -> String:
 	elif activation.filter == Activation.Filter.Start:
 		return "At the start of an encounter"
 	elif activation.filter == Activation.Filter.Bloodied:
-		return "Whenever {0} HP drops below 25%".format([
+		return "Whenever {0} HP drops below 50%".format([
 			describe_filter_actor_possessive(activation.filter_actor)
 		])
 	elif activation.filter == Activation.Filter.Miss:
