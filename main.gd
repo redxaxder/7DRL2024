@@ -466,6 +466,7 @@ func toggle_skill_tree():
 	update_outcome()
 
 func update_outcome():
+	player_hp = min(player_hp, player_stats.max_hp())
 	var mod_state = apply_player_mods(next_encounter_base_state)
 	mod_state.get_player().cur_hp = player_hp
 
