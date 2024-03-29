@@ -92,7 +92,7 @@ static func random_ability(skill_seed: int) -> Ability:
 		else SkillsCore.TargetAny
 	
 	eff.element = rng.randi() % Elements.Kind.MAX
-	var power: float = (rng.randf() + rng.randf() + rng.randf())
+	var power: float = 2 + (rng.randf() + rng.randf() + rng.randf())
 	match eff.targets:
 		SkillsCore.Target.Self:
 			eff.effect_type = SkillsCore.EffectType.StatBuff
@@ -131,7 +131,7 @@ static func random_ability(skill_seed: int) -> Ability:
 	var act: Activation = Activation.new()
 	if rng.randf() < 0.5:
 		act.trigger = SkillsCore.Trigger.Action
-		power += 3*sign(power)
+		power += 4 * sign(power)
 		var mod_table = [	Ability.ModParam.CooldownTime,
 							Ability.ModParam.Power]
 		if !(eff.targets == SkillsCore.Target.Self):
@@ -143,10 +143,11 @@ static func random_ability(skill_seed: int) -> Ability:
 		var num_mods = 0
 	
 		if rng.randf() < 0.2:
-			num_rolls *= 2
-			power *= 2.5
+			num_rolls += 8
+			power += 3 * sign(power)
 		elif rng.randf() < 0.3:
-			num_rolls += 1
+			num_rolls += 2
+			power += sign(power)
 			num_mods = 1
 		else:
 			num_mods = 2
@@ -175,7 +176,8 @@ static func random_ability(skill_seed: int) -> Ability:
 				Ability.ModParam.CooldownTime:
 					act.cooldown_time = 90 / (rolled + 1)
 				Ability.ModParam.Power:
-					power *= pow(1.15, rolled)
+					power += sign(power) * rolled
+					power *= pow(1.05, rolled)
 				Ability.ModParam.AbilityRange:
 					act.ability_range = rolled
 				Ability.ModParam.Radius:
@@ -242,7 +244,8 @@ static func random_ability(skill_seed: int) -> Ability:
 			var rolled = rolls[i]
 			match mod_table[i]:
 				Ability.ModParam.Power:
-					power *= pow(1.20, rolled)
+					power += sign(power) * rolled
+					power *= pow(1.05, rolled)
 				Ability.ModParam.AbilityRange:
 					act.ability_range = rolled
 				Ability.ModParam.Radius:
