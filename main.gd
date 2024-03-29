@@ -73,6 +73,8 @@ func _ready():
 	update_button_visibility()
 	var timer : Timer = get_node("%ConsumablesCounter")
 	timer.start(0.5)
+	if(Constants.debug_mode):
+		get_node("%damage_preview").visible = true
 # warning-ignore:return_value_discarded
 	timer.connect("timeout", self, "transfer_reward")
 	if meta.is_fresh:
@@ -98,9 +100,15 @@ func title_select(i: int):
 	
 
 func _process(delta):
-	if driver != null and driver.started and !driver.done:
+	if driver == null: return
+	var encounter_damage = calculate_damage(driver.cur_state)
+	if driver.started and !driver.done:
+		get_node("%damage_preview").text = "[ ... -%d ]" % encounter_damage
 		for _i in 5:
 			if !driver.tick(): break
+	elif driver != null:
+		get_node("%damage_preview").text = "[ - %d ]" % encounter_damage
+
 
 func update_skill_points():
 	get_node("%ViewSkillTree").update_num_skills_to_unlock(progress)
@@ -238,13 +246,18 @@ func _unhandled_input(event):
 			get_node("%ViewSkillTree").recalculate_player_bonuses()
 			update_outcome()
 
+func calculate_damage(result_state: EncounterState) -> int:
+	var player_state = result_state.get_player()
+	var remaining_hp = player_state.cur_hp
+	var temp_hp = player_state.stats.max_hp() - player_stats.max_hp()
+	var max_tmp = max(0, remaining_hp - 1)
+	temp_hp = clamp(temp_hp, 0, max_tmp)
+	var final_hp = remaining_hp - temp_hp
+	return player_hp - final_hp
+	
 func done():
-	var final_player_state = encounter_result.get_player()
-	var remaining_hp = final_player_state.cur_hp
-	var temp_hp = final_player_state.stats.max_hp() - player_stats.max_hp()
-	temp_hp = min(temp_hp, remaining_hp - 1)
-	temp_hp = clamp(temp_hp, 0,  remaining_hp - 1)
-	player_hp = remaining_hp - temp_hp
+	var damage = calculate_damage(encounter_result)
+	player_hp -= damage
 
 	if player_hp > 0:
 		win_rewards()
@@ -461,26 +474,8 @@ func update_outcome():
 	driver.initialize(mod_state, map, driver_seed)
 	driver.tick()
 	
-	if Constants.debug_mode:
-		var next_encounter_outcome = drive_encounter(DataUtil.deep_dup(mod_state), map, driver_seed)
-		var encounter_damage = player_hp - calculate_new_hp(next_encounter_outcome)
-		get_node("%damage_preview").text = "[ - %d ]" % encounter_damage
-		get_node("%damage_preview").visible = true
 	
-static func drive_encounter(mod_state: EncounterState, m: Map, ds: int) -> EncounterHistory:
-	var driver = EncounterDriver.new()
-	driver.initialize(mod_state, m, ds)
-	while driver.tick() and driver.current_time < time_limit:
-		pass
-	return driver.history
 	
-func calculate_new_hp(next_encounter_outcome) -> int:
-	var final_player_state = next_encounter_outcome.final().get_player()
-	var remaining_hp = final_player_state.cur_hp
-	var temp_hp = final_player_state.stats.max_hp() - player_stats.max_hp()
-	temp_hp = min(temp_hp, remaining_hp)
-	temp_hp = max(0, temp_hp)
-	return remaining_hp - temp_hp
 	
 
 
