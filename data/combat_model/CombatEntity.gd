@@ -54,31 +54,25 @@ func initialize_with_block(_stats: StatBlock, _faction: int, moniker: String):
 	faction = _faction
 	name = moniker
 
+
+# amount of evasion corresponding to an increase in effective hp
+# equal to 100% of base
+const EVASION_100 = 50.0
 func chance_to_hit_other(other: CombatEntity) -> float:
-	#example: self accuracy 10, other evasion 8
-	# chance to hit is 1 - 1 / 100 = .99
-	#example: self accuracy 10, other evasion 12
-	# chance to hit is 1 - abs(5 - 12) / 100 = .93
-	#example: self accuracy 10, other evasion 20
-	# chance to hit is 1 - abs(5 - 20) / 100 = .85
-	var numerator: float = 1.0
-	if stats.accuracy() < other.stats.evasion():
-		numerator =  float(other.stats.evasion()) - float(stats.accuracy()) / 2.0
-	return 1.0 - numerator / chance_denom
+	var effective_evasion = float(other.stats.evasion() - stats.accuracy())
+	var x = effective_evasion / EVASION_100
+	var hit = 1.0
+	hit -= x/(1 + abs(x))
+	hit *= 0.5
+	return hit
 	
 func basic_attack_damage_to_other(other: CombatEntity) -> Array:
-	#example: self damage is 10, other evasion 8
-	# damage range is (6, 8)
-	#example: self damage is 10, other evasion 12
-	# damage range is (4, 7)
-	#example: self damage is 10, other evasion 12
-	# damage range is (4, 7)
-	#example: self damage is 10, other evasion 20
-	# damage range is (0, 5)
-	var max_damage = (stats.damage() - float(other.stats.evasion()) / 4.0) * damage_fudge
-	var min_damage = (stats.damage() - float(other.stats.evasion()) / 2.0) * damage_fudge
-	max_damage = int(max(max_damage, 0))
-	min_damage = int(max(min_damage, 0))
+	#var max_damage = (stats.damage() - float(other.stats.evasion()) / 4.0) * damage_fudge
+	#var min_damage = (stats.damage() - float(other.stats.evasion()) / 2.0) * damage_fudge
+#	max_damage = int(max(max_damage, 0))
+#	min_damage = int(max(min_damage, 0))
+	var max_damage = float(stats.damage())
+	var min_damage = float(stats.damage()) / 2.0
 	return [min_damage, max_damage]
 	
 func element_resist_multiplier(damage_type: int) -> float:
