@@ -128,10 +128,7 @@ func transfer_reward():
 
 func consume_health_potion():
 	var max_hp = player_stats.max_hp()
-	player_hp = int(min(
-		max_hp,
-		player_hp + max_hp * 0.3
-	))
+	player_hp = max_hp
 	update_outcome()
 
 func new_game():

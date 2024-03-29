@@ -23,7 +23,7 @@ var CONSUMABLE_TYPES = {
 	},
 	"health": {
 		"name": "Health Potion",
-		"description": "Heal 30% HP.",
+		"description": "Restore full HP.",
 		"sprite": preload("res://graphics/consumables/heart-bottle.svg"),
 		"color": Color("#00ca67"),
 		"start_count": 0
