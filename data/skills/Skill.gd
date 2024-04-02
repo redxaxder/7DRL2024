@@ -47,13 +47,16 @@ const STAT_PREMIUM = { \
 	Stat.Kind.IceResist: 5,
 	Stat.Kind.PoisonResist: 5,
 }
-static func random_bonus(skill_seed: int) -> Array:
+static func random_bonus(skill_seed: int, column: int = 0) -> Array:
 	var rng = RandomNumberGenerator.new()
 	rng.seed = skill_seed
 	var plus = Bonus.new()
 	var magnitude = rng.randi() % 4
 	var variance = (rng.randf() - 0.5) /6
 	var power = (1 + magnitude) * 10 * (1+ variance)
+	
+	power *= get_column_modifier(column)
+	
 	plus.stat = rng.randi() % Stat.Kind.MAX
 	plus.power = power * STAT_PREMIUM[plus.stat]
 	if magnitude == 0: return [plus]
@@ -69,9 +72,11 @@ static func random_bonus(skill_seed: int) -> Array:
 	return  [plus, minus]
 
 
+# each column is slightly more powerful
+static func get_column_modifier(column: int) -> float:
+	return 1.0 + column * 0.05
 
-
-static func random_ability(skill_seed: int) -> Ability:
+static func random_ability(skill_seed: int, column: int = 0) -> Ability:
 	var rng = RandomNumberGenerator.new()
 	rng.seed = skill_seed
 #	var scaling = random_mods(rng.randi())
@@ -93,6 +98,7 @@ static func random_ability(skill_seed: int) -> Ability:
 	
 	eff.element = rng.randi() % Elements.Kind.MAX
 	var power: float = 2 + (rng.randf() + rng.randf() + rng.randf())
+	
 	match eff.targets:
 		SkillsCore.Target.Self:
 			eff.effect_type = SkillsCore.EffectType.StatBuff
@@ -263,6 +269,8 @@ static func random_ability(skill_seed: int) -> Ability:
 			var mod_param = mod_table[rng.randi() % n]
 			var mod_stat = rng.randi() % 6
 			a.modifiers.append(Ability.mod(mod_stat, mod_param, 4))
+	
+	power *= get_column_modifier(column)
 
 	eff.power = int(power)
 	a.activation = act

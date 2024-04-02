@@ -174,7 +174,7 @@ func update_button_visibility():
 	get_node("%GO").visible = (gonogo or gameover) && !$SkillTreePanel.visible
 	get_node("%RESTART").visible = gameover
 	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
-	get_node("%FloorNumber").visible = gonogo and !$SkillTreePanel.visible
+	get_node("%FloorNumber").visible = true
 	get_node("%SkillPoints").visible = gonogo
 	get_node("%OpenSkillTree").visible = gonogo
 	get_node("%Title").visible = gameover
@@ -312,7 +312,7 @@ func make_encounter(use_seed: int = 0):
 		load_meta().unlock_random(randi()).save()
 		refresh_title_list()
 
-	get_node("%ConsumablesContainer").init_rewards()
+	get_node("%ConsumablesContainer").init_rewards(progress)
 
 	var state = EncounterState.new()
 	var player = CombatEntity.new()

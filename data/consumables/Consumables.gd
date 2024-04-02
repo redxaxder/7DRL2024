@@ -112,12 +112,13 @@ func get_reward_messages():
 		]))
 	return messages
 		
-func init_rewards():
+func init_rewards(progress: int):
 	var stat_text = ""
 	won_stats = [
 		randi() % 6
 	]
-	stat_reward_increase = (randi() % 3) + 3
+	var reward_range : int = 3 + floor(progress / 30.0)
+	stat_reward_increase = (randi() % reward_range) + 3
 	
 	for s in won_stats:
 		stat_text += "Also gain {0} {1}.\n".format([
