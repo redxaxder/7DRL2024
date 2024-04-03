@@ -97,8 +97,9 @@ func describe_effect(stats: StatBlock) -> String:
 	var base_power = effect.power
 	var scaled_string = ""
 	var modifier_scaling = get_modifier_scaling_desc(ModParam.Power)
-	scaled_string = " ([color=#3affa9]{0} + {1}{2} scaling[/color])".format([
+	scaled_string = " ([color=#3affa9]{0} {1} {2}{3} scaling[/color])".format([
 		effect.power,
+		"+" if effect.power > 0 else "-",
 		"{0}/".format([modifier_scaling]) if modifier_scaling else "",
 		Stat.NAME[Elements.ATTACK[effect.element]]
 	])

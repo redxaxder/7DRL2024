@@ -75,9 +75,9 @@ text = "Unlock"
 
 [node name="Stats" type="RichTextLabel" parent="."]
 unique_name_in_owner = true
-margin_left = 670.0
-margin_top = 284.0
-margin_right = 970.0
-margin_bottom = 584.0
+margin_left = 702.0
+margin_top = 283.0
+margin_right = 1002.0
+margin_bottom = 583.0
 text = "Foo bar asdkflasjfdsa
 "

@@ -107,7 +107,7 @@ func random_skill_tree(rng_seed: int):
 		skills.append([])
 	rng.seed = rng_seed
 	for row in 3:
-		for column in 6:
+		for column in 7:
 			if (row + column) % 2 == 0:
 				append_skill(
 					random_ability_skill(rng.randi(), column),
