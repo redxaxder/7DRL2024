@@ -1,6 +1,5 @@
 extends Node2D
 
-
 export var show_extra_history:bool = true setget set_show_extra_history
 func set_show_extra_history(x):
 	show_extra_history = x
@@ -28,10 +27,13 @@ var reward_bonuses = []
 
 # are we waiting for the player to decide to do an encounter, (true) or
 # are we in the history view (false)?
-var gonogo: bool = false
-var gameover: bool = true
+#var gonogo: bool = false
+#var gameover: bool = true
 var has_seen_end: bool = false
 var map = Map.new()
+
+enum ui_modes {GONOGO, VIEW, TITLE, DEFEAT}
+var ui_mode = ui_modes.TITLE
 
 func _ready():
 # warning-ignore:return_value_discarded
@@ -123,7 +125,7 @@ func update_skill_points():
 	])
 
 func transfer_reward():
-	if gonogo && !gameover:
+	if ui_mode == ui_modes.GONOGO:
 		get_node("%ConsumablesContainer").transfer_reward()
 
 func consume_health_potion():
@@ -132,7 +134,7 @@ func consume_health_potion():
 	update_outcome()
 
 func new_game():
-	gameover = false
+	ui_mode = ui_modes.GONOGO
 	
 	# set lethal encounter to random floor 1-3
 	
@@ -170,14 +172,14 @@ func seen_end(result):
 
 
 func update_button_visibility():
-	get_node("%DONE").visible = !gonogo and !gameover and has_seen_end
-	get_node("%GO").visible = (gonogo or gameover) && !$SkillTreePanel.visible
-	get_node("%RESTART").visible = gameover
-	get_node("%ConsumablesContainer").visible = gonogo and !gameover and !$SkillTreePanel.visible
-	get_node("%FloorNumber").visible = true
-	get_node("%SkillPoints").visible = gonogo
-	get_node("%OpenSkillTree").visible = gonogo
-	get_node("%Title").visible = gameover
+	get_node("%DONE").visible = ui_mode == ui_modes.VIEW and has_seen_end
+	get_node("%GO").visible = (ui_mode == ui_modes.GONOGO or ui_mode == ui_modes.TITLE) and !$SkillTreePanel.visible
+	get_node("%RESTART").visible = ui_mode == ui_modes.DEFEAT
+	get_node("%ConsumablesContainer").visible = ui_mode == ui_modes.GONOGO and !$SkillTreePanel.visible
+	get_node("%FloorNumber").visible = ui_mode != ui_modes.TITLE and !$SkillTreePanel.visible
+	get_node("%SkillPoints").visible = ui_mode != ui_modes.TITLE
+	get_node("%OpenSkillTree").visible = ui_mode == ui_modes.GONOGO
+	get_node("%Title").visible = ui_mode == ui_modes.TITLE
 
 func apply_player_mods(s: EncounterState) -> EncounterState:
 	var st = DataUtil.deep_dup(s)
@@ -190,8 +192,9 @@ func apply_player_mods(s: EncounterState) -> EncounterState:
 
 
 func go():
-	if gameover:
+	if ui_mode == ui_modes.TITLE:
 		new_game()
+		ui_mode = ui_modes.GONOGO
 		return
 	var victory_text = []
 	var Consumables =  get_node("ConsumablesContainer")
@@ -201,7 +204,7 @@ func go():
 	driver.tick()
 	get_node("%state_view").init_view(driver.history.get_state(0), map)
 	get_node("%history_view").view(driver.history, map, victory_text)
-	gonogo = false
+	ui_mode = ui_modes.VIEW
 	update_button_visibility()
 
 func no_go():
@@ -260,7 +263,7 @@ func done():
 		win_rewards()
 		make_encounter()
 	else:
-		gameover = true
+		ui_mode = ui_modes.DEFEAT
 		get_node("%Title").set_victory(false)
 		update_button_visibility()
 		
@@ -279,13 +282,14 @@ func win_rewards():
 	player_hp = player_hp + new_max_hp - prev_max_hp
 
 func restart():
-	new_game()
+	ui_mode = ui_modes.TITLE
+	update_button_visibility()
 
 func make_encounter(use_seed: int = 0):
 	progress += 1
 	if progress > 100:
 		load_meta().win(selected).save()
-		gameover = true
+		ui_mode = ui_modes.TITLE
 		get_node("%Title").set_victory(true)
 		get_node("%Title").mark_won(selected)
 		update_button_visibility()
@@ -344,7 +348,7 @@ func make_encounter(use_seed: int = 0):
 		state.add_actor(shrine, passable.pop_back().loc)
 	
 	next_encounter_base_state = state
-	gonogo = true
+	ui_mode = ui_modes.GONOGO
 	update_button_visibility()
 	get_node("%state_view").init_view(apply_player_mods(next_encounter_base_state), map)
 	update_outcome()

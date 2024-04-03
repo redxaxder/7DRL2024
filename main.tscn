@@ -65,10 +65,10 @@ valign = 1
 
 [node name="RESTART" type="Button" parent="."]
 unique_name_in_owner = true
-margin_left = 928.0
-margin_top = 539.0
-margin_right = 1015.0
-margin_bottom = 589.0
+margin_left = 563.0
+margin_top = 538.0
+margin_right = 650.0
+margin_bottom = 588.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
