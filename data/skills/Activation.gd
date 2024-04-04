@@ -77,10 +77,10 @@ func filter_event_type():
 func filter_event_source():
 	if FILTER_FOCUS[filter] == FilterFocus.Source:
 		return filter_actor
-	return SkillsCore.TargetAny
+	return SkillsCore.NoTargetFilter
 func filter_event_target():
 	if FILTER_FOCUS[filter] == FilterFocus.Target:
 		return filter_actor
-	return SkillsCore.TargetAny
+	return SkillsCore.NoTargetFilter
 
 
