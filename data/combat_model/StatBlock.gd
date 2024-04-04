@@ -47,8 +47,8 @@ func eyesight(): return get_modified_stat(Stat.Kind.Eyesight)
 func footwork(): return get_modified_stat(Stat.Kind.Footwork)
 func hustle(): return get_modified_stat(Stat.Kind.Hustle)
 
-func brawn_desc(): return "affects Health & Power"
-func brains_desc(): return "affects Accuracy & Power"
+func brawn_desc(): return "affects Health & Attack"
+func brains_desc(): return "affects Accuracy & Attack"
 func guts_desc(): return "affects Health & Evasion"
 func eyesight_desc(): return "affects Accuracy & Crit"
 func footwork_desc(): return "affects Speed & Evasion"
