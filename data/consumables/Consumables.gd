@@ -86,14 +86,12 @@ func win_rewards():
 		reward_bonuses.append(bonus)
 	
 	
-	print("won rewards "+ str(stat_reward_increase))
 	
 	return reward_bonuses
 		
 func transfer_reward():
 	var r = won_rewards.pop_back()
 	if(r):	
-		print("transfer_reward type"+r)
 		consumable_inventory[r] += 1
 		CONSUMABLE_TYPES[r].shake = 30
 		
@@ -103,7 +101,6 @@ func get_reward_messages():
 		var reward_name = CONSUMABLE_TYPES[reward_key].name
 		messages.append(str("You got a ", reward_name,"."))
 	
-	print("get rewards messages"+ str(stat_reward_increase))
 	
 	for s in won_stats:
 		messages.append("You gain {0} {1}.".format([
@@ -228,7 +225,7 @@ func unhover_button(config, button):
 	get_node("%ConsumableTooltip").visible = false
 	
 func use_consumable(type: String):
-	if consumable_inventory[type] > 0:	
+	if consumable_inventory.has(type) && consumable_inventory[type] > 0:	
 		var config = CONSUMABLE_TYPES[type]
 		consumable_inventory[type] = consumable_inventory[type]-1
 		emit_signal("consume_"+type)

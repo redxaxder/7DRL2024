@@ -233,7 +233,6 @@ func generate_description(stats: StatBlock) -> String:
 	dict["activation_text"] = describe_activation_condition()
 	dict["effect_text"] = describe_effect(stats)
 	dict["cooldown"] = describe_cooldown(stats)
-#	prints("hp", stats.max_hp())
 	var text = ""
 	# text += "{trigger}\n".format(dict)
 	if activation.trigger == SkillsCore.Trigger.Automatic:

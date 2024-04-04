@@ -181,7 +181,7 @@ func update_button_visibility():
 	get_node("%RESTART").visible = ui_mode == ui_modes.DEFEAT
 	get_node("%ConsumablesContainer").visible = ui_mode == ui_modes.GONOGO and !$SkillTreePanel.visible
 	get_node("%FloorNumber").visible = ui_mode != ui_modes.TITLE and !$SkillTreePanel.visible
-	get_node("%SkillPoints").visible = ui_mode != ui_modes.TITLE
+	get_node("%SkillPoints").visible = ui_mode == ui_modes.GONOGO or $SkillTreePanel.visible
 	get_node("%OpenSkillTree").visible = ui_mode == ui_modes.GONOGO
 	get_node("%Title").visible = ui_mode == ui_modes.TITLE
 
@@ -226,6 +226,9 @@ func _unhandled_input(event):
 				go()
 			if get_node("%DONE").visible == true && ui_mode == ui_modes.VIEW:
 				debounce_timer.start(0.2)
+				# var new_hp = calculate_new_hp()
+				# don't restart from return if dead
+				# if(new_hp > 0):
 				done()
 	if event.is_action_pressed("teleport_potion"):
 		get_node("%ConsumablesContainer").use_consumable("teleport")
@@ -259,9 +262,11 @@ func calculate_damage(result_state: EncounterState) -> int:
 	var final_hp = remaining_hp - temp_hp
 	return player_hp - final_hp
 	
+func calculate_new_hp():
+	return player_hp - calculate_damage(encounter_result)
+	
 func done():
-	var damage = calculate_damage(encounter_result)
-	player_hp -= damage
+	player_hp = calculate_new_hp();
 
 	if player_hp > 0:
 		win_rewards()

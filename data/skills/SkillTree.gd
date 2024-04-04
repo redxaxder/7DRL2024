@@ -35,19 +35,16 @@ func addSkill(skillName: String, i: int, _j:int) -> Skill:
 	return skill
 	
 func append_skill(skill: Skill, row: int):
-	print("append_skill")
 	skills[row].append(skill)
 	
 func unlock(skill: Skill):
 	unlocks[skill] = true
 
 static func random_ability_skill(rng_seed: int, column: int = 0) -> Skill:
-	print("random ability skill column", column)
 	var skill = Skill.new()
 	skill.kind = Skill.Kind.Ability
 	skill.ability = Skill.random_ability(rng_seed, column)
 	var name = SkillName.generate_name(skill.ability.effect.element)
-	print(name)
 	skill.ability.name = name
 	skill.name = name
 	return skill
@@ -60,7 +57,6 @@ static func random_bonus_skill(skill_name: String, rng_seed: int, column: int = 
 	return skill
 
 static func create_ability_skill(ability: Ability) -> Skill:
-	print("create_ability_skill")
 	var skill = Skill.new()
 	skill.name = ability.name
 	skill.kind = Skill.Kind.Ability
@@ -504,6 +500,5 @@ func append_and_create_ability(opt: Dictionary):
 	opt.erase('row')
 	var ability: Ability = build_ability(opt)
 	ability.modifiers = modifiers
-	print("skills[row].size()", skills[row].size())
 	append_skill(create_ability_skill(ability), row)
 	

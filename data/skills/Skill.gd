@@ -129,7 +129,7 @@ static func random_ability(skill_seed: int, column: int = 0) -> Ability:
 			eff.mod_stat = Stat.DERIVED_STATS[ rng.randi() % Stat.DERIVED_STATS.size() ]
 		elif power < 0: #elemental attack or defense
 			eff.mod_stat = Elements.ATTACK[eff.element]
-			power *= 2
+			power *= 4
 		elif power > 0: #elemental attack or defense
 			eff.mod_stat = Elements.DEFENSE[eff.element]
 			power *= 2
