@@ -24,7 +24,7 @@ func add_unlocked_line(i: int, did_win: bool):
 	var unlockline = LogLine.instance()
 	unlocks.add_child(unlockline)
 	var treename = Meta.tree_name(i)
-	unlockline.set_label(str(i," ", treename))
+	unlockline.set_label(str(Meta.display_date_index(i)," ", treename))
 	unlockline.connect("pressed", self, "log_click", [i])
 	unlockline.payload = i
 	if did_win:
