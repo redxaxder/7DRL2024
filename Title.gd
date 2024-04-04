@@ -25,19 +25,21 @@ func add_unlocked_line(i: int, did_win: bool):
 	unlocks.add_child(unlockline)
 	var treename = Meta.tree_name(i)
 	unlockline.set_label(str(Meta.display_date_index(i)," ", treename))
-	unlockline.connect("pressed", self, "log_click", [i])
+	unlockline.connect("pressed", self, "log_click", [i, unlockline])
 	unlockline.payload = i
 	if did_win:
 		unlockline.modulate = Color(0.623529, 0.788235, 0.035294)
 
-func log_click(id: int):
+func log_click(id: int, node: Node):
 	emit_signal("select", id)
 	for logline in get_node("%unlocks").get_children():
-		logline.highlighted = id == logline.payload
+		logline.highlighted = false
+	if node:
+		node.highlighted = true
 
 func pick_something():
 	var unlocks = get_node("%unlocks")
 	if unlocks.get_child_count() > 0:
-		log_click(unlocks.get_child(0).payload)
+		log_click(unlocks.get_child(0).payload,unlocks.get_child(0))
 	else:
-		log_click(Meta.get_date_index())
+		log_click(Meta.get_date_index(), null)

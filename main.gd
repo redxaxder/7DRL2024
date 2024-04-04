@@ -89,7 +89,11 @@ func refresh_title_list():
 	var title = get_node("%Title")
 	var meta = load_meta()
 	title.clear_unlocks()
-	for i in meta.get_unlocked():
+	var unlocked = meta.get_unlocked()
+	if unlocked.size() > 2: 	#add duplicate of today to top of list
+		var today = meta.get_date_index()
+		title.add_unlocked_line(today, meta.did_win(today))
+	for i in unlocked:
 		if selected < 0: selected = i
 		title.add_unlocked_line(i, meta.did_win(i))
 	
