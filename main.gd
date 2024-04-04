@@ -217,10 +217,10 @@ func _unhandled_input(event):
 	if event.is_action_pressed("return") && !$SkillTreePanel.visible:
 		var debounce_timer : Timer = get_node("%history_view").get_node("%DebounceTimer")
 		if debounce_timer.get_time_left() <= 0:
-			if get_node("%GO").visible == true && gonogo: 
+			if get_node("%GO").visible == true && ui_mode == ui_modes.GONOGO: 
 				debounce_timer.start(0.2)
 				go()
-			if get_node("%DONE").visible == true && !gonogo:
+			if get_node("%DONE").visible == true && ui_mode == ui_modes.VIEW:
 				debounce_timer.start(0.2)
 				done()
 	if event.is_action_pressed("teleport_potion"):
