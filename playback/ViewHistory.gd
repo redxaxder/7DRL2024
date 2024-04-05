@@ -13,8 +13,6 @@ var history: EncounterHistory
 var map: Map
 var marked_end = false
 var events_logged: int = 0
-var debounce_timer : Timer
-var currently_displayed = false
 
 signal seen_end(state)
 signal updated(encounter_state, encounter_event)
@@ -40,8 +38,6 @@ func _ready():
 	progressbar.step = 1
 	progressbar.min_value = 0
 	progressbar.connect("scrolling", self, "progress_bar_scroll")
-		
-	debounce_timer = get_node("%DebounceTimer")
 
 func _end():
 	if !history: return 0
@@ -54,16 +50,11 @@ func clear():
 	map = null
 	for c in get_node("%combat_log").get_children():
 		c.queue_free()
-	for c in get_children():
-		if 'visible' in c:
-			c.visible = false
-	currently_displayed = false
+	visible = false
 
 var _victory_messages = []
 func view(_history: EncounterHistory, _map: Map, victory_messages):
-	for c in get_children():
-		if 'visible' in c:
-			c.visible = true
+	visible = true
 	history = _history
 	max_cursor = 0
 	map = _map
@@ -75,7 +66,6 @@ func view(_history: EncounterHistory, _map: Map, victory_messages):
 	var progressbar = get_node("%progress_bar")
 	progressbar.max_value = _end()
 	_refresh()
-	currently_displayed = true
 
 func _update_history_log():
 	var history_amount = history.size() - 1
@@ -220,25 +210,36 @@ func progress_bar_scroll():
 		cursor = progressbar.value
 		_refresh()
 
-func _unhandled_input(event):
-	if currently_displayed:
-		if event.is_action_pressed("up"): to_start()
-		if event.is_action_pressed("down"): to_end()
-		if event.is_action_pressed("return"): 
-			if debounce_timer.get_time_left() <= 0 && cursor < _end():
-				debounce_timer.start(0.2)
-				to_end()
-		if event.is_action_pressed("right"): next()
-		if event.is_action_pressed("left"): prev()
-		if event.is_action_pressed("toggle"):
-			if get_node("%play").visible: play()
-			elif get_node("%pause").visible: pause()
-	
-func _gui_input(event):
-	if event.is_action_pressed("ui_up"): to_start()
-	if event.is_action_pressed("ui_down"): to_end()
-	if event.is_action_pressed("ui_right"): next()
-	if event.is_action_pressed("ui_left"): prev()
+func _input(event):
+	var x = self.visible
+	if !visible: return
+	if event is InputEventMouseMotion:
+		return
+	if event.is_action_pressed("ui_up") or \
+		event.is_action_pressed("up"):
+			to_start()
+			accept_event()
+	if	event.is_action_pressed("return") or \
+		event.is_action_pressed("ui_down") or \
+		event.is_action_pressed("down"):
+			if cursor != _end() or !marked_end:
+				accept_event()
+			to_end()
+	if	event.is_action_pressed("right") or \
+		event.is_action_pressed("ui_right"):
+			next()
+			accept_event()
+	if 	event.is_action_pressed("ui_left") or \
+		event.is_action_pressed("left"):
+			prev()
+			accept_event()
+	if event.is_action_pressed("toggle"):
+		if get_node("%play").visible:
+			play()
+			accept_event()
+		elif get_node("%pause").visible:
+			pause()
+			accept_event()
 
 func _refresh():
 	if !history: return

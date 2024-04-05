@@ -219,17 +219,10 @@ func _unhandled_input(event):
 	if event.is_action_pressed("toggle"):
 		if get_node("%GO").visible == true: go()
 	if event.is_action_pressed("return") && !$SkillTreePanel.visible:
-		var debounce_timer : Timer = get_node("%history_view").get_node("%DebounceTimer")
-		if debounce_timer.get_time_left() <= 0:
-			if get_node("%GO").visible == true && ui_mode == ui_modes.GONOGO: 
-				debounce_timer.start(0.2)
-				go()
-			if get_node("%DONE").visible == true && ui_mode == ui_modes.VIEW:
-				debounce_timer.start(0.2)
-				# var new_hp = calculate_new_hp()
-				# don't restart from return if dead
-				# if(new_hp > 0):
-				done()
+		if get_node("%GO").visible == true && ui_mode == ui_modes.GONOGO: 
+			go()
+		if get_node("%DONE").visible == true && ui_mode == ui_modes.VIEW:
+			done()
 	if event.is_action_pressed("teleport_potion"):
 		get_node("%ConsumablesContainer").use_consumable("teleport")
 	if event.is_action_pressed("health_potion"):

@@ -171,7 +171,3 @@ unique_name_in_owner = true
 margin_right = 266.0
 size_flags_horizontal = 3
 custom_constants/separation = 0
-
-[node name="DebounceTimer" type="Timer" parent="."]
-unique_name_in_owner = true
-one_shot = true
